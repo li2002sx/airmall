@@ -1,0 +1,6 @@
+framework module Pods_AirMall {
+  umbrella header "Pods-AirMall-umbrella.h"
+
+  export *
+  module * { export * }
+}

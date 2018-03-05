@@ -1,0 +1,79 @@
+<!doctype html>
+<html>
+
+<head>
+	<meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="css/style.css" media="all">
+    <script type="text/javascript" src="js/dispatch.js" ></script>
+</head>
+
+<body>
+	<h1>WebViewJavascriptBridge Demo</h1>
+	<div id='buttons'></div>
+	<div id='log'></div>
+    <div><a href="Cart.html">购物车</a></div>
+    <script type="text/javascript">
+        window.onerror = function (err) {
+            log('window.onerror: ' + err)
+        }
+    
+    // function setupWebViewJavascriptBridge(callback) {
+    //     if (window.WebViewJavascriptBridge) { return callback(WebViewJavascriptBridge); }
+    //     if (window.WVJBCallbacks) { return window.WVJBCallbacks.push(callback); }
+    //     window.WVJBCallbacks = [callback];
+    //     var WVJBIframe = document.createElement('iframe');
+    //     WVJBIframe.style.display = 'none';
+    //     WVJBIframe.src = 'https://__bridge_loaded__';
+    //     document.documentElement.appendChild(WVJBIframe);
+    //     setTimeout(function () { document.documentElement.removeChild(WVJBIframe) }, 0)
+    // }
+    
+    var uniqueId = 1
+    function log(message, data) {
+        var log = document.getElementById('log')
+        var el = document.createElement('div')
+        el.className = 'logLine'
+        el.innerHTML = uniqueId++ + '. ' + message + ':<br/>' + JSON.stringify(data)
+        if (log.children.length) { log.insertBefore(el, log.children[0]) }
+        else { log.appendChild(el) }
+    }
+    
+    log('JS got response', null)
+    
+    //    setupWebViewJavascriptBridge(function(bridge) {
+    
+    
+    //     document.body.appendChild(document.createElement('br'))
+    
+    //     var callbackButton = document.getElementById('buttons').appendChild(document.createElement('button'))
+    //     callbackButton.innerHTML = 'Fire testObjcCallback'
+    //     callbackButton.onclick = function(e) {
+    //         e.preventDefault()
+    //         log('JS calling handler "testObjcCallback"')
+    //         bridge.callHandler('testObjcCallback', {'foo': 'bar'}, function(response) {
+    //             log('JS got response', response)
+    //         })
+    //     }
+    // })
+    
+        appJsBridge.registerHandler('live', function (data, callback) {
+            log('ObjC called testJavascriptHandler with', data)
+            callback("1234567")
+        })
+        
+        // var callHandler = function (method, param, callback) { // js调用app事件
+        //     setupWebViewJavascriptBridge(function (bridge) {
+        //         bridge.callHandler(method, param, function (response) {
+        //             //处理调用oc response 回来的结果
+        //             callback(response)
+        //         })
+        //     })
+        // }
+        
+        appJsBridge.callHandler('gift', { giftId: 9000 }, function (result) {
+           log('gift with', result)
+        })
+    </script>
+</body>
+
+</html>
