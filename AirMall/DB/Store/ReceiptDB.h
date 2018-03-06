@@ -15,6 +15,8 @@
 
 @interface ReceiptDB : NSObject
 
-+(CommonResult*) receive:(ReceiptParam*) receiptParam userDict:(NSDictionary*) userDict;
++(NSString*) receive:(ReceiptParam*) receiptParam userDict:(NSDictionary*) userDict;
+
++(NSString*) replenish:(ReplenishParam*) replenishParam userDict:(NSDictionary*) userDict;
 
 @end

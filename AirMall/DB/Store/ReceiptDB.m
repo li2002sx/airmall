@@ -29,21 +29,21 @@
         bg_executeSql(sql, nil, nil);
         totalConfirmCount += sku.confirmCount;
         
-        sql = [NSString stringWithFormat:@"select * from Inventory where FlightID =%@ ,Sku=%@",flightId,sku.sku];
+        sql = [NSString stringWithFormat:@"select * from Inventory where FlightID =%@ and Sku='%@'",flightId,sku.sku];
         NSArray* arr = bg_executeSql(sql, nil, nil);
         if([arr count] > 0){
-           sql = [NSString stringWithFormat:@"update Inventory set Qty=Qty+%ld where FlightID =%@ ,Sku=%@",sku.confirmCount - sku.damagedCount,flightId,sku.sku];
+           sql = [NSString stringWithFormat:@"update Inventory set Qty=Qty+%ld where FlightID =%@ and Sku='%@'",sku.confirmCount - sku.damagedCount,flightId,sku.sku];
             bg_executeSql(sql, nil, nil);
         }else{
             sql=[NSString stringWithFormat:@"insert Inventory(FlightID,ProductID,ProductItemID,Sku,Qty) values(%@,%ld,%ld,%@,%ld)",flightId,@(1),@(1),sku.sku,sku.confirmCount - sku.damagedCount];
             bg_executeSql(sql, nil, nil);
         }
         
-        sql = [NSString stringWithFormat:@"insert DamageList(FlightID,SKU,ProductName,Quantity,Unit,UnitPrice,DamagedReason,DamagedReasonDesc,EmpID,CreateTime) values(%ld,%@,%@,%ld,%@,%@,%@,%@,datetime('now', 'localtime'))",deliveryId,sku.sku,@"123",sku.damagedCount,@"台",@(11350),sku.damagedReason,sku.damagedReasonDesc,empId];
+        sql = [NSString stringWithFormat:@"INSERT INTO DamageList(FlightID,SKU,ProductName,Quantity,Unit,UnitPrice,DamagedReason,DamagedReasonDesc,EmpID,CreateTime) VALUES (%ld,'%@','%@',%ld,'%@',%@,'%@','%@',%@,datetime('now','localtime'))",deliveryId,sku.sku,@"123",sku.damagedCount,@"台",@(11350),sku.damagedReason,sku.damagedReasonDesc,empId];
         id damage =  bg_executeSql(sql, nil, nil);
-        NSString * damageId = [damage valueForKey:@"id"];
+        NSString * damageId = damage;
         
-        sql= [NSString stringWithFormat:@"insert DamageItem(DamageID,ImageUrl,CreateTime) values(%@,%@,datetime('now', 'localtime'))",damageId,sku.imageBase64];
+        sql= [NSString stringWithFormat:@"INSERT INTO DamageItem(DamageID,ImageUrl,CreateTime) values(%@,'%@',datetime('now', 'localtime'))",damageId,sku.imageBase64];
         bg_executeSql(sql, nil, nil);
     }
     
@@ -51,8 +51,24 @@
     bg_executeSql(sql, nil, nil);
     
     NSString* json = [result yy_modelToJSONObject];
-    
     return json;
+}
+
++(NSString*) replenish:(ReplenishParam*) replenishParam userDict:(NSDictionary*) userDict{
+    CommonResult* result = [CommonResult new];
+    [result setStatus:1];
+    
+    NSString* empId = [userDict valueForKey:@"EmpID"];
+    NSString* empNo = [userDict valueForKey:@"EmpNo"];
+    NSString* flightId = [userDict valueForKey:@"FlightID"];
+    NSString* scheduleId = [userDict valueForKey:@"ScheduleID"];
+    
+    NSString* sql = [NSString stringWithFormat:@"INSERT INTO ReceiptList (DeliveryNo,FlightID,ScheduleID,DeliveryType,DeliveryStatus,NeedCounts,ApplicantEmpID,ApplicantEmpName,ApplicantTime,ConfirmCounts,DeliveryEmpID,DeliveryEmpName,DeliveryTime,Remark) VALUES ('%@','%@','%@',2,'正常','0','%@','%@',datetime('now', 'localtime'),'0','','','','')",@"123456",flightId,scheduleId,empNo,empNo];
+    
+    
+    NSString* json = [result yy_modelToJSONObject];
+    return json;
+    
 }
 
 @end

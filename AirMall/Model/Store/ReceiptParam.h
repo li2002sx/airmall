@@ -33,3 +33,18 @@
 @property(nonatomic)NSString* imageBase64;
 
 @end
+
+@interface ReplenishParam : NSObject
+
+@property(nonatomic)NSArray* replenishList;
+
+@end
+
+@interface ReplenishSku : NSObject
+
+@property(nonatomic)NSString* sku;
+
+@property(nonatomic)NSInteger needCount;
+
+@end
+
