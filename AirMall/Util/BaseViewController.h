@@ -11,6 +11,9 @@
 #import "CommonUtil.h"
 #import "BGFMDB.h"
 
-@interface BaseViewController : UIViewController
+@interface BaseViewController : UIViewController{
+    NSUserDefaults *_userInfo;
+    NSDictionary* _userDict;
+}
 
 @end

@@ -20,6 +20,9 @@
     // Do any additional setup after loading the view.
     bg_setDebug(YES);//打开调试模式,打印输出调试信息.
     self.navigationController.navigationBar.hidden = YES;
+    _userInfo = [NSUserDefaults standardUserDefaults];
+    _userDict = [NSMutableDictionary dictionaryWithDictionary:[_userInfo objectForKey: user_key]];
+    
     bg_setSqliteName(@"AriMall");
 }
 

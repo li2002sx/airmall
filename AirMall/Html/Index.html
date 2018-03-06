@@ -5,6 +5,7 @@
 	<meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1.0, maximum-scale=1.0">
     <link rel="stylesheet" type="text/css" href="css/style.css" media="all">
     <script type="text/javascript" src="js/dispatch.js" ></script>
+    <script type="text/javascript" src="js/jquery-3.3.1.min.js" ></script>
 </head>
 
 <body>
@@ -12,10 +13,57 @@
 	<div id='buttons'></div>
 	<div id='log'></div>
     <div><a href="Cart.html">购物车</a></div>
+    <div><input type="button" id="selectOne" value="获取单条数据"></div>
+    <div><input type="button" id="selectList" value="获取列表数据"></div>
+    <div><input type="button" id="receive" value="收货确认"></div>
     <script type="text/javascript">
         window.onerror = function (err) {
             log('window.onerror: ' + err)
         }
+    
+        //获取单条数据
+        $('#selectOne').click(function(){
+          var sql = 'select * from Staff order by 1 desc limit 1';
+          var param = {
+            sql:sql
+          }
+          appJsBridge.callHandler('selectOne', param, function (result) {
+              log('result with', result)
+              })
+        })
+        //获取单条数据
+        $('#selectList').click(function(){
+          var sql = 'select * from Staff order by 1 desc';
+          var param = {
+             sql:sql,
+             pageIndex:1,
+             pageSize:10
+          }
+          appJsBridge.callHandler('selectList', param, function (result) {
+              log('result with', result)
+          })
+       })
+       //收货确认
+       $('#receive').click(function(){
+                           var skus  = [];
+                           var sku = {
+                              sku:'123456',
+                           confirmCount:2,
+                           damagedCount:2,
+                           damagedReason:'故意',
+                           damagedReasonDesc:'刮花了',
+                           imageBase64:'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACoAAAAtCAYAAADYxvnjAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyFpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNi1jMTQyIDc5LjE2MDkyNCwgMjAxNy8wNy8xMy0wMTowNjozOSAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIChXaW5kb3dzKSIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDpGQzk3NDE5NjIwMzYxMUU4QkFDMTkyOENGNEUxMDA4MiIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDpGQzk3NDE5NzIwMzYxMUU4QkFDMTkyOENGNEUxMDA4MiI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOkZDOTc0MTk0MjAzNjExRThCQUMxOTI4Q0Y0RTEwMDgyIiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOkZDOTc0MTk1MjAzNjExRThCQUMxOTI4Q0Y0RTEwMDgyIi8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+Ew4m5QAAAg9JREFUeNrsmU0oRFEUx68xkZBMSIkSCcVCkXxsfWwkZWeF2LEiKdkoKWVBCgtLsrCwoyx8FDEoCyGRREJJQgnjf3LU9GLmzpt7MbqnfvVu3TfnN/fc+95974W53W5hM9pAL3BJ9H0DW6ABHNpJ5vQ6jgDFIBVEW/p5wIRXOxcMAYdkHupXCEZAheV3yr74UzdgE5xbRevBKEj4JtGdRTQnAElhOc87CsCYj/5zoBVcOngUp3xIUsSBJK/2OniyIbpiaWf66V8DlkCsk+dauESSJtDPx1SSWtADoiQlDzjXZ0TynPUXWaCdREskE5HUBljk9gJjd20MgwzJ/nV0QrJk5ygWmwdnwn44eAFlB3BOlpNLEEiSavHzEe0QIRJG1Ij+B9EXUAXCNEBXnUZVort87dQRr2ASXKkQpVtYisaqUrUSA9nmfRcxPKonGiQpfx5Pg6BFBW+OXWbVG9FfCNk5+sAbX4/i/OH83BShQvQR5INjTYNVBNb8VVem9PsaJQU/NdyomKM0mqWaJKnkXZYHR9ulpz6rZtUbUSMa/GKi90594FRDflrtnSBNhegAGNQ4WBdgVkXp0zVXNV5V6ZvFxzvLbQ2S9JawQ5Uo7b5bzao3okb0H4nehYDnLYkehYDoHonOhIDoNInS14mdPyxJX2HGSZQ+bJWDbvHxvfL+l8Xodn0NlkELqATP7wIMACkcUqdr6woxAAAAAElFTkSuQmCC'
+                           }
+                           skus.push(sku);
+                           var param ={
+                               deliveryID:1,
+                               deliveryList:skus
+                           }
+                           appJsBridge.callHandler('receive', param, function (result) {
+                             log('result with', result)
+                           });
+                           
+       })
     
     // function setupWebViewJavascriptBridge(callback) {
     //     if (window.WebViewJavascriptBridge) { return callback(WebViewJavascriptBridge); }

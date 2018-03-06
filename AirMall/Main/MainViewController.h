@@ -13,8 +13,30 @@
 #import "KLCPopup.h"
 #import "ShrinkMenuTableViewCell.h"
 #import "OpenMenuTableViewCell.h"
+#import "CommonDB.h"
+#import "ReceiptDB.h"
 
 @interface MainViewController : BaseViewController<WKNavigationDelegate,UITableViewDataSource,UITableViewDelegate>
+
+@property (weak, nonatomic) IBOutlet UILabel *thisFlightNoLabel;
+
+@property (weak, nonatomic) IBOutlet UILabel *lineCHNLabel;
+
+@property (weak, nonatomic) IBOutlet UILabel *preFlightNoLabel;
+
+@property (weak, nonatomic) IBOutlet UILabel *flightDurationLabel;
+
+@property (weak, nonatomic) IBOutlet UILabel *flightTimeLabel;
+
+@property (weak, nonatomic) IBOutlet UIImageView *empPhotoImageView;
+
+@property (weak, nonatomic) IBOutlet UILabel *empNameLabel;
+
+@property (weak, nonatomic) IBOutlet UILabel *empNoLabel;
+
+@property (weak, nonatomic) IBOutlet UILabel *empJobLabel;
+
+@property (weak, nonatomic) IBOutlet UILabel *lastLoginTimeLabel;
 
 @property (weak, nonatomic) IBOutlet UIView *shrinkView;
 
@@ -24,9 +46,6 @@
 
 @property (weak, nonatomic) IBOutlet UITableView *openTableView;
 
-@property (weak, nonatomic) IBOutlet UIButton *btnMenu;
-
-- (IBAction)btnMenuPressed:(id)sender;
 
 - (IBAction)btnFrashPressed:(id)sender;
 
@@ -36,9 +55,5 @@
 
 @property (weak, nonatomic) IBOutlet WKWebView *webView;
 
-@property (weak, nonatomic) IBOutlet UIView *menuView;
-
-
-- (IBAction)logoutPressed:(id)sender;
 
 @end

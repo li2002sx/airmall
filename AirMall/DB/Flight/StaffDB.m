@@ -10,18 +10,24 @@
 
 @implementation StaffDB
 
-+(Staff*) getStaffByNoAndPass:(NSString*) no password:(NSString*) password{
-    
-    Staff* staff = nil;
-    
-    NSString* sql = [NSString stringWithFormat:@"select * from staff where EmpNo = '%@' and EmpPassword = '%@' order by EmpID desc limit 1", no, password];
++(id)staffLogin:(NSString*) flightNo flightDate:(NSString*) flightDate empNo:(NSString*) empNo password:(NSString*) password{
+//    Staff* staff = nil;
+    id result = nil;
+    NSString* sql = [NSString stringWithFormat:@"select a.*,b.*,c.* from Staff as a join ScheduleInfo as b on b.EmpID = a.EmpID join FlightInfo as c on c.FlightID = b.FlightID where EmpNo = '%@' and EmpPassword = '%@' and c.Carrier || c.FlightNo = '%@' and date(c.FlightDate) = '%@' order by a.EmpID desc limit 1", empNo, password,flightNo,flightDate];
    
     NSArray* arr = bg_executeSql(sql, nil, nil);
     if([arr count] > 0){
-        NSString* json = [[arr objectAtIndex:0] yy_modelToJSONObject];
-        staff = [Staff yy_modelWithJSON:json];
+        result = [arr objectAtIndex:0];
+//        NSString* json = [[arr objectAtIndex:0] yy_modelToJSONObject];
+//        staff = [Staff yy_modelWithJSON:json];
     }
-    return staff;
+    return result;
+}
+
++(void) updateLastLoginTime:(NSString*) empNo{
+    NSString* sql = [NSString stringWithFormat:@"update Staff set LastLoginTime = datetime('now', 'localtime') where EmpNo = '%@'", empNo];
+    id result = bg_executeSql(sql, nil, nil);
+    NSLog(@"%@",result);
 }
 
 @end

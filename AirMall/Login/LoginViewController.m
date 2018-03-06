@@ -25,22 +25,21 @@
     
     PGDatePickManager *datePickManager = [[PGDatePickManager alloc]init];
     datePickManager.isShadeBackgroud = true;
+    datePickManager.cancelButtonText = @"取消";
+    datePickManager.confirmButtonText = @"确定";
     PGDatePicker *datePicker = datePickManager.datePicker;
     datePicker.delegate = self;
     datePicker.datePickerType = PGPickerViewType1;
     datePicker.isHiddenMiddleText = false;
     datePicker.datePickerMode = PGDatePickerModeDate;
     [self presentViewController:datePickManager animated:false completion:nil];
-//
-//    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-//
-//    //设置时间格式
-//    formatter.dateFormat = @"yyyy.MM.dd";
-//    NSString *dateStr = [formatter  stringFromDate:_datePicker.date];
-//    _fieldDate.text = dateStr;
 }
 
 - (void)datePicker:(PGDatePicker *)datePicker didSelectDate:(NSDateComponents *)dateComponents {
+    NSCalendar * calendar = [NSCalendar currentCalendar];
+    NSDate* date = [calendar dateFromComponents:dateComponents];
+    NSString* flightDate = [CommonUtil convertDateToString:date formatter:@"yyyy-MM-dd"];
+    _fieldDate.text = flightDate;
     NSLog(@"dateComponents = %@", dateComponents);
 }
 
@@ -58,20 +57,35 @@
 //    staff.LastLoginTime =  [NSDate date];
 //    [staff bg_save];
     
-    NSString *name = _fieldName.text;
-    if ([name length] <= 1) {
-        [CommonUtil showOnlyTextDialog:self.view tips:@"用户名不能为空"];
+    NSString *flightNo = _filedFlightNo.text;
+    if ([flightNo length] <= 3) {
+        [CommonUtil showOnlyTextDialog:self.view tips:@"航班号不能为空"];
+        return;
+    }
+    
+    NSString *flightDate = _fieldDate.text;
+    if ([flightDate length] <= 3) {
+        [CommonUtil showOnlyTextDialog:self.view tips:@"航班日期不能为空"];
+        return;
+    }
+    
+    NSString *empNo = _fieldName.text;
+    if ([empNo length] <= 1) {
+        [CommonUtil showOnlyTextDialog:self.view tips:@"员工号不能为空"];
         return;
     }
 
     NSString *password = _fieldPass.text;
-    if ([password length] < 6) {
-        [CommonUtil showOnlyTextDialog:self.view tips:@"密码位数必须大于等于6位"];
+    if ([password length] < 1) {
+        [CommonUtil showOnlyTextDialog:self.view tips:@"密码不能为空"];
         return;
     }
     
-    Staff* staff = [StaffDB getStaffByNoAndPass:name password:password];
-    if(staff == nil){
+    id result = [StaffDB staffLogin:flightNo flightDate:flightDate empNo:empNo password:password];
+    if(result != nil){
+        [StaffDB updateLastLoginTime:empNo];
+        [result setObject:[CommonUtil convertDateToString:[NSDate new] formatter:@"yyyy年M月d HH:mm:ss"] forKey:@"LastLoginTime"];
+        [_userInfo setValue:result forKey:user_key];
         
     MainViewController *mainView= [[MainViewController alloc] initWithNibName:@"MainViewController" bundle:nil];
 
@@ -79,10 +93,10 @@
         
     [self.navigationController pushViewController:mainView animated:YES];
         
-      NSLog(@"%@", [staff yy_modelToJSONObject]);
+//      NSLog(@"%@", [staff yy_modelToJSONObject]);
     }else{
         _hud = [[MBProgressHUD alloc] initWithView:self.view];
-        [CommonUtil showOnlyTextDialog:self.view tips:@"没有找到对应的用户"];
+        [CommonUtil showOnlyTextDialog:self.view tips:@"没有找到对应的信息，请检查输入！"];
     }
 }
 

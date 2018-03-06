@@ -73,6 +73,11 @@
 		AA4313EA204D587500E28C2B /* LogList.m in Sources */ = {isa = PBXBuildFile; fileRef = AA4313E9204D587500E28C2B /* LogList.m */; };
 		AA4313ED204D58CC00E28C2B /* SyncList.m in Sources */ = {isa = PBXBuildFile; fileRef = AA4313EC204D58CC00E28C2B /* SyncList.m */; };
 		AA4313F0204D62C000E28C2B /* DamageItem.m in Sources */ = {isa = PBXBuildFile; fileRef = AA4313EF204D62C000E28C2B /* DamageItem.m */; };
+		AA4313F3204E625F00E28C2B /* UserInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = AA4313F2204E625F00E28C2B /* UserInfo.m */; };
+		AA4313F7204E8A1800E28C2B /* CommonDB.m in Sources */ = {isa = PBXBuildFile; fileRef = AA4313F6204E8A1800E28C2B /* CommonDB.m */; };
+		AA4313FB204E8BFF00E28C2B /* CommonResult.m in Sources */ = {isa = PBXBuildFile; fileRef = AA4313FA204E8BFF00E28C2B /* CommonResult.m */; };
+		AA431402204E9B7C00E28C2B /* ReceiptParam.m in Sources */ = {isa = PBXBuildFile; fileRef = AA431401204E9B7C00E28C2B /* ReceiptParam.m */; };
+		AA431405204EA41400E28C2B /* ReceiptDB.m in Sources */ = {isa = PBXBuildFile; fileRef = AA431404204EA41400E28C2B /* ReceiptDB.m */; };
 		AA48B913204514070075C94D /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = AA48B912204514070075C94D /* AppDelegate.m */; };
 		AA48B91B204514070075C94D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AA48B91A204514070075C94D /* Assets.xcassets */; };
 		AA48B921204514070075C94D /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = AA48B920204514070075C94D /* main.m */; };
@@ -177,6 +182,16 @@
 		AA4313EC204D58CC00E28C2B /* SyncList.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SyncList.m; sourceTree = "<group>"; };
 		AA4313EE204D62C000E28C2B /* DamageItem.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DamageItem.h; sourceTree = "<group>"; };
 		AA4313EF204D62C000E28C2B /* DamageItem.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DamageItem.m; sourceTree = "<group>"; };
+		AA4313F1204E625F00E28C2B /* UserInfo.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UserInfo.h; sourceTree = "<group>"; };
+		AA4313F2204E625F00E28C2B /* UserInfo.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = UserInfo.m; sourceTree = "<group>"; };
+		AA4313F5204E8A1800E28C2B /* CommonDB.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CommonDB.h; sourceTree = "<group>"; };
+		AA4313F6204E8A1800E28C2B /* CommonDB.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CommonDB.m; sourceTree = "<group>"; };
+		AA4313F9204E8BFF00E28C2B /* CommonResult.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CommonResult.h; sourceTree = "<group>"; };
+		AA4313FA204E8BFF00E28C2B /* CommonResult.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CommonResult.m; sourceTree = "<group>"; };
+		AA431400204E9B7C00E28C2B /* ReceiptParam.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ReceiptParam.h; sourceTree = "<group>"; };
+		AA431401204E9B7C00E28C2B /* ReceiptParam.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ReceiptParam.m; sourceTree = "<group>"; };
+		AA431403204EA41400E28C2B /* ReceiptDB.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ReceiptDB.h; sourceTree = "<group>"; };
+		AA431404204EA41400E28C2B /* ReceiptDB.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ReceiptDB.m; sourceTree = "<group>"; };
 		AA48B90E204514070075C94D /* AirMall.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AirMall.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AA48B911204514070075C94D /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		AA48B912204514070075C94D /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -368,25 +383,13 @@
 			path = Log;
 			sourceTree = "<group>";
 		};
-		AA4313BA204D569F00E28C2B /* Handover */ = {
+		AA4313BC204D569F00E28C2B /* Store */ = {
 			isa = PBXGroup;
 			children = (
+				AA431403204EA41400E28C2B /* ReceiptDB.h */,
+				AA431404204EA41400E28C2B /* ReceiptDB.m */,
 			);
-			path = Handover;
-			sourceTree = "<group>";
-		};
-		AA4313BB204D569F00E28C2B /* HandoverMaster */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = HandoverMaster;
-			sourceTree = "<group>";
-		};
-		AA4313BC204D569F00E28C2B /* ReceiptList */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = ReceiptList;
+			path = Store;
 			sourceTree = "<group>";
 		};
 		AA4313BD204D569F00E28C2B /* Damage */ = {
@@ -439,8 +442,28 @@
 				AA4313DA204D582000E28C2B /* HandoverMaster.m */,
 				AA4313DC204D582D00E28C2B /* HandoverItem.h */,
 				AA4313DD204D582D00E28C2B /* HandoverItem.m */,
+				AA431400204E9B7C00E28C2B /* ReceiptParam.h */,
+				AA431401204E9B7C00E28C2B /* ReceiptParam.m */,
 			);
 			path = Store;
+			sourceTree = "<group>";
+		};
+		AA4313F4204E89F100E28C2B /* Common */ = {
+			isa = PBXGroup;
+			children = (
+				AA4313F5204E8A1800E28C2B /* CommonDB.h */,
+				AA4313F6204E8A1800E28C2B /* CommonDB.m */,
+			);
+			path = Common;
+			sourceTree = "<group>";
+		};
+		AA4313F8204E8BD400E28C2B /* Common */ = {
+			isa = PBXGroup;
+			children = (
+				AA4313F9204E8BFF00E28C2B /* CommonResult.h */,
+				AA4313FA204E8BFF00E28C2B /* CommonResult.m */,
+			);
+			path = Common;
 			sourceTree = "<group>";
 		};
 		AA48B905204514070075C94D = {
@@ -490,6 +513,8 @@
 				AA43135F204A9C5100E28C2B /* SynInfoTableViewCell.h */,
 				AA431360204A9C5100E28C2B /* SynInfoTableViewCell.m */,
 				AA431361204A9C5100E28C2B /* SynInfoTableViewCell.xib */,
+				AA4313F1204E625F00E28C2B /* UserInfo.h */,
+				AA4313F2204E625F00E28C2B /* UserInfo.m */,
 			);
 			path = Login;
 			sourceTree = "<group>";
@@ -526,6 +551,7 @@
 		AA4F0D942048F3F400081B94 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				AA4313F8204E8BD400E28C2B /* Common */,
 				AA4313D1204D575100E28C2B /* Store */,
 				AA4313B9204D568700E28C2B /* Log */,
 				AA4313B8204D568300E28C2B /* Damage */,
@@ -539,13 +565,12 @@
 		AA4F0D9D2049405100081B94 /* DB */ = {
 			isa = PBXGroup;
 			children = (
+				AA4313F4204E89F100E28C2B /* Common */,
 				AA4313C1204D56A800E28C2B /* Flight */,
 				AA4313C0204D56A000E28C2B /* Log */,
 				AA4313BD204D569F00E28C2B /* Damage */,
 				AA4313BF204D569F00E28C2B /* Order */,
-				AA4313BA204D569F00E28C2B /* Handover */,
-				AA4313BB204D569F00E28C2B /* HandoverMaster */,
-				AA4313BC204D569F00E28C2B /* ReceiptList */,
+				AA4313BC204D569F00E28C2B /* Store */,
 				AA4313BE204D569F00E28C2B /* Product */,
 			);
 			path = DB;
@@ -768,6 +793,7 @@
 				AA4F0D772045676700081B94 /* BaseViewController.m in Sources */,
 				AA4313CD204D571B00E28C2B /* ProductItem.m in Sources */,
 				AA48B913204514070075C94D /* AppDelegate.m in Sources */,
+				AA4313F3204E625F00E28C2B /* UserInfo.m in Sources */,
 				AA4313D4204D576D00E28C2B /* ReceiptList.m in Sources */,
 				AA4313D8204D578000E28C2B /* ReceiptItem.m in Sources */,
 				AA4313E7204D586900E28C2B /* DamageList.m in Sources */,
@@ -779,7 +805,10 @@
 				AA4F0D7F20456B4200081B94 /* CommonUtil.m in Sources */,
 				AA4313D0204D572B00E28C2B /* Inventory.m in Sources */,
 				AA4313C7204D56FD00E28C2B /* ScheduleInfo.m in Sources */,
+				AA4313F7204E8A1800E28C2B /* CommonDB.m in Sources */,
 				AA431362204A9C5100E28C2B /* SynInfoTableViewCell.m in Sources */,
+				AA4313FB204E8BFF00E28C2B /* CommonResult.m in Sources */,
+				AA431402204E9B7C00E28C2B /* ReceiptParam.m in Sources */,
 				AA4313DE204D582D00E28C2B /* HandoverItem.m in Sources */,
 				AA4313C4204D56E700E28C2B /* FlightInfo.m in Sources */,
 				AA4313EA204D587500E28C2B /* LogList.m in Sources */,
@@ -789,6 +818,7 @@
 				AA4313DB204D582000E28C2B /* HandoverMaster.m in Sources */,
 				AA4313E1204D584200E28C2B /* SalesOrder.m in Sources */,
 				AA4313E4204D584F00E28C2B /* SalesOrderItem.m in Sources */,
+				AA431405204EA41400E28C2B /* ReceiptDB.m in Sources */,
 				AA4F0DA1204940D200081B94 /* StaffDB.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

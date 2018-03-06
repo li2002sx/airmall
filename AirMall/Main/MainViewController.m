@@ -28,6 +28,19 @@
     
      _hud = [[MBProgressHUD alloc] initWithView:self.view];
     
+    id userInfo = [_userInfo objectForKey:user_key];
+    _thisFlightNoLabel.text = [NSString stringWithFormat:@"%@%@",[userInfo objectForKey:@"Carrier"],[userInfo objectForKey:@"FlightNo"]];
+    _lineCHNLabel.text = [userInfo objectForKey:@"LineCHN"];
+    NSDate* deptTime = [CommonUtil convertDateFromString:[userInfo objectForKey:@"DeptTime"]];
+    NSDate* arrTime = [CommonUtil convertDateFromString:[userInfo objectForKey:@"ArrTime"]];
+    _flightTimeLabel.text = [NSString stringWithFormat:@"%@  -  %@",[CommonUtil convertDateToString:deptTime formatter:@"hh:mm"],[CommonUtil convertDateToString:arrTime formatter:@"hh:mm"]];
+    NSArray* timeDiffArr = [CommonUtil timeDiff:deptTime end:arrTime];
+    _flightDurationLabel.text = [NSString stringWithFormat:@"%@小时%@分",[timeDiffArr valueForKey:@"hour"],[timeDiffArr valueForKey:@"minute"]];
+    _empNameLabel.text = [userInfo objectForKey:@"EmpNo"];
+    _empNoLabel.text = [userInfo objectForKey:@"EmpNo"];
+    _empJobLabel.text = [userInfo objectForKey:@"EmpType"];
+    _lastLoginTimeLabel.text = [userInfo objectForKey:@"LastLoginTime"];
+    
     _tableViewDict = [[NSDictionary alloc] initWithObjectsAndKeys:
                       @[@"icon-menu",@"LOGO"],@"0",
                       @[@"icon-hangban-select",@"航班信息"],@"1",
@@ -67,9 +80,28 @@
     _bridge = [WebViewJavascriptBridge bridgeForWebView:_webView];
     [_bridge setWebViewDelegate:self];
     
-    [_bridge registerHandler:@"gift" handler:^(id data, WVJBResponseCallback responseCallback) {
-        NSLog(@"gift called: %@", data);
-        responseCallback(@"Response from gift");
+    //获取单条的查询结果
+    [_bridge registerHandler:@"selectOne" handler:^(id data, WVJBResponseCallback responseCallback) {
+        NSString* sql = [data objectForKey:@"sql"];
+        NSString* json = [CommonDB selectOne:sql];
+        responseCallback(json);
+    }];
+    
+    //获取列表的查询结果
+    [_bridge registerHandler:@"selectList" handler:^(id data, WVJBResponseCallback responseCallback) {
+        NSString* sql = [data objectForKey:@"sql"];
+        NSInteger pageIndex = [[data objectForKey:@"pageIndex"] integerValue];
+        NSInteger pageSize = [[data objectForKey:@"pageSize"] integerValue];
+        NSString* json = [CommonDB selectList:sql pageIndex:pageIndex pageSize:pageSize];
+        responseCallback(json);
+    }];
+    
+    //确认收货
+    [_bridge registerHandler:@"receive" handler:^(id data, WVJBResponseCallback responseCallback) {
+//        NSString* dataJson = [data yy_modelToJSONObject];
+        ReceiptParam* receiptParam = [ReceiptParam yy_modelWithJSON:data];
+        NSString* json = [ReceiptDB receive:receiptParam userDict:_userDict];
+        responseCallback(json);
     }];
     
     //    [_bridge registerHandler:@"testObjcCallback" handler:^(id data, WVJBResponseCallback responseCallback) {
@@ -155,7 +187,7 @@
 }
 
 - (void)webView:(WKWebView *)webView didFinishNavigation:(WKNavigation *)navigation {
-    [_hud hide:YES];
+    [_hud hideAnimated:YES];
     NSLog(@"webViewDidFinishLoad");
 }
 

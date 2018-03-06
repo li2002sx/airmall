@@ -15,6 +15,7 @@
                 <outlet property="fieldDate" destination="Kb7-Ww-Em5" id="ezy-qB-6D0"/>
                 <outlet property="fieldName" destination="cNV-Zc-N8z" id="7R1-sA-B6R"/>
                 <outlet property="fieldPass" destination="2n0-XY-ct9" id="NbH-rN-921"/>
+                <outlet property="filedFlightNo" destination="nFc-a6-MHw" id="IoL-66-b8q"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
         </placeholder>
@@ -80,7 +81,7 @@
                                     <color key="textColor" red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="calibratedRGB"/>
                                     <nil key="highlightedColor"/>
                                 </label>
-                                <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="nFc-a6-MHw">
+                                <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="MU2494" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="nFc-a6-MHw">
                                     <rect key="frame" x="140" y="0.0" width="230" height="50"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     <nil key="textColor"/>
