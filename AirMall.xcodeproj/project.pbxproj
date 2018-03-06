@@ -216,6 +216,7 @@
 		AA4F0D982048F49900081B94 /* Staff.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Staff.m; sourceTree = "<group>"; };
 		AA4F0D9F204940D200081B94 /* StaffDB.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = StaffDB.h; sourceTree = "<group>"; };
 		AA4F0DA0204940D200081B94 /* StaffDB.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = StaffDB.m; sourceTree = "<group>"; };
+		B02A22D2204EF35200C93BC1 /* AriMall.db */ = {isa = PBXFileReference; lastKnownFileType = file; path = AriMall.db; sourceTree = "<group>"; };
 		CDDFC860718B02AC7FA69D90 /* Pods_AirMall.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_AirMall.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		F2E2984E4E62AA9E76A8826A /* Pods-AirMall.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AirMall.release.xcconfig"; path = "Pods/Target Support Files/Pods-AirMall/Pods-AirMall.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -565,6 +566,7 @@
 		AA4F0D9D2049405100081B94 /* DB */ = {
 			isa = PBXGroup;
 			children = (
+				B02A22D2204EF35200C93BC1 /* AriMall.db */,
 				AA4313F4204E89F100E28C2B /* Common */,
 				AA4313C1204D56A800E28C2B /* Flight */,
 				AA4313C0204D56A000E28C2B /* Log */,
