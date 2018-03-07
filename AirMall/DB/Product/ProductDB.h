@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "YYModel.h"
 #import "ProductList.h"
 #import "ProductItem.h"
 
@@ -16,8 +17,8 @@
 
 +(NSArray*) getProductListByIds:(NSArray*) productIdArr;
 
-+(ProductItem*) getSkuBySku:(NSString*) sku;
++(ProductItem*) getProductItemBySku:(NSString*) sku;
 
-+(NSArray*) getSkuListBySkus:(NSArray*) skuArr;
++(NSArray*) getProductItemListBySkus:(NSArray*) skuArr;
 
 @end

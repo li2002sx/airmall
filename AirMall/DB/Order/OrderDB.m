@@ -14,9 +14,10 @@
     
     Cart* cart = nil;
     NSString* where = [NSString stringWithFormat:@"where Sku='%@'",sku];
-    NSArray* arr = [ProductList bg_find:@"Cart" where:where];
+    NSArray* arr = [Cart bg_find:@"Cart" where:where];
     if([arr count]>0){
-        cart = [arr objectAtIndex:0];
+        NSString* json = [[arr objectAtIndex:0] yy_modelToJSONObject];
+        cart = [Cart yy_modelWithJSON:json];
     }
     return cart;
 }
@@ -28,25 +29,19 @@
     
     NSInteger carId = 0;
     Cart* cart = [self getCartBySku:sku];
-    if(cart == nil){
+    if(cart != nil){
         NSString* update = [NSString stringWithFormat:@"set Quantity=%ld where sku='%@'",num,sku];
         [Cart bg_update:@"Cart" where:update];
         [result setStatus:1];
         [result setCartId:cart.CartID];
     }else{
-        ProductItem* productItem = [ProductDB getSkuBySku:sku];
+        ProductItem* productItem = [ProductDB getProductItemBySku:sku];
         if(productItem != nil){
-            cart = [Cart new];
-            cart.Sku = sku;
-            cart.Price = productItem.Price;
-            cart.Discount = productItem.Discount;
-            cart.ProductItemID = productItem.ItemID;
-            cart.ProductID = productItem.ProductID;
-            cart.Quantity = num;
-            [Cart bg_save];
+            NSString* sql = [NSString stringWithFormat:@"INSERT INTO Cart (Price,Discount,ProductItemID,Sku,ProductID,Quantity) VALUES (%f,%f,%ld,'%@',%ld,%ld)",productItem.Price,productItem.Discount,productItem.ItemID,sku,productItem.ProductID,num];
+            bg_executeSql(sql, nil, nil);
             carId =  [CommonDB selectMaxId:@"Cart" pk:@"CartID"];
             [result setStatus:1];
-            [result setCartId:cart.CartID];
+            [result setCartId:carId];
         }else{
             [result setMessage:@"没有找到SKU"];
         }
@@ -97,7 +92,10 @@
     if([arr count] > 0){
         float totalPrice = 0;
         float totalDiscountPrice = 0;
-        for(Cart* cart in arr){
+        for(Cart* item in arr){
+            NSString* cartJson = [item yy_modelToJSONString];
+            Cart* cart = [Cart yy_modelWithJSON:cartJson];
+            
             totalPrice += cart.Price;
             totalDiscountPrice += cart.Discount;
             
@@ -109,11 +107,14 @@
                 break;
             }
         }
-        NSString* sql =[NSString stringWithFormat:@"INSERT INTO SalesOrder (OrderPrice,DiscountPrice,PaymentPrice,Status,FirstName,LastName,PaymentType,EmpID,CreateTime,PayTime,Remark)VALUES (%ld,%ld,%ld,'1','%@','%@','现金','%@',datetime('now','localtime'),datetime('now','localtime'),'%@')",totalPrice,totalDiscountPrice,totalPrice-totalDiscountPrice,createOrderParam.firstName,createOrderParam.lastName,empId,createOrderParam.remark];
+        NSString* sql =[NSString stringWithFormat:@"INSERT INTO SalesOrder (OrderPrice,DiscountPrice,PaymentPrice,Status,FirstName,LastName,PaymentType,EmpID,CreateTime,PayTime,Remark)VALUES (%f,%f,%f,'1','%@','%@','现金','%@',datetime('now','localtime'),datetime('now','localtime'),'%@')",totalPrice,totalDiscountPrice,totalPrice-totalDiscountPrice,createOrderParam.firstName,createOrderParam.lastName,empId,createOrderParam.remark];
         bg_executeSql(sql, nil, nil);
         NSInteger orderId = [CommonDB selectMaxId:@"SalesOrder" pk:@"OrderID"];
-        for(Cart* cart in arr){
-            sql=[NSString stringWithFormat:@"INSERT INTO SalesOrderItem (UnitPrice,DiscountFee,OrderID,ProductID,Sku,SkuName,Barcode,Quantity) VALUES (%ld,%ld,%ld,%ld,'%@','%@','',%ld)",cart.Price,cart.Discount,orderId,cart.ProductID,cart.Sku,cart.Sku,cart.Quantity];
+        for(Cart* item in arr){
+            NSString* cartJson = [item yy_modelToJSONString];
+            Cart* cart = [Cart yy_modelWithJSON:cartJson];
+            
+            sql=[NSString stringWithFormat:@"INSERT INTO SalesOrderItem (UnitPrice,DiscountFee,OrderID,ProductID,Sku,SkuName,Barcode,Quantity) VALUES (%f,%f,%ld,%ld,'%@','%@','',%ld)",cart.Price,cart.Discount,orderId,cart.ProductID,cart.Sku,cart.Sku,cart.Quantity];
             bg_executeSql(sql, nil, nil);
              NSString* update = [NSString stringWithFormat:@"set Qty= Qty- %ld where FlightID='%@' and Sku='%@'",cart.Quantity,flightId,cart.Sku];
             [Inventory bg_update:@"Inventory" where:update];

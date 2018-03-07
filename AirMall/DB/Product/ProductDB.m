@@ -30,22 +30,23 @@
     return arr;
 }
 
-+(ProductItem*) getSkuBySku:(NSString*) sku{
++(ProductItem*) getProductItemBySku:(NSString*) sku{
     
     ProductItem* productItem = nil;
     NSString* where = [NSString stringWithFormat:@"where Sku='%@'",sku];
-    NSArray* arr = [ProductList bg_find:@"ProductItem" where:where];
+    NSArray* arr = [ProductItem bg_find:@"ProductItem" where:where];
     if([arr count]>0){
-        productItem = [arr objectAtIndex:0];
+        NSString* json = [[arr objectAtIndex:0] yy_modelToJSONObject];
+        productItem = [ProductItem yy_modelWithJSON:json];
     }
     return productItem;
 }
 
-+(NSArray*) getSkuListBySkus:(NSArray*) skuArr{
++(NSArray*) getProductItemListBySkus:(NSArray*) skuArr{
     
     NSString* skus = [skuArr componentsJoinedByString:@","];
     NSString* where = [NSString stringWithFormat:@"where Sku in (%@)",skus];
-    NSArray* arr = [ProductList bg_find:@"ProductItem" where:where];
+    NSArray* arr = [ProductItem bg_find:@"ProductItem" where:where];
     
     return arr;
 }
