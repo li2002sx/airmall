@@ -16,6 +16,13 @@
     <div><input type="button" id="selectOne" value="获取单条数据"></div>
     <div><input type="button" id="selectList" value="获取列表数据"></div>
     <div><input type="button" id="receive" value="收货确认"></div>
+    <div><input type="button" id="replenish" value="补货申请"></div>
+    <div><input type="button" id="inventory" value="盘点生成交接单"></div>
+    <div><input type="button" id="transfer" value="交接确认"></div>
+    <div><input type="button" id="addCart" value="加入购物车"></div>
+    <div><input type="button" id="updateNum" value="修改SKU数量"></div>
+    <div><input type="button" id="deleteCartSku" value="删除SKU"></div>
+    <div><input type="button" id="createOrder" value="创建订单"></div>
     <script type="text/javascript">
         window.onerror = function (err) {
             log('window.onerror: ' + err)
@@ -63,7 +70,101 @@
                              log('result with', result)
                            });
                            
-       })
+                           });
+       
+       $('#replenish').click(function(){
+           var skus  = [];
+           var sku = {
+               sku:'123456',
+               needCount:25
+           }
+           skus.push(sku);
+           var param ={
+             replenishList:skus
+                             };
+           appJsBridge.callHandler('replenish', param, function (result) {
+                log('result with', result)
+           });
+       });
+       
+       //盘点生成交接单
+       $('#inventory').click(function(){
+                             var skus  = [];
+                             var sku = {
+                             sku:'123456',
+                             handoverCount:25
+                             }
+                             skus.push(sku);
+                             var param ={
+                             inventoryList:skus
+                             };
+                             appJsBridge.callHandler('inventory', param, function (result) {
+                                                     log('result with', result)
+                                                     });
+                             });
+                             
+         //交接确认
+         $('#transfer').click(function(){
+                             var skus  = [];
+                             var sku = {
+                             sku:'123456',
+                             handoverCount:2,
+                             damagedCount:2,
+                             damagedReason:'故意',
+                             damagedReasonDesc:'刮花了',
+                             imageBase64:'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACoAAAAtCAYAAADYxvnjAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyFpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNi1jMTQyIDc5LjE2MDkyNCwgMjAxNy8wNy8xMy0wMTowNjozOSAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIChXaW5kb3dzKSIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDpGQzk3NDE5NjIwMzYxMUU4QkFDMTkyOENGNEUxMDA4MiIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDpGQzk3NDE5NzIwMzYxMUU4QkFDMTkyOENGNEUxMDA4MiI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOkZDOTc0MTk0MjAzNjExRThCQUMxOTI4Q0Y0RTEwMDgyIiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOkZDOTc0MTk1MjAzNjExRThCQUMxOTI4Q0Y0RTEwMDgyIi8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+Ew4m5QAAAg9JREFUeNrsmU0oRFEUx68xkZBMSIkSCcVCkXxsfWwkZWeF2LEiKdkoKWVBCgtLsrCwoyx8FDEoCyGRREJJQgnjf3LU9GLmzpt7MbqnfvVu3TfnN/fc+95974W53W5hM9pAL3BJ9H0DW6ABHNpJ5vQ6jgDFIBVEW/p5wIRXOxcMAYdkHupXCEZAheV3yr74UzdgE5xbRevBKEj4JtGdRTQnAElhOc87CsCYj/5zoBVcOngUp3xIUsSBJK/2OniyIbpiaWf66V8DlkCsk+dauESSJtDPx1SSWtADoiQlDzjXZ0TynPUXWaCdREskE5HUBljk9gJjd20MgwzJ/nV0QrJk5ygWmwdnwn44eAFlB3BOlpNLEEiSavHzEe0QIRJG1Ij+B9EXUAXCNEBXnUZVort87dQRr2ASXKkQpVtYisaqUrUSA9nmfRcxPKonGiQpfx5Pg6BFBW+OXWbVG9FfCNk5+sAbX4/i/OH83BShQvQR5INjTYNVBNb8VVem9PsaJQU/NdyomKM0mqWaJKnkXZYHR9ulpz6rZtUbUSMa/GKi90594FRDflrtnSBNhegAGNQ4WBdgVkXp0zVXNV5V6ZvFxzvLbQ2S9JawQ5Uo7b5bzao3okb0H4nehYDnLYkehYDoHonOhIDoNInS14mdPyxJX2HGSZQ+bJWDbvHxvfL+l8Xodn0NlkELqATP7wIMACkcUqdr6woxAAAAAElFTkSuQmCC'
+                             }
+                             skus.push(sku);
+                             var param ={
+                             transferList:skus
+                             }
+                             appJsBridge.callHandler('transfer', param, function (result) {
+                                                     log('result with', result)
+                                                     });
+                             
+                             });
+         //加入购物车
+         $('#addCart').click(function(){
+                             var param = {
+                             sku:'123456',
+                             quantity:1
+                             }
+                               appJsBridge.callHandler('addCart', param, function (result) {
+                                                       log('result with', result)
+                                                       });
+                               });
+                               
+        //修改购物车商品数量
+        $('#updateNum').click(function(){
+                           var param = {
+                           sku:'123456',
+                           updateType:1
+                           }
+                           appJsBridge.callHandler('updateNum', param, function (result) {
+                                                   log('result with', result)
+                                                   });
+                           });
+       //删除购物车商品
+       $('#deleteCartSku').click(function(){
+                             var param = {
+                             sku:'123456'
+                             }
+                             appJsBridge.callHandler('deleteCartSku', param, function (result) {
+                                                     log('result with', result)
+                                                     });
+                             });
+      //创建订单
+      $('#createOrder').click(function(){
+                               var param = {
+                               firstName:'李',
+                              lastName:'胜喜',
+                              mobile:'13810583852',
+                              remark:'12355555'
+                               }
+                               appJsBridge.callHandler('createOrder', param, function (result) {
+                                                       log('result with', result)
+                                                       });
+                               });
     
     // function setupWebViewJavascriptBridge(callback) {
     //     if (window.WebViewJavascriptBridge) { return callback(WebViewJavascriptBridge); }

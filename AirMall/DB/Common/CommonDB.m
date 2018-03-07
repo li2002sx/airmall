@@ -51,4 +51,17 @@
     return json;
 }
 
++(NSInteger) selectMaxId:(NSString*)table pk:(NSString*)pk{
+    
+    NSString* sql = [NSString stringWithFormat:@"select max(%@) as max from %@",pk,table];
+    
+    NSArray* arr = bg_executeSql(sql, nil, nil);
+    if([arr count] > 0){
+        NSInteger max = [[[arr objectAtIndex:0] valueForKey:@"max"] integerValue];
+        return max;
+    }else{
+        return 1;
+    }
+}
+
 @end

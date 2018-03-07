@@ -48,3 +48,41 @@
 
 @end
 
+@interface InventoryParam : NSObject
+
+@property(nonatomic)NSArray* inventoryList;
+
+@end
+
+@interface InventorySku : NSObject
+
+@property(nonatomic)NSString* sku;
+
+@property(nonatomic)NSInteger handoverCount;
+
+@end
+
+@interface TransferParam : NSObject
+
+@property(nonatomic)NSInteger handoverID;
+
+@property(nonatomic)NSArray* transferList;
+
+@end
+
+@interface TransferSku : NSObject
+
+@property(nonatomic)NSString* sku;
+
+@property(nonatomic)NSInteger handoverCount;
+
+@property(nonatomic)NSInteger damagedCount;
+
+@property(nonatomic)NSString* damagedReason;
+
+@property(nonatomic)NSString* damagedReasonDesc;
+
+@property(nonatomic)NSString* imageBase64;
+
+@end
+

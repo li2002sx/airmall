@@ -12,11 +12,16 @@
 #import "CommonResult.h"
 #import "ReceiptParam.h"
 #import "Inventory.h"
+#import "CommonDB.h"
 
 @interface ReceiptDB : NSObject
 
 +(NSString*) receive:(ReceiptParam*) receiptParam userDict:(NSDictionary*) userDict;
 
 +(NSString*) replenish:(ReplenishParam*) replenishParam userDict:(NSDictionary*) userDict;
+
++(NSString*) inventory:(InventoryParam*) inventoryParam userDict:(NSDictionary*) userDict;
+
++(NSString*) transfer:(TransferParam*) transferParam userDict:(NSDictionary*) userDict;
 
 @end

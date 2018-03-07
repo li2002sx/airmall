@@ -98,9 +98,59 @@
     
     //确认收货
     [_bridge registerHandler:@"receive" handler:^(id data, WVJBResponseCallback responseCallback) {
-//        NSString* dataJson = [data yy_modelToJSONObject];
         ReceiptParam* receiptParam = [ReceiptParam yy_modelWithJSON:data];
         NSString* json = [ReceiptDB receive:receiptParam userDict:_userDict];
+        responseCallback(json);
+    }];
+    
+    //补货申请
+    [_bridge registerHandler:@"replenish" handler:^(id data, WVJBResponseCallback responseCallback) {
+        ReplenishParam* replenishParam = [ReplenishParam yy_modelWithJSON:data];
+        NSString* json = [ReceiptDB replenish:replenishParam userDict:_userDict];
+        responseCallback(json);
+    }];
+    
+    //盘点生成交接单
+    [_bridge registerHandler:@"inventory" handler:^(id data, WVJBResponseCallback responseCallback) {
+        InventoryParam* inventoryParam = [InventoryParam yy_modelWithJSON:data];
+        NSString* json = [ReceiptDB inventory:inventoryParam userDict:_userDict];
+        responseCallback(json);
+    }];
+    
+    //交接确认
+    [_bridge registerHandler:@"transfer" handler:^(id data, WVJBResponseCallback responseCallback) {
+        TransferParam* transferParam = [TransferParam yy_modelWithJSON:data];
+        NSString* json = [ReceiptDB transfer:transferParam userDict:_userDict];
+        responseCallback(json);
+    }];
+    
+    //加入购物车
+    [_bridge registerHandler:@"addCart" handler:^(id data, WVJBResponseCallback responseCallback) {
+        NSString* sku = [data valueForKey:@"sku"];
+        NSInteger* quantity = [[data valueForKey:@"quantity"] integerValue];
+        NSString* json = [OrderDB addCart:sku num:quantity];
+        responseCallback(json);
+    }];
+    
+    //修改购物车商品数量
+    [_bridge registerHandler:@"updateNum" handler:^(id data, WVJBResponseCallback responseCallback) {
+        NSString* sku = [data valueForKey:@"sku"];
+        NSInteger* updateType = [[data valueForKey:@"updateType"] integerValue];
+        NSString* json = [OrderDB updateNum:sku updateType:updateType];
+        responseCallback(json);
+    }];
+    
+    //删除购物车商品
+    [_bridge registerHandler:@"deleteCartSku" handler:^(id data, WVJBResponseCallback responseCallback) {
+        NSString* sku = [data valueForKey:@"sku"];
+        NSString* json = [OrderDB deleteCartSku:sku];
+        responseCallback(json);
+    }];
+    
+    //创建订单
+    [_bridge registerHandler:@"createOrder" handler:^(id data, WVJBResponseCallback responseCallback) {
+        CreateOrderParam* createOrderParam = [CreateOrderParam yy_modelWithJSON:data];
+        NSString* json = [OrderDB createOrder:createOrderParam userDict:_userDict];
         responseCallback(json);
     }];
     
@@ -112,7 +162,7 @@
     [_bridge callHandler:@"testJavascriptHandler" data:@{ @"foo":@"before ready" }];
     
 //    [self renderButtons:_webView];
-    [self loadHtmlPage:_webView];
+    [self loadHtmlPage:@"Pages/Index"];
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
@@ -169,6 +219,10 @@
     if(tableView == _shrinkTableView){
         if(row == 0){
             [_popup showWithLayout:_layout];
+        }else if(row == 1){
+             [self loadHtmlPage:@"Pages/Index"];
+        }else{
+            [self loadHtmlPage:@"Index"];
         }
     }else if(tableView == _openTableView){
         if(row == 0){
@@ -222,12 +276,12 @@
     //    }];
 }
 
-- (void)loadHtmlPage:(WKWebView*)webView {
+- (void)loadHtmlPage:(NSString*)path {
     
-    NSString* htmlPath = [[NSBundle mainBundle] pathForResource:@"Html/Index" ofType:@"html"];
+    NSString* htmlPath = [[NSBundle mainBundle] pathForResource:[NSString stringWithFormat:@"Html/%@",path] ofType:@"html"];
     NSString* appHtml = [NSString stringWithContentsOfFile:htmlPath encoding:NSUTF8StringEncoding error:nil];
     NSURL *baseURL = [NSURL fileURLWithPath:htmlPath];
-    [webView loadHTMLString:appHtml baseURL:baseURL];
+    [_webView loadHTMLString:appHtml baseURL:baseURL];
     
 //    NSURL *filePath = [[NSBundle mainBundle] URLForResource:@"Html/index.html" withExtension:nil];
 //    NSURLRequest *request = [NSURLRequest requestWithURL:filePath];

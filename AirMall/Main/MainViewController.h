@@ -15,6 +15,7 @@
 #import "OpenMenuTableViewCell.h"
 #import "CommonDB.h"
 #import "ReceiptDB.h"
+#import "OrderDB.h"
 
 @interface MainViewController : BaseViewController<WKNavigationDelegate,UITableViewDataSource,UITableViewDelegate>
 

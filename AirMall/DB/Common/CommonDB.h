@@ -16,4 +16,6 @@
 
 +(NSString*) selectList:(NSString*)sql pageIndex:(NSInteger)pageIndex pageSize:(NSInteger)pageSize;
 
++(NSInteger) selectMaxId:(NSString*)table pk:(NSString*)pk;
+
 @end

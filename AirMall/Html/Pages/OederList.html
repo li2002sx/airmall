@@ -1,0 +1,218 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>换班交接管理</title>
+    <link href="../Component/Bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="../Content/Style.css" rel="stylesheet" />
+    <script src="../Scripts/jquery-1.10.2.min.js"></script>
+    <script src="../Component/Bootstrap/js/bootstrap.min.js"></script>
+    <style>
+        .content-header {
+            height: 50px;
+        }
+
+        .content-body {
+            height: calc(100% - 50px);
+            padding: 10px 0;
+        }
+
+        .lb-block {
+            float: left;
+            height: 40px;
+            line-height: 40px;
+        }
+
+            .lb-block:first-child {
+                margin-left: 20px;
+            }
+
+            .lb-block span {
+                font-size: 20px;
+                color: #FE5659;
+                font-weight: 600;
+            }
+
+        .order-list-wrapper {
+            padding: 20px 36px 0;
+            height: 100%;
+            overflow-y: auto;
+        }
+
+            .order-list-wrapper .order-list-item {
+                display: -webkit-box;
+                display: -ms-flexbox;
+                display: flex;
+                -webkit-box-align: center;
+                -ms-flex-align: center;
+                align-items: center;
+                border-bottom: 1px solid #e6e6e6;
+                padding-bottom: 6px;
+                margin-bottom: 10px;
+            }
+
+                .order-list-wrapper .order-list-item .img-wrapper {
+                    -webkit-box-flex: 100px;
+                    -ms-flex: 100px 0 0px;
+                    flex: 100px 0 0;
+                    display: -webkit-box;
+                    display: -ms-flexbox;
+                    display: flex;
+                    -webkit-box-pack: center;
+                    -ms-flex-pack: center;
+                    justify-content: center;
+                    -webkit-box-align: center;
+                    -ms-flex-align: center;
+                    align-items: center;
+                    overflow: hidden;
+                    height: 100px;
+                }
+
+                    .order-list-wrapper .order-list-item .img-wrapper img {
+                        max-width: 150%;
+                    }
+
+                .order-list-wrapper .order-list-item .order-detail {
+                    padding-left: 30px;
+                    position: relative;
+                    -webkit-box-flex: 1;
+                    -ms-flex: 1;
+                    flex: 1;
+                }
+
+                    .order-list-wrapper .order-list-item .order-detail p {
+                        font-size: 14px;
+                        color: #999;
+                        margin-bottom: 4px;
+                    }
+
+                    .order-list-wrapper .order-list-item .order-detail .irr-sen {
+                        display: -webkit-box;
+                        display: -ms-flexbox;
+                        display: flex;
+                        -webkit-box-align: center;
+                        -ms-flex-align: center;
+                        align-items: center;
+                    }
+
+                    .order-list-wrapper .order-list-item .order-detail .color-r {
+                        color: #ff5356;
+                        font-size: 24px;
+                    }
+
+                    .order-list-wrapper .order-list-item .order-detail .order-num {
+                        margin-bottom: 14px;
+                        font-size: 18px;
+                        color: #666;
+                    }
+
+                    .order-list-wrapper .order-list-item .order-detail .order-state {
+                        position: absolute;
+                        top: 0;
+                        right: 0;
+                        color: #c7c7c7;
+                    }
+    </style>
+</head>
+<body>
+    <div class="content">
+        <div class="content-header">
+            <div class="content-title">
+                <span></span><h3>订单列表</h3>
+            </div>
+            <div class="serach-group">
+                <input class="search-control" placeholder="请输入关键字" />
+                <div class="search-icon">
+                    <span class="iconfont icon-search"></span>
+                </div>
+            </div>
+            <div class="lb-block">
+                <label>销售总金额:</label>
+                <span>￥897,512</span>
+            </div>
+            <div class="lb-block">
+                <label>已售总额:</label>
+                <span>￥9,512</span>
+            </div>
+        </div>
+        <div class="content-body">
+            <div class="order-list-wrapper">
+                <div class="order-list-item">
+                    <div class="img-wrapper">
+                        <img src="/Images/orderlist-1.png">
+                    </div>
+                    <div class="order-detail">
+                        <p class="order-num"><span class="weight">订单编号：</span><span>109687455662</span></p>
+                        <p>宝石蝶品牌重磅16姆米桑蚕丝围巾女冬季厚款披肩暖搭真丝丝巾女大方巾/夜莺与玫瑰 藏青色</p>
+                        <p><span>数量：</span><span>2</span></p>
+                        <p class="irr-sen"><span>实付：</span><span class="color-r">￥899</span></p>
+                        <span class="order-state">已完成</span>
+                    </div>
+                </div>
+                <div class="order-list-item">
+                    <div class="img-wrapper">
+                        <img src="/Images/orderlist-1.png">
+                    </div>
+                    <div class="order-detail">
+                        <p class="order-num"><span class="weight">订单编号：</span><span>109687455662</span></p>
+                        <p>宝石蝶品牌重磅16姆米桑蚕丝围巾女冬季厚款披肩暖搭真丝丝巾女大方巾/夜莺与玫瑰 藏青色</p>
+                        <p><span>数量：</span><span>2</span></p>
+                        <p class="irr-sen"><span>实付：</span><span class="color-r">￥899</span></p>
+                        <span class="order-state">已完成</span>
+                    </div>
+                </div>
+                <div class="order-list-item">
+                    <div class="img-wrapper">
+                        <img src="/Images/orderlist-1.png">
+                    </div>
+                    <div class="order-detail">
+                        <p class="order-num"><span class="weight">订单编号：</span><span>109687455662</span></p>
+                        <p>宝石蝶品牌重磅16姆米桑蚕丝围巾女冬季厚款披肩暖搭真丝丝巾女大方巾/夜莺与玫瑰 藏青色</p>
+                        <p><span>数量：</span><span>2</span></p>
+                        <p class="irr-sen"><span>实付：</span><span class="color-r">￥899</span></p>
+                        <span class="order-state">已完成</span>
+                    </div>
+                </div>
+                <div class="order-list-item">
+                    <div class="img-wrapper">
+                        <img src="/Images/orderlist-1.png">
+                    </div>
+                    <div class="order-detail">
+                        <p class="order-num"><span class="weight">订单编号：</span><span>109687455662</span></p>
+                        <p>宝石蝶品牌重磅16姆米桑蚕丝围巾女冬季厚款披肩暖搭真丝丝巾女大方巾/夜莺与玫瑰 藏青色</p>
+                        <p><span>数量：</span><span>2</span></p>
+                        <p class="irr-sen"><span>实付：</span><span class="color-r">￥899</span></p>
+                        <span class="order-state">已完成</span>
+                    </div>
+                </div>
+                <div class="order-list-item">
+                    <div class="img-wrapper">
+                        <img src="/Images/orderlist-1.png">
+                    </div>
+                    <div class="order-detail">
+                        <p class="order-num"><span class="weight">订单编号：</span><span>109687455662</span></p>
+                        <p>宝石蝶品牌重磅16姆米桑蚕丝围巾女冬季厚款披肩暖搭真丝丝巾女大方巾/夜莺与玫瑰 藏青色</p>
+                        <p><span>数量：</span><span>2</span></p>
+                        <p class="irr-sen"><span>实付：</span><span class="color-r">￥899</span></p>
+                        <span class="order-state">已完成</span>
+                    </div>
+                </div>
+                <div class="order-list-item">
+                    <div class="img-wrapper">
+                        <img src="/Images/orderlist-1.png">
+                    </div>
+                    <div class="order-detail">
+                        <p class="order-num"><span class="weight">订单编号：</span><span>109687455662</span></p>
+                        <p>宝石蝶品牌重磅16姆米桑蚕丝围巾女冬季厚款披肩暖搭真丝丝巾女大方巾/夜莺与玫瑰 藏青色</p>
+                        <p><span>数量：</span><span>2</span></p>
+                        <p class="irr-sen"><span>实付：</span><span class="color-r">￥899</span></p>
+                        <span class="order-state">已完成</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

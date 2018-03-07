@@ -12,6 +12,32 @@
 
 @end
 
-@implementation ReceiptSku : NSObject
+@implementation ReceiptSku
+
+@end
+
+@implementation ReplenishParam
+
+@end
+
+@implementation ReplenishSku
+
+@end
+
+
+
+@implementation InventoryParam
+
+@end
+
+@implementation InventorySku
+
+@end
+
+@implementation TransferParam
+
+@end
+
+@implementation TransferSku
 
 @end

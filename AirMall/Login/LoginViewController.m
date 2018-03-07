@@ -57,6 +57,9 @@
 //    staff.LastLoginTime =  [NSDate date];
 //    [staff bg_save];
     
+//    Cart* cart = [Cart new];
+//    [cart bg_save];
+    
     NSString *flightNo = _filedFlightNo.text;
     if ([flightNo length] <= 3) {
         [CommonUtil showOnlyTextDialog:self.view tips:@"航班号不能为空"];

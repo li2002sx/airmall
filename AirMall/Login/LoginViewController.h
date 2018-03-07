@@ -25,6 +25,7 @@
 #import "HandoverItem.h"
 #import "LogList.h"
 #import "SyncList.h"
+#import "Cart.h"
 
 @interface LoginViewController : BaseViewController<PGDatePickerDelegate>
 

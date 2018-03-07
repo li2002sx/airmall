@@ -78,6 +78,9 @@
 		AA4313FB204E8BFF00E28C2B /* CommonResult.m in Sources */ = {isa = PBXBuildFile; fileRef = AA4313FA204E8BFF00E28C2B /* CommonResult.m */; };
 		AA431402204E9B7C00E28C2B /* ReceiptParam.m in Sources */ = {isa = PBXBuildFile; fileRef = AA431401204E9B7C00E28C2B /* ReceiptParam.m */; };
 		AA431405204EA41400E28C2B /* ReceiptDB.m in Sources */ = {isa = PBXBuildFile; fileRef = AA431404204EA41400E28C2B /* ReceiptDB.m */; };
+		AA431408204FED3400E28C2B /* Cart.m in Sources */ = {isa = PBXBuildFile; fileRef = AA431407204FED3400E28C2B /* Cart.m */; };
+		AA43140E204FEEB500E28C2B /* OrderDB.m in Sources */ = {isa = PBXBuildFile; fileRef = AA43140D204FEEB500E28C2B /* OrderDB.m */; };
+		AA431411204FF10100E28C2B /* ProductDB.m in Sources */ = {isa = PBXBuildFile; fileRef = AA431410204FF10100E28C2B /* ProductDB.m */; };
 		AA48B913204514070075C94D /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = AA48B912204514070075C94D /* AppDelegate.m */; };
 		AA48B91B204514070075C94D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AA48B91A204514070075C94D /* Assets.xcassets */; };
 		AA48B921204514070075C94D /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = AA48B920204514070075C94D /* main.m */; };
@@ -192,6 +195,12 @@
 		AA431401204E9B7C00E28C2B /* ReceiptParam.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ReceiptParam.m; sourceTree = "<group>"; };
 		AA431403204EA41400E28C2B /* ReceiptDB.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ReceiptDB.h; sourceTree = "<group>"; };
 		AA431404204EA41400E28C2B /* ReceiptDB.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ReceiptDB.m; sourceTree = "<group>"; };
+		AA431406204FED3400E28C2B /* Cart.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Cart.h; sourceTree = "<group>"; };
+		AA431407204FED3400E28C2B /* Cart.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Cart.m; sourceTree = "<group>"; };
+		AA43140C204FEEB500E28C2B /* OrderDB.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OrderDB.h; sourceTree = "<group>"; };
+		AA43140D204FEEB500E28C2B /* OrderDB.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OrderDB.m; sourceTree = "<group>"; };
+		AA43140F204FF10100E28C2B /* ProductDB.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ProductDB.h; sourceTree = "<group>"; };
+		AA431410204FF10100E28C2B /* ProductDB.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ProductDB.m; sourceTree = "<group>"; };
 		AA48B90E204514070075C94D /* AirMall.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AirMall.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AA48B911204514070075C94D /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		AA48B912204514070075C94D /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -358,6 +367,8 @@
 				AA4313E0204D584200E28C2B /* SalesOrder.m */,
 				AA4313E2204D584F00E28C2B /* SalesOrderItem.h */,
 				AA4313E3204D584F00E28C2B /* SalesOrderItem.m */,
+				AA431406204FED3400E28C2B /* Cart.h */,
+				AA431407204FED3400E28C2B /* Cart.m */,
 			);
 			path = Order;
 			sourceTree = "<group>";
@@ -403,6 +414,8 @@
 		AA4313BE204D569F00E28C2B /* Product */ = {
 			isa = PBXGroup;
 			children = (
+				AA43140F204FF10100E28C2B /* ProductDB.h */,
+				AA431410204FF10100E28C2B /* ProductDB.m */,
 			);
 			path = Product;
 			sourceTree = "<group>";
@@ -410,6 +423,8 @@
 		AA4313BF204D569F00E28C2B /* Order */ = {
 			isa = PBXGroup;
 			children = (
+				AA43140C204FEEB500E28C2B /* OrderDB.h */,
+				AA43140D204FEEB500E28C2B /* OrderDB.m */,
 			);
 			path = Order;
 			sourceTree = "<group>";
@@ -814,7 +829,9 @@
 				AA4313DE204D582D00E28C2B /* HandoverItem.m in Sources */,
 				AA4313C4204D56E700E28C2B /* FlightInfo.m in Sources */,
 				AA4313EA204D587500E28C2B /* LogList.m in Sources */,
+				AA431411204FF10100E28C2B /* ProductDB.m in Sources */,
 				AA4F0D992048F49900081B94 /* Staff.m in Sources */,
+				AA43140E204FEEB500E28C2B /* OrderDB.m in Sources */,
 				AA43139C204D226D00E28C2B /* KLCPopup.m in Sources */,
 				AA4F0D72204566A100081B94 /* LoginViewController.m in Sources */,
 				AA4313DB204D582000E28C2B /* HandoverMaster.m in Sources */,
@@ -822,6 +839,7 @@
 				AA4313E4204D584F00E28C2B /* SalesOrderItem.m in Sources */,
 				AA431405204EA41400E28C2B /* ReceiptDB.m in Sources */,
 				AA4F0DA1204940D200081B94 /* StaffDB.m in Sources */,
+				AA431408204FED3400E28C2B /* Cart.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
