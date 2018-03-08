@@ -16,4 +16,5 @@ target 'AirMall' do
   pod 'LBXScan/LBXZBar','~> 2.3'
   pod 'LBXScan/UI','~> 2.3'
   pod 'PGDatePicker', '>= 2.0.6'
+  pod 'HMQRCodeScanner'
 end

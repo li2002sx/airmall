@@ -16,6 +16,7 @@
 #import "CommonDB.h"
 #import "ReceiptDB.h"
 #import "OrderDB.h"
+#import "HMScannerController.h"
 
 @interface MainViewController : BaseViewController<WKNavigationDelegate,UITableViewDataSource,UITableViewDelegate>
 

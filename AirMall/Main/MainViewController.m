@@ -19,14 +19,20 @@
 
 @property NSDictionary *tableViewDict;
 
+@property UIView* topLayerView;
+
+@property UIView* leftLayerView;
+
 @end
+
+#define _BaseUrl "http://180.169.45.158:5678/pages/"
 
 @implementation MainViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-     _hud = [[MBProgressHUD alloc] initWithView:self.view];
+     _hud = [MBProgressHUD showHUDAddedTo:self.navigationController.view animated:YES];
     
     id userInfo = [_userInfo objectForKey:user_key];
     _thisFlightNoLabel.text = [NSString stringWithFormat:@"%@%@",[userInfo objectForKey:@"Carrier"],[userInfo objectForKey:@"FlightNo"]];
@@ -43,13 +49,14 @@
     
     _tableViewDict = [[NSDictionary alloc] initWithObjectsAndKeys:
                       @[@"icon-menu",@"LOGO"],@"0",
-                      @[@"icon-hangban-select",@"航班信息"],@"1",
-                      @[@"icon-huanban",@"换班交接"],@"2",
-                      @[@"icon-goods",@"商品列表"],@"3",
-                      @[@"icon-cart",@"订单列表"],@"4",
-                      @[@"icon-store",@"库存管理"],@"5",
-                      @[@"icon-log",@"日志查询"],@"6",
+                      @[@"icon-hangban-select",@"航班信息",@"Index.html"],@"1",
+                      @[@"icon-huanban",@"换班交接",@"AssociateManage.html"],@"2",
+                      @[@"icon-goods",@"商品列表",@"ProductList.html"],@"3",
+                      @[@"icon-cart",@"订单列表",@"OederList.html"],@"4",
+                      @[@"icon-store",@"库存管理",@"query.html"],@"5",
+                      @[@"icon-log",@"日志查询",@"Log.html"],@"6",
                       @[@"icon-logout",@"账号退出"],@"7",
+                      @[@"icon-log",@"DEMO"],@"8",
                       nil];
     
     _shrinkTableView.dataSource = self;
@@ -68,6 +75,8 @@
     _shrinkView.layer.shadowOffset = CGSizeMake(3,3);//shadowOffset阴影偏移,x向右偏移4，y向下偏移4，默认(0, -3),这个跟shadowRadius配合使用
     _shrinkView.layer.shadowOpacity = 0.1;//阴影透明度，默认0
     _shrinkView.layer.shadowRadius = 2;//阴影半径，默认3
+    
+    [self initLayer];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -79,6 +88,30 @@
     [WebViewJavascriptBridge enableLogging];
     _bridge = [WebViewJavascriptBridge bridgeForWebView:_webView];
     [_bridge setWebViewDelegate:self];
+    
+    //启动拍照
+    [_bridge registerHandler:@"scan" handler:^(id data, WVJBResponseCallback responseCallback) {
+        
+        HMScannerController *scanner = [HMScannerController scannerWithCardName:nil avatar:nil completion:^(NSString *stringValue) {
+            NSLog(@"%@",stringValue);
+        }];
+        
+        [scanner setTitleColor:[UIColor whiteColor] tintColor:[UIColor greenColor]];
+        [self showDetailViewController:scanner sender:nil];
+//        responseCallback(json);
+    }];
+    
+    //显示遮罩
+    [_bridge registerHandler:@"showCover" handler:^(id data, WVJBResponseCallback responseCallback) {
+        [_topLayerView setHidden:NO];
+        [_leftLayerView setHidden:NO];
+    }];
+    
+    //隐藏遮罩
+    [_bridge registerHandler:@"hideCover" handler:^(id data, WVJBResponseCallback responseCallback) {
+        [_topLayerView setHidden:YES];
+        [_leftLayerView setHidden:YES];
+    }];
     
     //获取单条的查询结果
     [_bridge registerHandler:@"selectOne" handler:^(id data, WVJBResponseCallback responseCallback) {
@@ -127,7 +160,7 @@
     //加入购物车
     [_bridge registerHandler:@"addCart" handler:^(id data, WVJBResponseCallback responseCallback) {
         NSString* sku = [data valueForKey:@"sku"];
-        NSInteger* quantity = [[data valueForKey:@"quantity"] integerValue];
+        NSInteger quantity = [[data valueForKey:@"quantity"] integerValue];
         NSString* json = [OrderDB addCart:sku num:quantity];
         responseCallback(json);
     }];
@@ -135,7 +168,7 @@
     //修改购物车商品数量
     [_bridge registerHandler:@"updateNum" handler:^(id data, WVJBResponseCallback responseCallback) {
         NSString* sku = [data valueForKey:@"sku"];
-        NSInteger* updateType = [[data valueForKey:@"updateType"] integerValue];
+        NSInteger updateType = [[data valueForKey:@"updateType"] integerValue];
         NSString* json = [OrderDB updateNum:sku updateType:updateType];
         responseCallback(json);
     }];
@@ -162,7 +195,8 @@
     [_bridge callHandler:@"testJavascriptHandler" data:@{ @"foo":@"before ready" }];
     
 //    [self renderButtons:_webView];
-    [self loadHtmlPage:@"Pages/Index"];
+//    [self loadHtmlPage:@"Pages/Index"];
+    [self loadHtmlUrl:@"index.html"];
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
@@ -216,11 +250,17 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     NSInteger row = [indexPath row];
+    if(row == 7){
+        LoginViewController *loginView= [[LoginViewController alloc] initWithNibName:@"LoginViewController" bundle:nil];
+        [self.navigationController popViewControllerAnimated:YES];
+    }
     if(tableView == _shrinkTableView){
         if(row == 0){
             [_popup showWithLayout:_layout];
-        }else if(row == 1){
-             [self loadHtmlPage:@"Pages/Index"];
+        }else if(row < 7){
+            NSArray *arr = [_tableViewDict valueForKey:[NSString stringWithFormat:@"%ld",row]];
+            [self loadHtmlUrl:[arr objectAtIndex:2]];
+//             [self loadHtmlPage:@"Pages/Index"];
         }else{
             [self loadHtmlPage:@"Index"];
         }
@@ -229,38 +269,16 @@
             [_popup dismiss:YES];
         }
     }
-    if(row == 7){
-        LoginViewController *loginView= [[LoginViewController alloc] initWithNibName:@"LoginViewController" bundle:nil];
-        [self.navigationController popViewControllerAnimated:YES];
-    }
 }
 
 - (void)webView:(WKWebView *)webView didStartProvisionalNavigation:(WKNavigation *)navigation {
-    [CommonUtil showHud:@"正在加载" andView:webView andHud:_hud];
+    [CommonUtil showLoading:@"正在加载" andHud:_hud];
     NSLog(@"webViewDidStartLoad");
 }
 
 - (void)webView:(WKWebView *)webView didFinishNavigation:(WKNavigation *)navigation {
     [_hud hideAnimated:YES];
     NSLog(@"webViewDidFinishLoad");
-}
-
-- (void)renderButtons:(WKWebView*)webView {
-    UIFont* font = [UIFont fontWithName:@"HelveticaNeue" size:12.0];
-    
-    UIButton *callbackButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    [callbackButton setTitle:@"Call handler" forState:UIControlStateNormal];
-    [callbackButton addTarget:self action:@selector(callHandler:) forControlEvents:UIControlEventTouchUpInside];
-    [self.view insertSubview:callbackButton aboveSubview:webView];
-    callbackButton.frame = CGRectMake(10, 400, 100, 35);
-    callbackButton.titleLabel.font = font;
-    
-    UIButton* reloadButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    [reloadButton setTitle:@"Reload webview" forState:UIControlStateNormal];
-    [reloadButton addTarget:webView action:@selector(reload) forControlEvents:UIControlEventTouchUpInside];
-    [self.view insertSubview:reloadButton aboveSubview:webView];
-    reloadButton.frame = CGRectMake(110, 400, 100, 35);
-    reloadButton.titleLabel.font = font;
 }
 
 - (void)callHandler:(id)sender {
@@ -288,6 +306,27 @@
 //    [webView loadRequest:request];
 }
 
+- (void)loadHtmlUrl:(NSString*)page {
+
+    NSString* url = [NSString stringWithFormat:@"%s%@",_BaseUrl,page];
+    [_webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:url]]];
+}
+
+- (void)initLayer{
+    _topLayerView = [UIView new];
+    _topLayerView.frame = CGRectMake(0,0,_ScreenWidth,70);
+    [_topLayerView setBackgroundColor:[UIColor colorWithRed:0.0 green:0.0 blue:0.0 alpha:0.5]];
+    [_topLayerView setHidden:YES];
+    [self.view addSubview:_topLayerView];
+    
+    
+    _leftLayerView = [UIView new];
+    _leftLayerView.frame = CGRectMake(0,70,50,_ScreenHeight);
+    [_leftLayerView setBackgroundColor:[UIColor colorWithRed:0.0 green:0.0 blue:0.0 alpha:0.5]];
+    [_leftLayerView setHidden:YES];
+    [self.view addSubview:_leftLayerView];
+}
+
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
@@ -302,20 +341,6 @@
     // Pass the selected object to the new view controller.
 }
 */
-
-- (IBAction)logoutPressed:(id)sender {
-    
-
-}
-- (IBAction)btnMenuPressed:(id)sender {
-    
-    [_popup showWithLayout:_layout duration:2.0];
-//    if([_menuView isHidden]){
-//        [popup show];
-//    }else{
-//        [popup dismiss:YES];
-//    }
-}
 
 - (IBAction)btnFrashPressed:(id)sender {
 //    [_popup dismiss:YES];

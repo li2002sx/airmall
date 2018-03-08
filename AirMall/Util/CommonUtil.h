@@ -10,13 +10,17 @@
 #import "MBProgressHUD.h"
 #import "YYModel.h"
 
+#define _ScreenWidth [UIScreen mainScreen].bounds.size.width
+#define _ScreenHeight [UIScreen mainScreen].bounds.size.height
+
 #define user_key @"USERKEY"
+
 
 @interface CommonUtil : NSObject
 
-+ (void)showOnlyTextDialog:(UIView *)view tips:(NSString *)tips;
++ (void)showOnlyText:(UIView *)view tips:(NSString *)tips;
 
-+ (void)showHud:(NSString *)text andView:(UIView *)view andHud:(MBProgressHUD *)hud;
++ (void)showLoading:(NSString *)text andHud:(MBProgressHUD *)hud;
 
 + (NSDate *) convertDateFromString:(NSString *)dateString;
 

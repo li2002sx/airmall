@@ -62,25 +62,25 @@
     
     NSString *flightNo = _filedFlightNo.text;
     if ([flightNo length] <= 3) {
-        [CommonUtil showOnlyTextDialog:self.view tips:@"航班号不能为空"];
+        [CommonUtil showOnlyText:self.view tips:@"航班号不能为空"];
         return;
     }
     
     NSString *flightDate = _fieldDate.text;
     if ([flightDate length] <= 3) {
-        [CommonUtil showOnlyTextDialog:self.view tips:@"航班日期不能为空"];
+        [CommonUtil showOnlyText:self.view tips:@"航班日期不能为空"];
         return;
     }
     
     NSString *empNo = _fieldName.text;
     if ([empNo length] <= 1) {
-        [CommonUtil showOnlyTextDialog:self.view tips:@"员工号不能为空"];
+        [CommonUtil showOnlyText:self.view tips:@"员工号不能为空"];
         return;
     }
 
     NSString *password = _fieldPass.text;
     if ([password length] < 1) {
-        [CommonUtil showOnlyTextDialog:self.view tips:@"密码不能为空"];
+        [CommonUtil showOnlyText:self.view tips:@"密码不能为空"];
         return;
     }
     
@@ -98,8 +98,7 @@
         
 //      NSLog(@"%@", [staff yy_modelToJSONObject]);
     }else{
-        _hud = [[MBProgressHUD alloc] initWithView:self.view];
-        [CommonUtil showOnlyTextDialog:self.view tips:@"没有找到对应的信息，请检查输入！"];
+        [CommonUtil showOnlyText:self.navigationController.view tips:@"没有找到对应的信息，请检查输入！"];
     }
 }
 

@@ -13,6 +13,9 @@
 	<div id='buttons'></div>
 	<div id='log'></div>
     <div><a href="Cart.html">购物车</a></div>
+    <div><input type="button" id="scan" value="启动拍照"></div>
+    <div><input type="button" id="showCover" value="显示遮罩"></div>
+    <div><input type="button" id="hideCover" value="隐藏遮罩"></div>
     <div><input type="button" id="selectOne" value="获取单条数据"></div>
     <div><input type="button" id="selectList" value="获取列表数据"></div>
     <div><input type="button" id="receive" value="收货确认"></div>
@@ -28,6 +31,31 @@
             log('window.onerror: ' + err)
         }
     
+        //启动扫描
+        $('#scan').click(function(){
+             appJsBridge.callHandler('scan', null, function (result) {
+                                     log('result with', result)
+                                     })
+        })
+        
+        //获取扫描信息
+        appJsBridge.registerHandler('getScanResult', function (data, callback) {
+                                    log('ObjC called testJavascriptHandler with', data)
+                                    callback("1234567")
+                                    })
+    
+        //显示遮罩
+        $('#showCover').click(function(){
+                              appJsBridge.callHandler('showCover', null, function (result) {
+                                                      log('result with', result)
+                                                      })
+                              })
+        //隐藏遮罩
+        $('#hideCover').click(function(){
+                              appJsBridge.callHandler('hideCover', null, function (result) {
+                                                      log('result with', result)
+                                                      })
+                              })
         //获取单条数据
         $('#selectOne').click(function(){
           var sql = 'select * from Staff order by 1 desc limit 1';

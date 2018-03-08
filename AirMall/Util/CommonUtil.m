@@ -10,25 +10,26 @@
 
 @implementation CommonUtil
 
-+ (void)showOnlyTextDialog:(UIView *)view tips:(NSString *)tips{
-    MBProgressHUD *hud = [[MBProgressHUD alloc] initWithView:view];
-    [view addSubview:hud];
-    hud.labelText = tips;
-    hud.mode = MBProgressHUDModeText;
++ (void)showOnlyText:(UIView *)view tips:(NSString *)tips{
     
-    [hud showAnimated:YES whileExecutingBlock:^{
-        sleep(2);
-    } completionBlock:^{
-        [hud removeFromSuperview];
-    }];
+    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:view animated:YES];
+    
+    // Set the text mode to show only text.
+    hud.mode = MBProgressHUDModeText;
+    hud.label.text = tips;
+//    hud.backgroundView.style = MBProgressHUDBackgroundStyleSolidColor;
+//    hud.backgroundView.color = [UIColor colorWithWhite:0.f alpha:0.5f];
+    // Move to bottm center.
+//    hud.offset = CGPointMake(0.f, MBProgressMaxOffset);
+    [hud hideAnimated:YES afterDelay:2.f];
 }
 
-+ (void)showHud:(NSString *)text andView:(UIView *)view andHud:(MBProgressHUD *)hud{
-    [view addSubview:hud];
-    hud.labelText = text;//显示提示
-    hud.dimBackground = NO;//使背景成黑灰色，让MBProgressHUD成高亮显示
-    hud.square = YES;//设置显示框的高度和宽度一样
-    [hud show:YES];
++ (void)showLoading:(NSString *)text andHud:(MBProgressHUD *)hud{
+    
+    hud.label.text = NSLocalizedString(text, @"");
+//    // Change the background view style and color.
+    hud.backgroundView.style = MBProgressHUDBackgroundStyleSolidColor;
+    hud.backgroundView.color = [UIColor colorWithWhite:0.f alpha:0.5f];
 }
 
 + (NSDate *) convertDateFromString:(NSString *)dateString{
