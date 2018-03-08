@@ -95,6 +95,7 @@
 		AA4F0D932047FA9A00081B94 /* Html in Resources */ = {isa = PBXBuildFile; fileRef = AA4F0D922047FA9900081B94 /* Html */; };
 		AA4F0D992048F49900081B94 /* Staff.m in Sources */ = {isa = PBXBuildFile; fileRef = AA4F0D982048F49900081B94 /* Staff.m */; };
 		AA4F0DA1204940D200081B94 /* StaffDB.m in Sources */ = {isa = PBXBuildFile; fileRef = AA4F0DA0204940D200081B94 /* StaffDB.m */; };
+		B02A22DD20518CF400C93BC1 /* LogDB.m in Sources */ = {isa = PBXBuildFile; fileRef = B02A22DC20518CF400C93BC1 /* LogDB.m */; };
 		CC6F66183AADDFC01D6E776F /* Pods_AirMall.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CDDFC860718B02AC7FA69D90 /* Pods_AirMall.framework */; };
 /* End PBXBuildFile section */
 
@@ -226,6 +227,8 @@
 		AA4F0D9F204940D200081B94 /* StaffDB.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = StaffDB.h; sourceTree = "<group>"; };
 		AA4F0DA0204940D200081B94 /* StaffDB.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = StaffDB.m; sourceTree = "<group>"; };
 		B02A22D2204EF35200C93BC1 /* AriMall.db */ = {isa = PBXFileReference; lastKnownFileType = file; path = AriMall.db; sourceTree = "<group>"; };
+		B02A22DB20518CF400C93BC1 /* LogDB.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LogDB.h; sourceTree = "<group>"; };
+		B02A22DC20518CF400C93BC1 /* LogDB.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LogDB.m; sourceTree = "<group>"; };
 		CDDFC860718B02AC7FA69D90 /* Pods_AirMall.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_AirMall.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		F2E2984E4E62AA9E76A8826A /* Pods-AirMall.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AirMall.release.xcconfig"; path = "Pods/Target Support Files/Pods-AirMall/Pods-AirMall.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -429,13 +432,6 @@
 			path = Order;
 			sourceTree = "<group>";
 		};
-		AA4313C0204D56A000E28C2B /* Log */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Log;
-			sourceTree = "<group>";
-		};
 		AA4313C1204D56A800E28C2B /* Flight */ = {
 			isa = PBXGroup;
 			children = (
@@ -581,10 +577,10 @@
 		AA4F0D9D2049405100081B94 /* DB */ = {
 			isa = PBXGroup;
 			children = (
+				B02A22DA20518CE400C93BC1 /* Log */,
 				B02A22D2204EF35200C93BC1 /* AriMall.db */,
 				AA4313F4204E89F100E28C2B /* Common */,
 				AA4313C1204D56A800E28C2B /* Flight */,
-				AA4313C0204D56A000E28C2B /* Log */,
 				AA4313BD204D569F00E28C2B /* Damage */,
 				AA4313BF204D569F00E28C2B /* Order */,
 				AA4313BC204D569F00E28C2B /* Store */,
@@ -600,6 +596,15 @@
 				AA43131D204A6B6900E28C2B /* Login */,
 			);
 			path = Images;
+			sourceTree = "<group>";
+		};
+		B02A22DA20518CE400C93BC1 /* Log */ = {
+			isa = PBXGroup;
+			children = (
+				B02A22DB20518CF400C93BC1 /* LogDB.h */,
+				B02A22DC20518CF400C93BC1 /* LogDB.m */,
+			);
+			path = Log;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -838,6 +843,7 @@
 				AA4F0D72204566A100081B94 /* LoginViewController.m in Sources */,
 				AA4313DB204D582000E28C2B /* HandoverMaster.m in Sources */,
 				AA4313E1204D584200E28C2B /* SalesOrder.m in Sources */,
+				B02A22DD20518CF400C93BC1 /* LogDB.m in Sources */,
 				AA4313E4204D584F00E28C2B /* SalesOrderItem.m in Sources */,
 				AA431405204EA41400E28C2B /* ReceiptDB.m in Sources */,
 				AA4F0DA1204940D200081B94 /* StaffDB.m in Sources */,

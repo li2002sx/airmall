@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "YYModel.h"
 #import "Staff.h"
+#import "LogDB.h"
 
 #define tb_staff @"staff"
 

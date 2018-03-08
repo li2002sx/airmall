@@ -13,6 +13,7 @@
 #import "ReceiptParam.h"
 #import "Inventory.h"
 #import "CommonDB.h"
+#import "LogDB.h"
 
 @interface ReceiptDB : NSObject
 

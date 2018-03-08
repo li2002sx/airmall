@@ -14,6 +14,7 @@
 #import "Cart.h"
 #import "CommonDB.h"
 #import "Inventory.h"
+#import "LogDB.h"
 
 @interface OrderDB : NSObject
 
