@@ -17,15 +17,13 @@
 @property KLCPopupLayout layout;
 @property KLCPopup* popup;
 
-@property NSDictionary *tableViewDict;
+@property NSMutableArray *tableViewArr;
 
 @property UIView* topLayerView;
 
 @property UIView* leftLayerView;
 
 @end
-
-#define _BaseUrl "http://180.169.45.158:5678/pages/"
 
 @implementation MainViewController
 
@@ -34,36 +32,27 @@
     
      _hud = [MBProgressHUD showHUDAddedTo:self.navigationController.view animated:YES];
     
-    id userInfo = [_userInfo objectForKey:user_key];
-    _thisFlightNoLabel.text = [NSString stringWithFormat:@"%@%@",[userInfo objectForKey:@"Carrier"],[userInfo objectForKey:@"FlightNo"]];
-    _lineCHNLabel.text = [userInfo objectForKey:@"LineCHN"];
-    NSDate* deptTime = [CommonUtil convertDateFromString:[userInfo objectForKey:@"DeptTime"]];
-    NSDate* arrTime = [CommonUtil convertDateFromString:[userInfo objectForKey:@"ArrTime"]];
+    _userDict = [_userInfo objectForKey:_UserKey];
+    _thisFlightNoLabel.text = [NSString stringWithFormat:@"%@%@",[_userDict objectForKey:@"Carrier"],[_userDict objectForKey:@"FlightNo"]];
+    _lineCHNLabel.text = [_userDict objectForKey:@"LineCHN"];
+    NSDate* deptTime = [CommonUtil convertDateTimeFromString:[_userDict objectForKey:@"DeptTime"]];
+    NSDate* arrTime = [CommonUtil convertDateTimeFromString:[_userDict objectForKey:@"ArrTime"]];
     _flightTimeLabel.text = [NSString stringWithFormat:@"%@  -  %@",[CommonUtil convertDateToString:deptTime formatter:@"hh:mm"],[CommonUtil convertDateToString:arrTime formatter:@"hh:mm"]];
     NSArray* timeDiffArr = [CommonUtil timeDiff:deptTime end:arrTime];
     _flightDurationLabel.text = [NSString stringWithFormat:@"%@小时%@分",[timeDiffArr valueForKey:@"hour"],[timeDiffArr valueForKey:@"minute"]];
-    _empNameLabel.text = [userInfo objectForKey:@"EmpNo"];
-    _empNoLabel.text = [userInfo objectForKey:@"EmpNo"];
-    _empJobLabel.text = [userInfo objectForKey:@"EmpType"];
-    _lastLoginTimeLabel.text = [userInfo objectForKey:@"LastLoginTime"];
+    _empNameLabel.text = [_userDict objectForKey:@"EmpNo"];
+    _empNoLabel.text = [_userDict objectForKey:@"EmpNo"];
+    _empJobLabel.text = [_userDict objectForKey:@"EmpType"];
+    _lastLoginTimeLabel.text = [_userDict objectForKey:@"LastLoginTime"];
     
-    _tableViewDict = [[NSDictionary alloc] initWithObjectsAndKeys:
-                      @[@"icon-menu",@"LOGO"],@"0",
-                      @[@"icon-hangban-select",@"航班信息",@"Index.html"],@"1",
-                      @[@"icon-huanban",@"换班交接",@"AssociateManage.html"],@"2",
-                      @[@"icon-goods",@"商品列表",@"ProductList.html"],@"3",
-                      @[@"icon-cart",@"订单列表",@"OederList.html"],@"4",
-                      @[@"icon-store",@"库存管理",@"query.html"],@"5",
-                      @[@"icon-log",@"日志查询",@"Log.html"],@"6",
-                      @[@"icon-logout",@"账号退出"],@"7",
-                      @[@"icon-log",@"DEMO"],@"8",
-                      nil];
+    _tableViewArr = [NSMutableArray arrayWithObjects:[NSMutableArray arrayWithObjects:@"icon-menu",@"LOGO", nil],[NSMutableArray arrayWithObjects:@"icon-hangban-select",@"航班信息",@"Index.html", nil],[NSMutableArray arrayWithObjects:@"icon-huanban",@"换班交接",@"AssociateManage.html", nil],[NSMutableArray arrayWithObjects:@"icon-goods",@"商品列表",@"ProductList.html", nil],[NSMutableArray arrayWithObjects:@"icon-cart",@"订单列表",@"OederList.html", nil],[NSMutableArray arrayWithObjects:@"icon-store",@"库存管理",@"query.html", nil],[NSMutableArray arrayWithObjects:@"icon-log",@"日志查询",@"Log.html", nil],[NSMutableArray arrayWithObjects:@"icon-logout",@"账号退出", nil],[NSMutableArray arrayWithObjects:@"icon-log",@"DEMO", nil], nil];
     
     _shrinkTableView.dataSource = self;
     _shrinkTableView.delegate = self;
     
     _openTableView.dataSource = self;
     _openTableView.delegate = self;
+    
     
     // Show in popup
     _layout = KLCPopupLayoutMake(KLCPopupHorizontalLayoutLeft,KLCPopupVerticalLayoutTop);
@@ -76,15 +65,19 @@
     _shrinkView.layer.shadowOpacity = 0.1;//阴影透明度，默认0
     _shrinkView.layer.shadowRadius = 2;//阴影半径，默认3
     
+    [self loadHtmlUrl:@"index.html"];
+    
     [self initLayer];
+    [self brigeInit];
 }
 
-- (void)viewWillAppear:(BOOL)animated {
+- (void)brigeInit{
+    
     if (_bridge) { return; }
     
-//    WKWebView* webView = [[NSClassFromString(@"WKWebView") alloc] initWithFrame:self.view.bounds];
+    //    WKWebView* webView = [[NSClassFromString(@"WKWebView") alloc] initWithFrame:self.view.bounds];
     _webView.navigationDelegate = self;
-//    [self.view addSubview:webView];
+    //    [self.view addSubview:webView];
     [WebViewJavascriptBridge enableLogging];
     _bridge = [WebViewJavascriptBridge bridgeForWebView:_webView];
     [_bridge setWebViewDelegate:self];
@@ -92,13 +85,23 @@
     //启动拍照
     [_bridge registerHandler:@"scan" handler:^(id data, WVJBResponseCallback responseCallback) {
         
-        HMScannerController *scanner = [HMScannerController scannerWithCardName:nil avatar:nil completion:^(NSString *stringValue) {
-            NSLog(@"%@",stringValue);
+        HMScannerController *scanner = [HMScannerController scannerWithCardName:nil avatar:nil completion:^(NSString *result) {
+            [_bridge callHandler:@"getScanResult" data:@{ @"info":result } responseCallback:^(id response) {
+                NSLog(@"result responded: %@", response); //传入data 参数，并且拿到js的回调，自行处理自己的逻辑
+            }];
+            NSLog(@"%@",result);
         }];
         
         [scanner setTitleColor:[UIColor whiteColor] tintColor:[UIColor greenColor]];
         [self showDetailViewController:scanner sender:nil];
-//        responseCallback(json);
+        //        responseCallback(json);
+    }];
+    
+    //上传
+    [_bridge registerHandler:@"upload" handler:^(id data, WVJBResponseCallback responseCallback) {
+        
+        [self selectPhoto];
+        //        responseCallback(json);
     }];
     
     //显示遮罩
@@ -113,19 +116,29 @@
         [_leftLayerView setHidden:YES];
     }];
     
-    //获取单条的查询结果
-    [_bridge registerHandler:@"selectOne" handler:^(id data, WVJBResponseCallback responseCallback) {
+    //登录信息
+    [_bridge registerHandler:@"loginInfo" handler:^(id data, WVJBResponseCallback responseCallback) {
+        LoginInfoResult* result = [LoginInfoResult new];
+        result.status = 1;
+        result.userInfo = _userDict;
+        NSString* json = [result yy_modelToJSONString];
+        NSLog(@"%@",json);
+        responseCallback(json);
+    }];
+    
+    //获取单条或多条数据查询结果
+    [_bridge registerHandler:@"selectList" handler:^(id data, WVJBResponseCallback responseCallback) {
         NSString* sql = [data objectForKey:@"sql"];
-        NSString* json = [CommonDB selectOne:sql];
+        NSString* json = [CommonDB selectList:sql];
         responseCallback(json);
     }];
     
     //获取列表的查询结果
-    [_bridge registerHandler:@"selectList" handler:^(id data, WVJBResponseCallback responseCallback) {
+    [_bridge registerHandler:@"selectListForPage" handler:^(id data, WVJBResponseCallback responseCallback) {
         NSString* sql = [data objectForKey:@"sql"];
         NSInteger pageIndex = [[data objectForKey:@"pageIndex"] integerValue];
         NSInteger pageSize = [[data objectForKey:@"pageSize"] integerValue];
-        NSString* json = [CommonDB selectList:sql pageIndex:pageIndex pageSize:pageSize];
+        NSString* json = [CommonDB selectListForPage:sql pageIndex:pageIndex pageSize:pageSize];
         responseCallback(json);
     }];
     
@@ -161,22 +174,25 @@
     [_bridge registerHandler:@"addCart" handler:^(id data, WVJBResponseCallback responseCallback) {
         NSString* sku = [data valueForKey:@"sku"];
         NSInteger quantity = [[data valueForKey:@"quantity"] integerValue];
-        NSString* json = [OrderDB addCart:sku num:quantity];
+        NSString* diningCarNo = [data valueForKey:@"diningCarNo"];
+        NSString* json = [OrderDB addCart:sku diningCarNo:diningCarNo num:quantity];
         responseCallback(json);
     }];
     
     //修改购物车商品数量
     [_bridge registerHandler:@"updateNum" handler:^(id data, WVJBResponseCallback responseCallback) {
         NSString* sku = [data valueForKey:@"sku"];
+        NSString* diningCarNo = [data valueForKey:@"diningCarNo"];
         NSInteger updateType = [[data valueForKey:@"updateType"] integerValue];
-        NSString* json = [OrderDB updateNum:sku updateType:updateType];
+        NSString* json = [OrderDB updateNum:sku diningCarNo:diningCarNo updateType:updateType];
         responseCallback(json);
     }];
     
     //删除购物车商品
     [_bridge registerHandler:@"deleteCartSku" handler:^(id data, WVJBResponseCallback responseCallback) {
         NSString* sku = [data valueForKey:@"sku"];
-        NSString* json = [OrderDB deleteCartSku:sku];
+        NSString* diningCarNo = [data valueForKey:@"diningCarNo"];
+        NSString* json = [OrderDB deleteCartSku:sku diningCarNo:diningCarNo];
         responseCallback(json);
     }];
     
@@ -192,11 +208,14 @@
     //        responseCallback(@"Response from testObjcCallback");
     //    }];
     
-    [_bridge callHandler:@"testJavascriptHandler" data:@{ @"foo":@"before ready" }];
+    //    [_bridge callHandler:@"testJavascriptHandler" data:@{ @"foo":@"before ready" }];
     
-//    [self renderButtons:_webView];
-//    [self loadHtmlPage:@"Pages/Index"];
-    [self loadHtmlUrl:@"index.html"];
+    //    [self renderButtons:_webView];
+    //    [self loadHtmlPage:@"Pages/Index"];
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
@@ -204,7 +223,7 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
-    return [_tableViewDict count];
+    return [_tableViewArr count];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -216,7 +235,7 @@
             shrinkMenuCell= [[[NSBundle mainBundle]loadNibNamed:ShrinkMenuCellIdentifier owner:nil options:nil] firstObject];
         }
         NSInteger row = [indexPath row];
-        NSArray *arr = [_tableViewDict valueForKey:[NSString stringWithFormat:@"%ld",row]];
+        NSArray *arr = [_tableViewArr objectAtIndex:row];
         UIImage *image = [UIImage imageNamed:[arr objectAtIndex:0]];
         [shrinkMenuCell.iconImageView setImage:image];
         shrinkMenuCell.selectionStyle = UITableViewCellSelectionStyleNone;
@@ -237,7 +256,7 @@
             [openMenuCell.logoImageView setHidden:NO];
             [openMenuCell.nameLabel setHidden:YES];
         }else{
-            NSArray *arr = [_tableViewDict valueForKey:[NSString stringWithFormat:@"%ld",row]];
+            NSArray *arr = [_tableViewArr objectAtIndex:row];
             UIImage *image = [UIImage imageNamed:[arr objectAtIndex:0]];
             [openMenuCell.imageView setImage:image];
             openMenuCell.nameLabel.text = [arr objectAtIndex:1];
@@ -251,24 +270,50 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     NSInteger row = [indexPath row];
     if(row == 7){
-        LoginViewController *loginView= [[LoginViewController alloc] initWithNibName:@"LoginViewController" bundle:nil];
+        [_userInfo setValue:@"" forKey:_UserKey];
+//        LoginViewController *loginView= [[LoginViewController alloc] initWithNibName:@"LoginViewController" bundle:nil];
         [self.navigationController popViewControllerAnimated:YES];
     }
     if(tableView == _shrinkTableView){
         if(row == 0){
             [_popup showWithLayout:_layout];
+            [_shrinkView setHidden:YES];
         }else if(row < 7){
-            NSArray *arr = [_tableViewDict valueForKey:[NSString stringWithFormat:@"%ld",row]];
+            NSArray *arr = [_tableViewArr objectAtIndex:row];
             [self loadHtmlUrl:[arr objectAtIndex:2]];
 //             [self loadHtmlPage:@"Pages/Index"];
+            [self updateTableViewIcon: row];
         }else{
             [self loadHtmlPage:@"Index"];
         }
     }else if(tableView == _openTableView){
         if(row == 0){
+            dispatch_time_t delayTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.20 * NSEC_PER_SEC));
+            
+            __weak typeof(self) weakSelf = self;
+            dispatch_after(delayTime, dispatch_get_main_queue(), ^{
+                [weakSelf.shrinkView setHidden:NO];
+            });
             [_popup dismiss:YES];
+        }else{
+            [self updateTableViewIcon: row];
         }
     }
+}
+
+- (void)updateTableViewIcon:(NSInteger) row{
+    
+    for(NSInteger i=0;i<[_tableViewArr count];i++){
+        NSMutableArray* arr = [_tableViewArr objectAtIndex:i];
+        NSString* iconString = [arr objectAtIndex:0];
+        iconString = [iconString stringByReplacingOccurrencesOfString:@"-select" withString:@""];
+        if(i == row){
+            iconString = [iconString stringByAppendingString:@"-select"];
+        }
+        [arr replaceObjectAtIndex:0 withObject:iconString];
+    }
+    [_shrinkTableView reloadData];
+    [_openTableView reloadData];
 }
 
 - (void)webView:(WKWebView *)webView didStartProvisionalNavigation:(WKNavigation *)navigation {
@@ -315,14 +360,14 @@
 - (void)initLayer{
     _topLayerView = [UIView new];
     _topLayerView.frame = CGRectMake(0,0,_ScreenWidth,70);
-    [_topLayerView setBackgroundColor:[UIColor colorWithRed:0.0 green:0.0 blue:0.0 alpha:0.5]];
+    [_topLayerView setBackgroundColor:[UIColor colorWithRed:0.0 green:0.0 blue:0.0 alpha:0.6]];
     [_topLayerView setHidden:YES];
     [self.view addSubview:_topLayerView];
     
     
     _leftLayerView = [UIView new];
     _leftLayerView.frame = CGRectMake(0,70,50,_ScreenHeight);
-    [_leftLayerView setBackgroundColor:[UIColor colorWithRed:0.0 green:0.0 blue:0.0 alpha:0.5]];
+    [_leftLayerView setBackgroundColor:[UIColor colorWithRed:0.0 green:0.0 blue:0.0 alpha:0.6]];
     [_leftLayerView setHidden:YES];
     [self.view addSubview:_leftLayerView];
 }
@@ -344,5 +389,93 @@
 
 - (IBAction)btnFrashPressed:(id)sender {
 //    [_popup dismiss:YES];
+    [_webView reload];
 }
+- (IBAction)btnBackPressed:(id)sender {
+    if([_webView canGoBack]){
+        [_webView goBack];
+    }
+}
+
+- (void)selectPhoto {
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"请选择图片来源" message:@"" preferredStyle:UIAlertControllerStyleAlert];
+    
+    UIAlertAction *photoAction = [UIAlertAction actionWithTitle:@"拍照" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
+         [self shootPiicturePrVideo];
+    }];
+    [alertController addAction:photoAction];
+    
+    UIAlertAction *selectPhotoAction = [UIAlertAction actionWithTitle:@"从手机相册选择" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
+        [self selectExistingPictureOrVideo];
+    }];
+    [alertController addAction:selectPhotoAction];
+    
+    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+    }];
+    [alertController addAction:cancelAction];
+    
+    [self presentViewController:alertController animated:YES completion:nil];
+}
+
+//从相机上选择
+- (void)shootPiicturePrVideo{
+    [self getMediaFromSource:UIImagePickerControllerSourceTypeCamera];
+}
+//从相册中选择
+- (void)selectExistingPictureOrVideo{
+    [self getMediaFromSource:UIImagePickerControllerSourceTypePhotoLibrary];
+}
+
+- (void) imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info{
+    _lastChosenMediaType = [info objectForKey:UIImagePickerControllerMediaType];
+    if([_lastChosenMediaType isEqual:(NSString *) kUTTypeImage])
+    {
+        UIImage *chosenImage = [info objectForKey:UIImagePickerControllerEditedImage];
+        
+        chosenImage = [CommonUtil imageCompressForSize:chosenImage targetSize:CGSizeMake(_ScreenWidth, _ScreenHeight)];
+        
+        NSString *imageBase64 = [CommonUtil image2DataURL:chosenImage];
+        
+        [_bridge callHandler:@"getUploadResult" data:@{ @"info":imageBase64 } responseCallback:^(id response) {
+            NSLog(@"result responded: %@", response); //传入data 参数，并且拿到js的回调，自行处理自己的逻辑
+        }];
+    }
+    if([self.lastChosenMediaType isEqual:(NSString *) kUTTypeMovie]){
+        
+        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"提示信息" message:@"系统只支持图片格式" preferredStyle:UIAlertControllerStyleAlert];
+        [alertController addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+        }]];
+        [self presentViewController:alertController animated:YES completion:nil];
+    }
+    [picker dismissViewControllerAnimated:YES completion:nil];
+}
+
+-(void) imagePickerControllerDidCancel:(UIImagePickerController *)picker{
+    [picker dismissViewControllerAnimated:YES completion:nil];
+}
+-(void)getMediaFromSource:(UIImagePickerControllerSourceType)sourceType
+{
+    NSArray *mediatypes=[UIImagePickerController availableMediaTypesForSourceType:sourceType];
+    if([UIImagePickerController isSourceTypeAvailable:sourceType] &&[mediatypes count]>0){
+        NSArray *mediatypes=[UIImagePickerController availableMediaTypesForSourceType:sourceType];
+        UIImagePickerController *picker=[[UIImagePickerController alloc] init];
+        picker.mediaTypes=mediatypes;
+        picker.delegate=self;
+        picker.allowsEditing=YES;
+        picker.sourceType=sourceType;
+        NSString *requiredmediatype=(NSString *)kUTTypeImage;
+        NSArray *arrmediatypes=[NSArray arrayWithObject:requiredmediatype];
+        [picker setMediaTypes:arrmediatypes];
+        [self presentViewController:picker animated:YES completion:nil];
+    }
+    else{
+        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"错误信息!" message:@"当前设备不支持拍摄功能" preferredStyle:UIAlertControllerStyleAlert];
+        
+        [alertController addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+        }]];
+        [self presentViewController:alertController animated:YES completion:nil];
+    }
+}
+
+
 @end

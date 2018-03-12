@@ -10,4 +10,13 @@
 
 @implementation ReceiptList
 
++(NSArray *)bg_unionPrimaryKeys{
+    
+    return @[@"DeliveryNo"];
+}
+
++(NSArray *)bg_ignoreKeys{
+    return @[@"Items"];
+}
+
 @end

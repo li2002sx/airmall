@@ -10,4 +10,9 @@
 
 @implementation Inventory
 
++(NSArray *)bg_unionPrimaryKeys{
+    
+    return @[@"ID"];
+}
+
 @end

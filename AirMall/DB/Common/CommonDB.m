@@ -10,16 +10,16 @@
 
 @implementation CommonDB
 
-+(NSString*) selectOne:(NSString*)sql{
++(NSString*) selectList:(NSString*)sql{
     
-    SelectOneResult* result = [SelectOneResult new];
+    SelectListResult* result = [SelectListResult new];
     [result setStatus:1];
     
     NSLog(@"sql:%@",sql);
     
     NSArray* arr = bg_executeSql(sql, nil, nil);
     if([arr count] > 0){
-        [result setInfo:[arr objectAtIndex:0]];
+        [result setList:arr];
     }else{
         [result setMessage:@"没有查询到数据"];
     }
@@ -27,9 +27,9 @@
     return json;
 }
 
-+(NSString*) selectList:(NSString*)sql pageIndex:(NSInteger)pageIndex pageSize:(NSInteger)pageSize{
++(NSString*) selectListForPage:(NSString*)sql pageIndex:(NSInteger)pageIndex pageSize:(NSInteger)pageSize{
     
-    SelectListResult* result =[SelectListResult new];
+    SelectListForPageResult* result =[SelectListForPageResult new];
     [result setStatus:1];
     
     sql = [sql lowercaseString];

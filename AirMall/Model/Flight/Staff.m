@@ -10,4 +10,9 @@
 
 @implementation Staff
 
++(NSArray *)bg_unionPrimaryKeys{
+    
+    return @[@"EmpNo"];
+}
+
 @end

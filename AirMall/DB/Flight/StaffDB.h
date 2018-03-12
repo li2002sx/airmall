@@ -15,7 +15,7 @@
 
 @interface StaffDB : NSObject
 
-+(id) staffLogin:(NSString*) flightNo flightDate:(NSString*) flightDate empNo:(NSString*) empNo password:(NSString*) password;
++(id) staffLogin:(NSString*) flightNo flightDate:(NSString*) flightDate empNo:(NSString*) empNo password:(NSString*) password deviceNo:(NSString*)deviceNo;
 
 +(void) updateLastLoginTime:(NSString*) empNo;
 @end

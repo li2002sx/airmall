@@ -15,10 +15,12 @@
 
 +(ProductList*) getProductById:(NSInteger) productId;
 
-+(NSArray*) getProductListByIds:(NSArray*) productIdArr;
++(NSMutableDictionary*) getProductListByIds:(NSMutableArray*) productIdArr;
+
++(NSMutableDictionary*) getProductListBySkus:(NSMutableArray*) skuArr;
 
 +(ProductItem*) getProductItemBySku:(NSString*) sku;
 
-+(NSArray*) getProductItemListBySkus:(NSArray*) skuArr;
++(NSMutableDictionary*) getProductItemListBySkus:(NSMutableArray*) skuArr;
 
 @end

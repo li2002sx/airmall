@@ -9,15 +9,18 @@
 </head>
 
 <body>
-	<h1>WebViewJavascriptBridge Demo</h1>
+	<h1>APP与H5交互 Demo</h1>
 	<div id='buttons'></div>
 	<div id='log'></div>
     <div><a href="Cart.html">购物车</a></div>
+    <div><img src="" id="image" with="200" height="200"></img></div>
     <div><input type="button" id="scan" value="启动拍照"></div>
+    <div><input type="button" id="upload" value="上传图片"></div>
     <div><input type="button" id="showCover" value="显示遮罩"></div>
     <div><input type="button" id="hideCover" value="隐藏遮罩"></div>
-    <div><input type="button" id="selectOne" value="获取单条数据"></div>
-    <div><input type="button" id="selectList" value="获取列表数据"></div>
+    <div><input type="button" id="loginInfo" value="登录信息"></div>
+    <div><input type="button" id="selectList" value="获取单条或多条数据"></div>
+    <div><input type="button" id="selectListForPage" value="获取列表数据(带分页)"></div>
     <div><input type="button" id="receive" value="收货确认"></div>
     <div><input type="button" id="replenish" value="补货申请"></div>
     <div><input type="button" id="inventory" value="盘点生成交接单"></div>
@@ -40,9 +43,24 @@
         
         //获取扫描信息
         appJsBridge.registerHandler('getScanResult', function (data, callback) {
+                                    //使用data.info 获取扫码信息
                                     log('ObjC called testJavascriptHandler with', data)
-                                    callback("1234567")
+                                    callback("传入APP的回掉，没有可以不要")
                                     })
+                                    
+        //上传图片
+        $('#upload').click(function(){
+                         appJsBridge.callHandler('upload', null, function (result) {
+                                                 log('result with', result)
+                                                 })
+                         })
+                         
+         //获取上传图片信息
+         appJsBridge.registerHandler('getUploadResult', function (data, callback) {
+                                     $('#image').attr('src',data.info);
+                                     log('ObjC called testJavascriptHandler with', data)
+                                     callback("传入APP的回掉，没有可以不要")
+                                     })
     
         //显示遮罩
         $('#showCover').click(function(){
@@ -56,42 +74,53 @@
                                                       log('result with', result)
                                                       })
                               })
-        //获取单条数据
-        $('#selectOne').click(function(){
+          //登录信息
+          $('#loginInfo').click(function(){
+                           appJsBridge.callHandler('loginInfo', null, function (result) {
+                                                   log('result with', result)
+                                                   })
+                           })
+        //获取单条或多条数据
+        $('#selectList').click(function(){
           var sql = 'select * from Staff order by 1 desc limit 1';
           var param = {
             sql:sql
           }
-          appJsBridge.callHandler('selectOne', param, function (result) {
+          appJsBridge.callHandler('selectList', param, function (result) {
+              //拿到数据自行处理，以下雷同
               log('result with', result)
               })
         })
-        //获取单条数据
-        $('#selectList').click(function(){
+        //获取带分页的列表数据
+        $('#selectListForPage').click(function(){
           var sql = 'select * from Staff order by 1 desc';
           var param = {
              sql:sql,
              pageIndex:1,
              pageSize:10
           }
-          appJsBridge.callHandler('selectList', param, function (result) {
+          appJsBridge.callHandler('selectListForPage', param, function (result) {
               log('result with', result)
           })
        })
        //收货确认
        $('#receive').click(function(){
                            var skus  = [];
+                           var pics = [];
+                           pics.push('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACoAAAAtCAYAAADYxvnjAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyFpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNi1jMTQyIDc5LjE2MDkyNCwgMjAxNy8wNy8xMy0wMTowNjozOSAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIChXaW5kb3dzKSIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDpGQzk3NDE5NjIwMzYxMUU4QkFDMTkyOENGNEUxMDA4MiIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDpGQzk3NDE5NzIwMzYxMUU4QkFDMTkyOENGNEUxMDA4MiI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOkZDOTc0MTk0MjAzNjExRThCQUMxOTI4Q0Y0RTEwMDgyIiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOkZDOTc0MTk1MjAzNjExRThCQUMxOTI4Q0Y0RTEwMDgyIi8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+Ew4m5QAAAg9JREFUeNrsmU0oRFEUx68xkZBMSIkSCcVCkXxsfWwkZWeF2LEiKdkoKWVBCgtLsrCwoyx8FDEoCyGRREJJQgnjf3LU9GLmzpt7MbqnfvVu3TfnN/fc+95974W53W5hM9pAL3BJ9H0DW6ABHNpJ5vQ6jgDFIBVEW/p5wIRXOxcMAYdkHupXCEZAheV3yr74UzdgE5xbRevBKEj4JtGdRTQnAElhOc87CsCYj/5zoBVcOngUp3xIUsSBJK/2OniyIbpiaWf66V8DlkCsk+dauESSJtDPx1SSWtADoiQlDzjXZ0TynPUXWaCdREskE5HUBljk9gJjd20MgwzJ/nV0QrJk5ygWmwdnwn44eAFlB3BOlpNLEEiSavHzEe0QIRJG1Ij+B9EXUAXCNEBXnUZVort87dQRr2ASXKkQpVtYisaqUrUSA9nmfRcxPKonGiQpfx5Pg6BFBW+OXWbVG9FfCNk5+sAbX4/i/OH83BShQvQR5INjTYNVBNb8VVem9PsaJQU/NdyomKM0mqWaJKnkXZYHR9ulpz6rZtUbUSMa/GKi90594FRDflrtnSBNhegAGNQ4WBdgVkXp0zVXNV5V6ZvFxzvLbQ2S9JawQ5Uo7b5bzao3okb0H4nehYDnLYkehYDoHonOhIDoNInS14mdPyxJX2HGSZQ+bJWDbvHxvfL+l8Xodn0NlkELqATP7wIMACkcUqdr6woxAAAAAElFTkSuQmCC');
+                                     pics.push('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFwAAABUCAYAAAAPvFA1AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyFpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNi1jMTQyIDc5LjE2MDkyNCwgMjAxNy8wNy8xMy0wMTowNjozOSAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIChXaW5kb3dzKSIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDo5RjhGQTAzRjIwMzYxMUU4QjdGREZEMkVDRjBGMkUxRCIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDo5RjhGQTA0MDIwMzYxMUU4QjdGREZEMkVDRjBGMkUxRCI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOjlGOEZBMDNEMjAzNjExRThCN0ZERkQyRUNGMEYyRTFEIiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOjlGOEZBMDNFMjAzNjExRThCN0ZERkQyRUNGMEYyRTFEIi8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+lmSiQgAABx9JREFUeNrsXQtsFFUU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');
                            var sku = {
-                              sku:'123456',
-                           confirmCount:2,
+                              sku:'Sku22131',
+                           diningCarNo:'121',
+                           confirmCount:20,
                            damagedCount:2,
                            damagedReason:'故意',
                            damagedReasonDesc:'刮花了',
-                           imageBase64:'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACoAAAAtCAYAAADYxvnjAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyFpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNi1jMTQyIDc5LjE2MDkyNCwgMjAxNy8wNy8xMy0wMTowNjozOSAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIChXaW5kb3dzKSIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDpGQzk3NDE5NjIwMzYxMUU4QkFDMTkyOENGNEUxMDA4MiIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDpGQzk3NDE5NzIwMzYxMUU4QkFDMTkyOENGNEUxMDA4MiI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOkZDOTc0MTk0MjAzNjExRThCQUMxOTI4Q0Y0RTEwMDgyIiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOkZDOTc0MTk1MjAzNjExRThCQUMxOTI4Q0Y0RTEwMDgyIi8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+Ew4m5QAAAg9JREFUeNrsmU0oRFEUx68xkZBMSIkSCcVCkXxsfWwkZWeF2LEiKdkoKWVBCgtLsrCwoyx8FDEoCyGRREJJQgnjf3LU9GLmzpt7MbqnfvVu3TfnN/fc+95974W53W5hM9pAL3BJ9H0DW6ABHNpJ5vQ6jgDFIBVEW/p5wIRXOxcMAYdkHupXCEZAheV3yr74UzdgE5xbRevBKEj4JtGdRTQnAElhOc87CsCYj/5zoBVcOngUp3xIUsSBJK/2OniyIbpiaWf66V8DlkCsk+dauESSJtDPx1SSWtADoiQlDzjXZ0TynPUXWaCdREskE5HUBljk9gJjd20MgwzJ/nV0QrJk5ygWmwdnwn44eAFlB3BOlpNLEEiSavHzEe0QIRJG1Ij+B9EXUAXCNEBXnUZVort87dQRr2ASXKkQpVtYisaqUrUSA9nmfRcxPKonGiQpfx5Pg6BFBW+OXWbVG9FfCNk5+sAbX4/i/OH83BShQvQR5INjTYNVBNb8VVem9PsaJQU/NdyomKM0mqWaJKnkXZYHR9ulpz6rZtUbUSMa/GKi90594FRDflrtnSBNhegAGNQ4WBdgVkXp0zVXNV5V6ZvFxzvLbQ2S9JawQ5Uo7b5bzao3okb0H4nehYDnLYkehYDoHonOhIDoNInS14mdPyxJX2HGSZQ+bJWDbvHxvfL+l8Xodn0NlkELqATP7wIMACkcUqdr6woxAAAAAElFTkSuQmCC'
+                           imageBase64s:pics
                            }
                            skus.push(sku);
                            var param ={
-                               deliveryID:1,
+                               deliveryNo:'D2343201803120001',
                                deliveryList:skus
                            }
                            appJsBridge.callHandler('receive', param, function (result) {
@@ -103,7 +132,8 @@
        $('#replenish').click(function(){
            var skus  = [];
            var sku = {
-               sku:'123456',
+               sku:'SKU16KN01',
+               diningCarNo:'121',
                needCount:25
            }
            skus.push(sku);
@@ -119,8 +149,10 @@
        $('#inventory').click(function(){
                              var skus  = [];
                              var sku = {
-                             sku:'123456',
-                             handoverCount:25
+                             sku:'SKU16KN01',
+                             diningCarNo:'121',
+                             handoverCount:25,
+                             damagedCount:2
                              }
                              skus.push(sku);
                              var param ={
@@ -134,13 +166,17 @@
          //交接确认
          $('#transfer').click(function(){
                              var skus  = [];
+                              var pics = [];
+                              pics.push('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACoAAAAtCAYAAADYxvnjAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyFpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNi1jMTQyIDc5LjE2MDkyNCwgMjAxNy8wNy8xMy0wMTowNjozOSAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIChXaW5kb3dzKSIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDpGQzk3NDE5NjIwMzYxMUU4QkFDMTkyOENGNEUxMDA4MiIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDpGQzk3NDE5NzIwMzYxMUU4QkFDMTkyOENGNEUxMDA4MiI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOkZDOTc0MTk0MjAzNjExRThCQUMxOTI4Q0Y0RTEwMDgyIiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOkZDOTc0MTk1MjAzNjExRThCQUMxOTI4Q0Y0RTEwMDgyIi8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+Ew4m5QAAAg9JREFUeNrsmU0oRFEUx68xkZBMSIkSCcVCkXxsfWwkZWeF2LEiKdkoKWVBCgtLsrCwoyx8FDEoCyGRREJJQgnjf3LU9GLmzpt7MbqnfvVu3TfnN/fc+95974W53W5hM9pAL3BJ9H0DW6ABHNpJ5vQ6jgDFIBVEW/p5wIRXOxcMAYdkHupXCEZAheV3yr74UzdgE5xbRevBKEj4JtGdRTQnAElhOc87CsCYj/5zoBVcOngUp3xIUsSBJK/2OniyIbpiaWf66V8DlkCsk+dauESSJtDPx1SSWtADoiQlDzjXZ0TynPUXWaCdREskE5HUBljk9gJjd20MgwzJ/nV0QrJk5ygWmwdnwn44eAFlB3BOlpNLEEiSavHzEe0QIRJG1Ij+B9EXUAXCNEBXnUZVort87dQRr2ASXKkQpVtYisaqUrUSA9nmfRcxPKonGiQpfx5Pg6BFBW+OXWbVG9FfCNk5+sAbX4/i/OH83BShQvQR5INjTYNVBNb8VVem9PsaJQU/NdyomKM0mqWaJKnkXZYHR9ulpz6rZtUbUSMa/GKi90594FRDflrtnSBNhegAGNQ4WBdgVkXp0zVXNV5V6ZvFxzvLbQ2S9JawQ5Uo7b5bzao3okb0H4nehYDnLYkehYDoHonOhIDoNInS14mdPyxJX2HGSZQ+bJWDbvHxvfL+l8Xodn0NlkELqATP7wIMACkcUqdr6woxAAAAAElFTkSuQmCC');
+                              pics.push('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFwAAABUCAYAAAAPvFA1AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyFpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNi1jMTQyIDc5LjE2MDkyNCwgMjAxNy8wNy8xMy0wMTowNjozOSAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIChXaW5kb3dzKSIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDo5RjhGQTAzRjIwMzYxMUU4QjdGREZEMkVDRjBGMkUxRCIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDo5RjhGQTA0MDIwMzYxMUU4QjdGREZEMkVDRjBGMkUxRCI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOjlGOEZBMDNEMjAzNjExRThCN0ZERkQyRUNGMEYyRTFEIiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOjlGOEZBMDNFMjAzNjExRThCN0ZERkQyRUNGMEYyRTFEIi8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+lmSiQgAABx9JREFUeNrsXQtsFFUU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');
                              var sku = {
-                             sku:'123456',
+                             sku:'SKU16KN01',
+                             diningCarNo:'121',
                              handoverCount:2,
                              damagedCount:2,
                              damagedReason:'故意',
                              damagedReasonDesc:'刮花了',
-                             imageBase64:'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACoAAAAtCAYAAADYxvnjAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyFpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNi1jMTQyIDc5LjE2MDkyNCwgMjAxNy8wNy8xMy0wMTowNjozOSAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIChXaW5kb3dzKSIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDpGQzk3NDE5NjIwMzYxMUU4QkFDMTkyOENGNEUxMDA4MiIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDpGQzk3NDE5NzIwMzYxMUU4QkFDMTkyOENGNEUxMDA4MiI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOkZDOTc0MTk0MjAzNjExRThCQUMxOTI4Q0Y0RTEwMDgyIiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOkZDOTc0MTk1MjAzNjExRThCQUMxOTI4Q0Y0RTEwMDgyIi8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+Ew4m5QAAAg9JREFUeNrsmU0oRFEUx68xkZBMSIkSCcVCkXxsfWwkZWeF2LEiKdkoKWVBCgtLsrCwoyx8FDEoCyGRREJJQgnjf3LU9GLmzpt7MbqnfvVu3TfnN/fc+95974W53W5hM9pAL3BJ9H0DW6ABHNpJ5vQ6jgDFIBVEW/p5wIRXOxcMAYdkHupXCEZAheV3yr74UzdgE5xbRevBKEj4JtGdRTQnAElhOc87CsCYj/5zoBVcOngUp3xIUsSBJK/2OniyIbpiaWf66V8DlkCsk+dauESSJtDPx1SSWtADoiQlDzjXZ0TynPUXWaCdREskE5HUBljk9gJjd20MgwzJ/nV0QrJk5ygWmwdnwn44eAFlB3BOlpNLEEiSavHzEe0QIRJG1Ij+B9EXUAXCNEBXnUZVort87dQRr2ASXKkQpVtYisaqUrUSA9nmfRcxPKonGiQpfx5Pg6BFBW+OXWbVG9FfCNk5+sAbX4/i/OH83BShQvQR5INjTYNVBNb8VVem9PsaJQU/NdyomKM0mqWaJKnkXZYHR9ulpz6rZtUbUSMa/GKi90594FRDflrtnSBNhegAGNQ4WBdgVkXp0zVXNV5V6ZvFxzvLbQ2S9JawQ5Uo7b5bzao3okb0H4nehYDnLYkehYDoHonOhIDoNInS14mdPyxJX2HGSZQ+bJWDbvHxvfL+l8Xodn0NlkELqATP7wIMACkcUqdr6woxAAAAAElFTkSuQmCC'
+                             imageBase64s:pics
                              }
                              skus.push(sku);
                              var param ={
@@ -154,7 +190,8 @@
          //加入购物车
          $('#addCart').click(function(){
                              var param = {
-                             sku:'123456',
+                             sku:'SKU16KN01',
+                             diningCarNo:'121',
                              quantity:1
                              }
                                appJsBridge.callHandler('addCart', param, function (result) {
@@ -165,7 +202,8 @@
         //修改购物车商品数量
         $('#updateNum').click(function(){
                            var param = {
-                           sku:'123456',
+                           sku:'SKU16KN01',
+                           diningCarNo:'121',
                            updateType:1
                            }
                            appJsBridge.callHandler('updateNum', param, function (result) {
@@ -175,7 +213,8 @@
        //删除购物车商品
        $('#deleteCartSku').click(function(){
                              var param = {
-                             sku:'123456'
+                             sku:'SKU16KN01',
+                             diningCarNo:'121'
                              }
                              appJsBridge.callHandler('deleteCartSku', param, function (result) {
                                                      log('result with', result)

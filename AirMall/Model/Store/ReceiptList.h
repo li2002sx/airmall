@@ -8,16 +8,15 @@
 
 #import <Foundation/Foundation.h>
 #import "BGFMDB.h"
+#import "ReceiptItem.h"
 
 @interface ReceiptList : NSObject
 
-@property(nonatomic)NSInteger DeliveryID;
-
 @property(nonatomic)NSString* DeliveryNo;
 
-@property(nonatomic)NSInteger FlightID;
+@property(nonatomic)NSString* FlightNo;
 
-@property(nonatomic)NSInteger ScheduleID;
+@property(nonatomic)NSString* FlightDate;
 
 @property(nonatomic)NSInteger DeliveryType;
 
@@ -25,22 +24,30 @@
 
 @property(nonatomic)NSInteger NeedCounts;
 
-@property(nonatomic)NSString* ApplicantEmpID;
+@property(nonatomic)NSString* ApplicantEmpNo;
 
 @property(nonatomic)NSString* ApplicantEmpName;
 
-@property(nonatomic)NSDate* ApplicantTime;
+@property(nonatomic)NSString* ApplicantDeviceNo;
 
-//@property(nonatomic)NSDate* DeliveryTime;
+@property(nonatomic)NSString* ApplicantTime;
+
+@property(nonatomic)NSString* DeliveryTime;
 
 @property(nonatomic)NSInteger ConfirmCounts;
 
-@property(nonatomic)NSString* DeliveryEmpID;
+@property(nonatomic)NSString* DeliveryEmpNo;
 
 @property(nonatomic)NSString* DeliveryEmpName;
 
-@property(nonatomic)NSDate* DeliveryTime;
+@property(nonatomic)NSString* DeliveryDeviceNo;
+
+@property(nonatomic)NSString* DeliveryConfirmTime;
 
 @property(nonatomic)NSString* Remark;
+
+@property NSArray<ReceiptItem*>* Items;
+
+@property(nonatomic)NSInteger Syn;
 
 @end

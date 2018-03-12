@@ -13,7 +13,9 @@
 
 @property(nonatomic)NSInteger ID;
 
-@property(nonatomic)NSInteger FlightID;
+@property(nonatomic)NSString* FlightNo;
+
+@property(nonatomic)NSString* FlightDate;
 
 @property(nonatomic)NSInteger ProductID;
 
@@ -21,6 +23,15 @@
 
 @property(nonatomic)NSString* Sku;
 
+@property(nonatomic)NSString* DiningCarNo;
+
+@property(nonatomic)NSString* Barcode;
+
+@property(nonatomic)NSString* ProductName;
+
+@property(nonatomic)NSString* Unit;
+
 @property(nonatomic)NSInteger Qty;
+
 
 @end

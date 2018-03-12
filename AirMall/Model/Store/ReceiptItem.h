@@ -11,19 +11,19 @@
 
 @interface ReceiptItem : NSObject
 
-@property(nonatomic)NSInteger ID;
-
-@property(nonatomic)NSInteger DeliveryID;
+@property(nonatomic)NSString* DeliveryNo;
 
 @property(nonatomic)NSString* DiningCarNo;
 
 @property(nonatomic)NSInteger ProductID;
 
+@property(nonatomic)NSInteger ProductItemID;
+
 @property(nonatomic)NSString* Sku;
 
 @property(nonatomic)NSString* Barcode;
 
-@property(nonatomic)NSString* SkuName;
+@property(nonatomic)NSString* ProductName;
 
 @property(nonatomic)NSString* Unit;
 

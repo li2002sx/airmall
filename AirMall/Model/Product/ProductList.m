@@ -10,4 +10,13 @@
 
 @implementation ProductList
 
++(NSArray *)bg_unionPrimaryKeys{
+    
+    return @[@"ProductID"];
+}
+
++(NSArray *)bg_ignoreKeys{
+    return @[@"Items",@"Pictures"];
+}
+
 @end

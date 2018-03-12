@@ -10,4 +10,8 @@
 
 @implementation ProductItem
 
++(NSArray *)bg_ignoreKeys{
+    return @[@"Attributes"];
+}
+
 @end

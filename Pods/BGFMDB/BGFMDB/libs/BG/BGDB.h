@@ -47,6 +47,8 @@
 
 #pragma mark --> 以下是直接存储一个对象的API
 
+-(void)createTable:(id _Nonnull)object ignoredKeys:(NSArray* const _Nullable)ignoredKeys complete:(bg_complete_B)complete;
+
 /**
  存储一个对象.
  @object 将要存储的对象.

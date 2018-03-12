@@ -11,12 +11,26 @@
 
 @interface DamageItem : NSObject
 
-@property(nonatomic)NSInteger ID;
+@property(nonatomic)NSString* DamagedNo;
 
-@property(nonatomic)NSInteger DamageID;
+@property(nonatomic)NSInteger ProductID;
+
+@property(nonatomic)NSInteger ProductItemID;
+
+@property(nonatomic)NSString* Sku;
+
+@property(nonatomic)NSString* Barcode;
+
+@property(nonatomic)NSString* ProductName;
+
+@property(nonatomic)NSString* Unit;
+
+@property(nonatomic)NSString* Quantity;
+
+@property(nonatomic)NSString* DamagedReason;
 
 @property(nonatomic)NSString* ImageUrl;
 
-@property(nonatomic)NSDate* CreateTime;
+@property(nonatomic)NSString* CreateTime;
 
 @end

@@ -11,19 +11,19 @@
 
 @interface HandoverItem : NSObject
 
-@property(nonatomic)NSInteger ID;
-
-@property(nonatomic)NSInteger HandoverID;
+@property(nonatomic)NSString* HandoverNo;
 
 @property(nonatomic)NSString* DiningCarNo;
 
-@property(nonatomic)NSInteger* ProductID;
+@property(nonatomic)NSInteger ProductID;
+
+@property(nonatomic)NSInteger ProductItemID;
 
 @property(nonatomic)NSString* Sku;
 
 @property(nonatomic)NSString* Barcode;
 
-@property(nonatomic)NSString* SkuName;
+@property(nonatomic)NSString* ProductName;
 
 @property(nonatomic)NSString* Unit;
 

@@ -8,30 +8,31 @@
 
 #import <Foundation/Foundation.h>
 #import "BGFMDB.h"
+#import "DamageItem.h"
+#import "DamagedProductPicture.h"
 
 @interface DamageList : NSObject
 
-@property(nonatomic)NSInteger ID;
+@property(nonatomic)NSString* DamagedNo;
 
-@property(nonatomic)NSInteger FlightID;
+@property(nonatomic)NSString* FlightNo;
 
-@property(nonatomic)NSString* SKU;
+@property(nonatomic)NSString* FlightDate;
 
-@property(nonatomic)NSString* ProductName;
+@property(nonatomic)NSString* EmpNo;
 
-@property(nonatomic)NSInteger Quantity;
+@property(nonatomic)NSString* DeviceNo;
 
-@property(nonatomic)NSString* Unit;
+@property(nonatomic)NSInteger DamagedCounts;
 
-@property(nonatomic)float UnitPrice;
+@property(nonatomic)NSString* CreateTime;
 
-@property(nonatomic)NSString* DamagedReason;
+@property(nonatomic)NSString* Remark;
 
-@property(nonatomic)NSString* DamagedReasonDesc;
+@property NSArray<DamageItem*>* Items;
 
-@property(nonatomic)NSInteger EmpID;
+@property NSArray<DamagedProductPicture *>* Pictures;
 
-@property(nonatomic)NSDate* CreateTime;
-
+@property(nonatomic)NSInteger Syn;
 
 @end

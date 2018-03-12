@@ -10,4 +10,9 @@
 
 @implementation ScheduleInfo
 
++(NSArray *)bg_unionPrimaryKeys{
+    
+    return @[@"FlightNo",@"FlightDate",@"EmpNo"];
+}
+
 @end

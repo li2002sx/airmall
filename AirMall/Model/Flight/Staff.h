@@ -11,9 +11,9 @@
 
 @interface Staff : NSObject
 
-@property(nonatomic)NSInteger EmpID;
-
 @property(nonatomic,copy)NSString* EmpNo;
+
+@property(nonatomic,copy)NSString* EmpName;
 
 @property(nonatomic,copy)NSString* EmpPassword;
 
@@ -21,12 +21,13 @@
 
 @property(nonatomic,copy)NSString* EmpType;
 
-@property(nonatomic,assign)BOOL IsActive;
+@property(nonatomic,assign)int IsActive;
 
-@property(nonatomic,strong)NSDate* CreateTime;
+@property(nonatomic,strong)NSString* CreateTime;
 
-@property(nonatomic,strong)NSDate* UpdateTime;
+@property(nonatomic,strong)NSString* UpdateTime;
 
-@property(nonatomic,strong)NSDate* LastLoginTime;
+@property(nonatomic,strong)NSString* LastLoginTime;
 
 @end
+

@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "AFNetworking/AFNetworking.h"
+#import "CommonUtil.h"
 
 /**
  *  宏定义请求成功的block
@@ -34,17 +35,17 @@ typedef void (^Progress)(NSProgress *progress);
 /**
  *  get方法
  */
-+(void)get:(NSString *)url params:(NSDictionary *)params success:(Success)success fail:(Fail)fail;
++(void)get:(NSString *)url params:(NSMutableDictionary *)params success:(Success)success fail:(Fail)fail;
 
 /**
  *  post方法
  */
-+(void)post:(NSString *)url params:(NSDictionary *)params success:(Success)success fail:(Fail)fail;
++(void)post:(NSString *)url params:(NSMutableDictionary *)params success:(Success)success fail:(Fail)fail;
 
 /**
  *  上传文件
  */
-+(void)upload:(NSString *)url params:(NSDictionary *)params fileData:(NSData *)filedata
++(void)upload:(NSString *)url params:(NSMutableDictionary *)params fileData:(NSData *)filedata
          name:(NSString *)name fileName:(NSString *)filename mimeType:(NSString *) mimeType
      progress:(Progress)progress success:(Success)success fail:(Fail)fail;
 
@@ -54,4 +55,6 @@ typedef void (^Progress)(NSProgress *progress);
 +(NSURLSessionDownloadTask *)down:(NSString *)url saveUrl:(NSURL *)fileUrl
                          progress:(Progress )progress success:(void (^)(NSURLResponse *, NSURL *))success
                              fail:(void (^)(NSError *))fail;
+
++(NSDictionary*)responseConfiguration:(id)responseObject;
 @end

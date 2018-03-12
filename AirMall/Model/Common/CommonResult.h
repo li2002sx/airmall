@@ -18,16 +18,22 @@
 
 @end
 
-@interface SelectOneResult : CommonResult
+@interface SelectListResult : CommonResult
 
-@property(nonatomic)id info;
+@property(nonatomic)NSArray* list;
 
 @end
 
-@interface SelectListResult : CommonResult
+@interface SelectListForPageResult : CommonResult
 
 @property(nonatomic)NSInteger totalCount;
 
 @property(nonatomic)NSArray* list;
+
+@end
+
+@interface LoginInfoResult : CommonResult
+
+@property(nonatomic)id userInfo;
 
 @end

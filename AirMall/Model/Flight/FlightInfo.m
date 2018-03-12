@@ -10,4 +10,9 @@
 
 @implementation FlightInfo
 
++(NSArray *)bg_unionPrimaryKeys{
+    
+    return @[@"FlightNo",@"FlightDate"];
+}
+
 @end

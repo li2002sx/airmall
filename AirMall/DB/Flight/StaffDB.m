@@ -10,10 +10,10 @@
 
 @implementation StaffDB
 
-+(id)staffLogin:(NSString*) flightNo flightDate:(NSString*) flightDate empNo:(NSString*) empNo password:(NSString*) password{
++(id)staffLogin:(NSString*) flightNo flightDate:(NSString*) flightDate empNo:(NSString*) empNo password:(NSString*) password deviceNo:(NSString*)deviceNo{
 //    Staff* staff = nil;
     id result = nil;
-    NSString* sql = [NSString stringWithFormat:@"select a.*,b.*,c.* from Staff as a join ScheduleInfo as b on b.EmpID = a.EmpID join FlightInfo as c on c.FlightID = b.FlightID where EmpNo = '%@' and EmpPassword = '%@' and c.Carrier || c.FlightNo = '%@' and date(c.FlightDate) = '%@' order by a.EmpID desc limit 1", empNo, password,flightNo,flightDate];
+    NSString* sql = [NSString stringWithFormat:@"select a.EmpNo,a.EmpName,a.EmpPhone,a.EmpType,a.IsActive,a.CreateTime,c.* from Staff as a join ScheduleInfo as b on b.EmpNo = a.EmpNo join FlightInfo as c on c.FlightNo = b.FlightNo and c.FlightDate = b.FlightDate where a.EmpNo = '%@' and EmpPassword = '%@' and c.Carrier || c.FlightNo = '%@' and date(c.FlightDate) = '%@' order by a.EmpNo desc limit 1", empNo, password,flightNo,flightDate];
    
     NSArray* arr = bg_executeSql(sql, nil, nil);
     if([arr count] > 0){
@@ -21,10 +21,12 @@
 //        NSString* json = [[arr objectAtIndex:0] yy_modelToJSONObject];
 //        staff = [Staff yy_modelWithJSON:json];
         LogList* log = [LogList new];
-        log.EmpID = [[result valueForKey:@"EmpID"] integerValue];
-        log.FlightID = [[result valueForKey:@"FlightID"] integerValue];
+        log.EmpNo = [result valueForKey:@"EmpNo"];
+        log.FlightNo = [result valueForKey:@"FlightNo"];
+        log.FlightDate = [result valueForKey:@"FlightDate"];
         log.Category = @"登录信息";
         log.Type = @"登录";
+        log.DeviceNo = deviceNo;
         log.Describe = [NSString stringWithFormat:@"账户：%@ 登录",[result valueForKey:@"EmpNo"]];
         [LogDB createLog:log];
     }

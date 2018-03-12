@@ -8,6 +8,10 @@
 
 #import <Foundation/Foundation.h>
 #import "BGFMDB.h"
+#import "ProductItem.h"
+#import "ProductPicture.h"
+
+@class ProductList;
 
 @interface ProductList : NSObject
 
@@ -25,25 +29,23 @@
 
 @property(nonatomic)NSString* Unit;
 
-@property(nonatomic)NSString* Standard;
-
 @property(nonatomic)NSString* ImageUrl;
 
 @property(nonatomic)NSString* ProductType;
 
-@property(nonatomic)NSInteger* SupplierID;
+@property(nonatomic)NSInteger SupplierID;
 
 @property(nonatomic)NSString* SupplierName;
 
 @property(nonatomic)NSString* ShelfLife;
 
-@property(nonatomic)NSDate* ProductionDate;
+@property(nonatomic)NSString* ProductionDate;
 
 @property(nonatomic)NSString* ProductOrigin;
 
 @property(nonatomic)NSString* ProductIdentification;
 
-@property(nonatomic)NSDate* UpdateTime;
+@property(nonatomic)NSString* UpdateTime;
 
 @property(nonatomic)NSString* Remark1;
 
@@ -52,5 +54,9 @@
 @property(nonatomic)NSString* Remark3;
 
 @property(nonatomic)NSString* Remark4;
+
+@property NSArray<ProductItem *>* Items;
+
+@property NSArray<ProductPicture *>* Pictures;
 
 @end

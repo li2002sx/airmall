@@ -965,9 +965,9 @@ void bg_cleanCache(){
                 [valueDict removeObjectForKey:bg_id];
             }
         }else{
-            if(![valueDict.allKeys containsObject:bg_id]) {
-                valueDict[bg_id] = @(1);//没有就预备放入
-            }
+//            if(![valueDict.allKeys containsObject:bg_id]) {
+//                valueDict[bg_id] = @(1);//没有就预备放入
+//            }
         }
     }else if(filtModelInfoType == bg_ModelInfoInsert){//插入时要移除主键,不然会出错.
         //判断是否定义了“联合主键”.
@@ -978,9 +978,9 @@ void bg_cleanCache(){
                 [valueDict removeObjectForKey:bg_id];
             }
         }else{
-            if(![valueDict.allKeys containsObject:bg_id]) {
-                valueDict[bg_id] = @(1);//没有就预备放入
-            }
+//            if(![valueDict.allKeys containsObject:bg_id]) {
+//                valueDict[bg_id] = @(1);//没有就预备放入
+//            }
         }
     }else if(filtModelInfoType == bg_ModelInfoArrayUpdate){//批量更新操作时,移除 创建时间 字段不做更新
         [valueDict removeObjectForKey:bg_sqlKey(bg_createTimeKey)];

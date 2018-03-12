@@ -11,25 +11,27 @@
 
 @interface SalesOrderItem : NSObject
 
-@property(nonatomic)NSInteger ID;
-
-@property(nonatomic)NSInteger OrderID;
+@property(nonatomic)NSString* OrderNo;
 
 @property(nonatomic)NSInteger ProductID;
 
+@property(nonatomic)NSInteger ProductItemID;
+
 @property(nonatomic)NSString* Sku;
 
-@property(nonatomic)NSString* SkuName;
+@property(nonatomic)NSString* DiningCarNo;
 
 @property(nonatomic)NSString* Barcode;
+
+@property(nonatomic)NSString* ProductName;
+
+@property(nonatomic)NSString* Unit;
 
 @property(nonatomic)float UnitPrice;
 
 @property(nonatomic)float DiscountFee;
 
 @property(nonatomic)NSInteger Quantity;
-
-@property(nonatomic)NSString* Unit;
 
 @property(nonatomic)NSString* Remark;
 

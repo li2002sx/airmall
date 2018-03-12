@@ -23,8 +23,9 @@
 /**
  *  get方法
  */
-+(void)get:(NSString *)url params:(NSDictionary *)params success:(Success)success fail:(Fail)fail{
-    AFHTTPSessionManager *manager = [self managerWithBaseURL:nil sessionConfiguration:NO];
++(void)get:(NSString *)url params:(NSMutableDictionary *)params success:(Success)success fail:(Fail)fail{
+    params = [CommonUtil createCommonArgs: params];
+    AFHTTPSessionManager *manager = [self managerWithBaseURL:@_ApiUrl sessionConfiguration:NO];
     [manager GET:url parameters:params progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         id dic = [self responseConfiguration:responseObject];
         success(task,dic);
@@ -36,10 +37,13 @@
 /**
  *  post方法
  */
-+(void)post:(NSString *)url params:(NSDictionary *)params success:(Success)success fail:(Fail)fail{
-    AFHTTPSessionManager *manager = [self managerWithBaseURL:nil sessionConfiguration:NO];
++(void)post:(NSString *)url params:(NSMutableDictionary *)params success:(Success)success fail:(Fail)fail{
+    params = [CommonUtil createCommonArgs: params];
+    AFHTTPSessionManager *manager = [self managerWithBaseURL:@_ApiUrl sessionConfiguration:NO];
+    manager.requestSerializer = [AFJSONRequestSerializer serializer];
     [manager POST:url parameters:params progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-        id dic = [self responseConfiguration:responseObject];
+//        id dic = [self responseConfiguration:responseObject];
+        id dic = responseObject;
         success(task,dic);
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
         fail(task,error);
@@ -49,10 +53,11 @@
 /**
  *  上传文件
  */
-+(void)upload:(NSString *)url params:(NSDictionary *)params fileData:(NSData *)filedata
++(void)upload:(NSString *)url params:(NSMutableDictionary *)params fileData:(NSData *)filedata
          name:(NSString *)name fileName:(NSString *)filename mimeType:(NSString *) mimeType
      progress:(Progress)progress success:(Success)success fail:(Fail)fail{
-    AFHTTPSessionManager *manager = [self managerWithBaseURL:nil sessionConfiguration:NO];
+    params = [CommonUtil createCommonArgs: params];
+    AFHTTPSessionManager *manager = [self managerWithBaseURL:@_ApiUrl sessionConfiguration:NO];
     
     [manager POST:url parameters:params constructingBodyWithBlock:^(id<AFMultipartFormData>  _Nonnull formData){
             [formData appendPartWithFileData:filedata name:name fileName:filename mimeType:mimeType];
@@ -72,7 +77,7 @@
 +(NSURLSessionDownloadTask *)down:(NSString *)url saveUrl:(NSURL *)fileUrl
                          progress:(Progress )progress success:(void (^)(NSURLResponse *, NSURL *))success
                              fail:(void (^)(NSError *))fail{
-    AFHTTPSessionManager *manager = [self managerWithBaseURL:nil sessionConfiguration:YES];
+    AFHTTPSessionManager *manager = [self managerWithBaseURL:@_ApiUrl sessionConfiguration:YES];
     
     NSURL *urlpath = [NSURL URLWithString:url];
     NSURLRequest *request = [NSURLRequest requestWithURL:urlpath];
@@ -113,7 +118,7 @@
     return manager;
 }
 
-+(id)responseConfiguration:(id)responseObject{
++(NSDictionary*)responseConfiguration:(id)responseObject{
     
     NSString *string = [[NSString alloc] initWithData:responseObject encoding:NSUTF8StringEncoding];
     string = [string stringByReplacingOccurrencesOfString:@"\n" withString:@""];

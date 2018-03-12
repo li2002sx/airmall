@@ -21,13 +21,34 @@
     return product;
 }
 
-+(NSArray*) getProductListByIds:(NSArray*) productIdArr{
++(NSMutableDictionary*) getProductListByIds:(NSMutableArray*) productIdArr{
+    
+    NSMutableDictionary* dict = [NSMutableDictionary new];
     
     NSString* productIds = [productIdArr componentsJoinedByString:@","];
     NSString* where = [NSString stringWithFormat:@"where ProductID in (%@)",productIds];
     NSArray* arr = [ProductList bg_find:@"ProductList" where:where];
+    if([arr count]>0){
+        for(id item in arr){
+            [dict setObject:item forKey:[item valueForKey:@"ProductID"]];
+        }
+    }
+    return dict;
+}
+
++(NSMutableDictionary*) getProductListBySkus:(NSMutableArray*) skuArr{
     
-    return arr;
+    NSMutableDictionary* dict = [NSMutableDictionary new];
+    
+    NSString* skus = [skuArr componentsJoinedByString:@","];
+    NSString* where = [NSString stringWithFormat:@"where productId in (select productId from ProductItem where sku in (%@))",skus];
+    NSArray* arr = [ProductList bg_find:@"ProductList" where:where];
+    if([arr count]>0){
+        for(id item in arr){
+            [dict setObject:item forKey:[item valueForKey:@"ProductID"]];
+        }
+    }
+    return dict;
 }
 
 +(ProductItem*) getProductItemBySku:(NSString*) sku{
@@ -42,13 +63,20 @@
     return productItem;
 }
 
-+(NSArray*) getProductItemListBySkus:(NSArray*) skuArr{
++(NSMutableDictionary*) getProductItemListBySkus:(NSMutableArray*) skuArr{
+    
+    NSMutableDictionary* dict = [NSMutableDictionary new];
     
     NSString* skus = [skuArr componentsJoinedByString:@","];
     NSString* where = [NSString stringWithFormat:@"where Sku in (%@)",skus];
     NSArray* arr = [ProductItem bg_find:@"ProductItem" where:where];
     
-    return arr;
+    if([arr count]>0){
+        for(id item in arr){
+            [dict setObject:item forKey:[item valueForKey:@"Sku"]];
+        }
+    }
+    return dict;
 }
 
 @end

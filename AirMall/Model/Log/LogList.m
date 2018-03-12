@@ -10,4 +10,9 @@
 
 @implementation LogList
 
++(NSArray *)bg_unionPrimaryKeys{
+    
+    return @[@"ID"];
+}
+
 @end

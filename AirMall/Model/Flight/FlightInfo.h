@@ -11,13 +11,11 @@
 
 @interface FlightInfo : NSObject
 
-@property(nonatomic)NSInteger FlightID;
+@property(nonatomic)NSString* FlightNo;
 
-@property(nonatomic)NSDate* FlightDate;
+@property(nonatomic)NSString* FlightDate;
 
 @property(nonatomic)NSString* Carrier;
-
-@property(nonatomic)NSString* FlightNo;
 
 @property(nonatomic)NSString* LineEng;
 
@@ -27,13 +25,13 @@
 
 @property(nonatomic)NSString* ACType;
 
-@property(nonatomic)NSDate* DeptTime;
+@property(nonatomic)NSString* DeptTime;
 
-@property(nonatomic)NSDate* ArrTime;
+@property(nonatomic)NSString* ArrTime;
 
-@property(nonatomic)NSDate* ActualDeptTime;
+@property(nonatomic)NSString* ActualDeptTime;
 
-@property(nonatomic)NSDate* ActualArrTime;
+@property(nonatomic)NSString* ActualArrTime;
 
 @property(nonatomic)NSString* IntOrDom;
 

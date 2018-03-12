@@ -12,9 +12,9 @@
 
 @interface CommonDB : NSObject
 
-+(NSString*) selectOne:(NSString*)sql;
++(NSString*) selectList:(NSString*)sql;
 
-+(NSString*) selectList:(NSString*)sql pageIndex:(NSInteger)pageIndex pageSize:(NSInteger)pageSize;
++(NSString*) selectListForPage:(NSString*)sql pageIndex:(NSInteger)pageIndex pageSize:(NSInteger)pageSize;
 
 +(NSInteger) selectMaxId:(NSString*)table pk:(NSString*)pk;
 

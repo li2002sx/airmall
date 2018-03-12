@@ -18,7 +18,7 @@
 #import "OrderDB.h"
 #import "HMScannerController.h"
 
-@interface MainViewController : BaseViewController<WKNavigationDelegate,UITableViewDataSource,UITableViewDelegate>
+@interface MainViewController : BaseViewController<WKNavigationDelegate,UITableViewDataSource,UITableViewDelegate,UINavigationControllerDelegate,UIImagePickerControllerDelegate>
 
 @property (weak, nonatomic) IBOutlet UILabel *thisFlightNoLabel;
 
@@ -48,14 +48,16 @@
 
 @property (weak, nonatomic) IBOutlet UITableView *openTableView;
 
-
 - (IBAction)btnFrashPressed:(id)sender;
 
 @property (weak, nonatomic) IBOutlet UIButton *btnBack;
 
-@property (weak, nonatomic) IBOutlet UIButton *btnBackPressed;
+- (IBAction)btnBackPressed:(id)sender;
 
 @property (weak, nonatomic) IBOutlet WKWebView *webView;
 
+@property (copy, nonatomic) NSString *lastChosenMediaType;
+
+@property (strong, nonatomic) UIImage *chosenImage;
 
 @end

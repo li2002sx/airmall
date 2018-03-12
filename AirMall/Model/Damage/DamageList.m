@@ -10,4 +10,13 @@
 
 @implementation DamageList
 
++(NSArray *)bg_unionPrimaryKeys{
+    
+    return @[@"DamagedNo"];
+}
+
++(NSArray *)bg_ignoreKeys{
+    return @[@"Items",@"Pictures"];
+}
+
 @end

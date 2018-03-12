@@ -12,13 +12,21 @@
 
 @interface Cart : NSObject
 
-@property(nonatomic)NSInteger CartID;
+//@property(nonatomic)NSInteger CartID;
+
+@property(nonatomic)NSString* DiningCarNo;
+
+@property(nonatomic)NSInteger ProductID;
 
 @property(nonatomic)NSInteger ProductItemID;
 
 @property(nonatomic)NSString* Sku;
 
-@property(nonatomic)NSInteger ProductID;
+@property(nonatomic)NSString* Barcode;
+
+@property(nonatomic)NSString* ProductName;
+
+@property(nonatomic)NSString* Unit;
 
 @property(nonatomic)float Price;
 
@@ -30,7 +38,7 @@
 
 @interface AddCartResult : CommonResult
 
-@property(nonatomic)NSInteger cartId;
+//@property(nonatomic)NSInteger cartId;
 
 @end
 

@@ -8,12 +8,17 @@
 
 #import <Foundation/Foundation.h>
 #import "BGFMDB.h"
+#import "SalesOrderItem.h"
 
 @interface SalesOrder : NSObject
 
-@property(nonatomic)NSInteger OrderID;
+@property(nonatomic)NSString* OrderNo;
 
-@property(nonatomic)NSInteger Status;
+@property(nonatomic)NSString* FlightNo;
+
+@property(nonatomic)NSDate* FlightDate;
+
+@property(nonatomic)NSInteger OrderStatus;
 
 @property(nonatomic)NSInteger CustomerID;
 
@@ -37,12 +42,18 @@
 
 @property(nonatomic)float PaymentPrice;
 
-@property(nonatomic)NSInteger EmpID;
+@property(nonatomic)NSString* EmpNo;
 
-@property(nonatomic)NSDate* CreateTime;
+@property(nonatomic)NSString* DeviceNo;
 
-@property(nonatomic)NSDate* PayTime;
+@property(nonatomic)NSString* CreateTime;
+
+@property(nonatomic)NSString* PayTime;
 
 @property(nonatomic)NSString* Remark;
+
+@property NSArray<SalesOrderItem*>* Items;
+
+@property(nonatomic)NSInteger Syn;
 
 @end

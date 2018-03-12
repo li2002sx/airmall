@@ -55,6 +55,20 @@
     return result;
 }
 /**
+ 同步创建表.
+ */
+-(BOOL)bg_createTable{
+    
+    __block BOOL result;
+    [[BGDB shareManager] createTable:self ignoredKeys:bg_getIgnoreKeys complete:^(BOOL isSuccess) {
+        result = isSuccess;
+    }];
+    //关闭数据库
+    [[BGDB shareManager] closeDB];
+    return result;
+}
+
+/**
  同步存储.
  */
 -(BOOL)bg_save{

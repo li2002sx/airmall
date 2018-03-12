@@ -12,7 +12,7 @@
 
 +(void) createLog:(LogList*)log{
     
-    NSString* sql = [NSString stringWithFormat:@"INSERT INTO LogList (EmpID,Category,Type,Describe,States,FlightID,CreateTime) VALUES ('%ld','%@','%@','%@','正常','%ld', datetime('now','localtime'))",(long)log.EmpID,log.Category,log.Type,log.Describe,(long)log.FlightID];
+    NSString* sql = [NSString stringWithFormat:@"INSERT INTO LogList (EmpNo,Category,Type,Describe,States,FlightNo,FlightDate,CreateTime,DeviceNo) VALUES ('%@','%@','%@','%@','正常','%@','%@', datetime('now','localtime'),'%@')",log.EmpNo,log.Category,log.Type,log.Describe,log.FlightNo,log.FlightDate,log.DeviceNo];
     bg_executeSql(sql, nil, nil);
 }
 

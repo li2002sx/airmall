@@ -8,16 +8,21 @@
 
 #import <Foundation/Foundation.h>
 #import "BGFMDB.h"
+#import "HandoverItem.h"
 
 @interface HandoverMaster : NSObject
 
-@property(nonatomic)NSInteger HandoverID;
-
 @property(nonatomic)NSString* HandoverNo;
 
-@property(nonatomic)NSInteger PreFlightID;
+@property(nonatomic)NSInteger PreFlightNo;
 
-@property(nonatomic)NSInteger FlightID;
+@property(nonatomic)NSString* FlightNo;
+
+@property(nonatomic)NSString* FlightDate;
+
+@property(nonatomic)NSString* TailNo;
+
+@property(nonatomic)NSString* ACType;
 
 @property(nonatomic)NSString* Type;
 
@@ -27,22 +32,30 @@
 
 @property(nonatomic)NSInteger HandoverDamagedCounts;
 
-@property(nonatomic)NSInteger HandoverEmpId;
+@property(nonatomic)NSString* HandoverEmpNo;
 
 @property(nonatomic)NSString* HandoverEmpName;
 
-@property(nonatomic)NSDate* HandoverTime;
+@property(nonatomic)NSString* HandoverDeviceNo;
+
+@property(nonatomic)NSString* HandoverTime;
 
 @property(nonatomic)NSInteger UndertakeCounts;
 
 @property(nonatomic)NSInteger UndertakeDamagedCounts;
 
-@property(nonatomic)NSString* UndertakeEmpId;
+@property(nonatomic)NSString* UndertakeEmpNo;
 
 @property(nonatomic)NSString* UndertakeEmpName;
 
-@property(nonatomic)NSDate* UndertakeTime;
+@property(nonatomic)NSString* UndertakeDeviceNo;
+
+@property(nonatomic)NSString* UndertakeTime;
 
 @property(nonatomic)NSString* Remark;
+
+@property NSArray<HandoverItem*>* Items;
+
+@property(nonatomic)NSInteger Syn;
 
 @end

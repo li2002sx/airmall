@@ -10,4 +10,13 @@
 
 @implementation SalesOrder
 
++(NSArray *)bg_unionPrimaryKeys{
+    
+    return @[@"OrderNo"];
+}
+
++(NSArray *)bg_ignoreKeys{
+    return @[@"Items"];
+}
+
 @end

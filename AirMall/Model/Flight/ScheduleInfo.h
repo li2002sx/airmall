@@ -11,10 +11,10 @@
 
 @interface ScheduleInfo : NSObject
 
-@property(nonatomic)NSInteger ScheduleID;
+@property(nonatomic)NSString* FlightNo;
 
-@property(nonatomic)NSInteger FlightID;
+@property(nonatomic)NSString* FlightDate;
 
-@property(nonatomic)NSInteger EmpID;
+@property(nonatomic)NSString* EmpNo;
 
 @end

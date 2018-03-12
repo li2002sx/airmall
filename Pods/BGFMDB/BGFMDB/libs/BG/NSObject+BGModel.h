@@ -76,6 +76,12 @@ NSMutableData,UIImage,NSDate,NSURL,NSRange,CGRect,CGSize,CGPoint,自定义对象
  @tablename 此参数为nil时，判断以当前类名为表名的表是否存在; 此参数非nil时,判断以当前参数为表名的表是否存在.
  */
 +(BOOL)bg_isExistForTableName:(NSString* _Nullable)tablename;
+
+/**
+ 同步创建表.
+ */
+-(BOOL)bg_createTable;
+
 /**
  同步存储.
  */

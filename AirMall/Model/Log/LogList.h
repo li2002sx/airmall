@@ -13,7 +13,7 @@
 
 @property(nonatomic)NSInteger ID;
 
-@property(nonatomic)NSInteger EmpID;
+@property(nonatomic)NSString* EmpNo;
 
 @property(nonatomic)NSString* Category;
 
@@ -23,8 +23,14 @@
 
 @property(nonatomic)NSString* States;
 
-@property(nonatomic)NSInteger FlightID;
+@property(nonatomic)NSString* FlightNo;
 
-@property(nonatomic)NSDate* CreateTime;
+@property(nonatomic)NSString* FlightDate;
+
+@property(nonatomic)NSString* CreateTime;
+
+@property(nonatomic)NSString* DeviceNo;
+
+@property(nonatomic)NSInteger Syn;
 
 @end

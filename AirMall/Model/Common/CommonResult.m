@@ -13,12 +13,16 @@
 
 @end
 
-@implementation SelectOneResult
+@implementation SelectListResult
 
 
 @end
 
-@implementation SelectListResult
+@implementation SelectListForPageResult
 
+
+@end
+
+@implementation LoginInfoResult
 
 @end

@@ -1637,6 +1637,17 @@ static BGDB* BGdb = nil;
 }
 
 /**
+ 创建表
+ */
+-(void)createTable:(id _Nonnull)object ignoredKeys:(NSArray* const _Nullable)ignoredKeys complete:(bg_complete_B)complete{
+    dispatch_semaphore_wait(self.semaphore, DISPATCH_TIME_FOREVER);
+    @autoreleasepool {
+        [BGTool ifNotExistWillCreateTableWithObject:object ignoredKeys:ignoredKeys];
+    }
+    dispatch_semaphore_signal(self.semaphore);
+}
+
+/**
  存储一个对象.
  */
 -(void)saveObject:(id _Nonnull)object ignoredKeys:(NSArray* const _Nullable)ignoredKeys complete:(bg_complete_B)complete{

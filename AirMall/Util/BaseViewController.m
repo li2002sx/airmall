@@ -16,41 +16,34 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(notifi:) name:AFNetworkingReachabilityDidChangeNotification object:nil];
     // Do any additional setup after loading the view.
     bg_setDebug(YES);//打开调试模式,打印输出调试信息.
     self.navigationController.navigationBar.hidden = YES;
     [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleLightContent;
     _userInfo = [NSUserDefaults standardUserDefaults];
-    _userDict = [NSMutableDictionary dictionaryWithDictionary:[_userInfo objectForKey: user_key]];
+//    id userObj = [_userInfo objectForKey:_UserKey];
+//    if([userObj isEqualToString:@""]){
+//        _userDict = [NSMutableDictionary new];
+//    }else{
+//        _userDict = [NSMutableDictionary dictionaryWithDictionary:userObj];
+//    }
     
-    bg_setSqliteName(@"AriMall");
+    bg_setSqliteName(@"AirMall");
+    
+    CFUUIDRef uuid = CFUUIDCreate(NULL);
+    assert(uuid != NULL);
+    CFStringRef uuidStr = CFUUIDCreateString(NULL, uuid);
+
+    _identifierNumber = [SAMKeychain passwordForService:@_AppService account:@_UUIDAcount];
+    if (!_identifierNumber){
+        [SAMKeychain setPassword: [NSString stringWithFormat:@"%@", uuidStr] forService:@_AppService account:@_UUIDAcount];
+        _identifierNumber = [SAMKeychain passwordForService:@_AppService account:@_UUIDAcount];
+    }
+    NSLog(@"identifierNumber:%@",_identifierNumber);
 }
 
 - (void)viewWillAppear:(BOOL)animated{
     
-}
-
-- (void)notifi:(NSNotification *)notifi{
-    NSDictionary *dic = notifi.userInfo;
-    //获取网络状态
-    NSInteger status = [[dic objectForKey:@"AFNetworkingReachabilityNotificationStatusItem"] integerValue];
-    switch (status) {
-        case AFNetworkReachabilityStatusUnknown:
-            NSLog(@"无法获取网络状态");
-            break;
-        case AFNetworkReachabilityStatusReachableViaWWAN:
-            NSLog(@"移动蜂窝网络");
-            break;
-        case AFNetworkReachabilityStatusReachableViaWiFi:
-            NSLog(@"wifi上网");
-            break;
-        case AFNetworkReachabilityStatusNotReachable:
-            NSLog(@"无网络连接");
-            break;
-        default:
-            break;
-    }
 }
 
 - (void)dealloc {

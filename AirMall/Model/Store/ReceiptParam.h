@@ -10,7 +10,7 @@
 
 @interface ReceiptParam : NSObject
 
-@property(nonatomic)NSInteger deliveryID;
+@property(nonatomic)NSString* deliveryNo;
 
 @property(nonatomic)NSString* message;
 
@@ -22,6 +22,8 @@
 
 @property(nonatomic)NSString* sku;
 
+@property(nonatomic)NSString* diningCarNo;
+
 @property(nonatomic)NSInteger confirmCount;
 
 @property(nonatomic)NSInteger damagedCount;
@@ -30,7 +32,7 @@
 
 @property(nonatomic)NSString* damagedReasonDesc;
 
-@property(nonatomic)NSString* imageBase64;
+@property(nonatomic)NSArray* imageBase64s;
 
 @end
 
@@ -43,6 +45,8 @@
 @interface ReplenishSku : NSObject
 
 @property(nonatomic)NSString* sku;
+
+@property(nonatomic)NSString* diningCarNo;
 
 @property(nonatomic)NSInteger needCount;
 
@@ -58,13 +62,17 @@
 
 @property(nonatomic)NSString* sku;
 
+@property(nonatomic)NSString* diningCarNo;
+
 @property(nonatomic)NSInteger handoverCount;
+
+@property(nonatomic)NSInteger damagedCount;
 
 @end
 
 @interface TransferParam : NSObject
 
-@property(nonatomic)NSInteger handoverID;
+@property(nonatomic)NSString* handoverNo;
 
 @property(nonatomic)NSArray* transferList;
 
@@ -74,6 +82,8 @@
 
 @property(nonatomic)NSString* sku;
 
+@property(nonatomic)NSString* diningCarNo;
+
 @property(nonatomic)NSInteger handoverCount;
 
 @property(nonatomic)NSInteger damagedCount;
@@ -82,7 +92,7 @@
 
 @property(nonatomic)NSString* damagedReasonDesc;
 
-@property(nonatomic)NSString* imageBase64;
+@property(nonatomic)NSArray* imageBase64s;
 
 @end
 

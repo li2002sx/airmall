@@ -10,6 +10,11 @@
 
 @implementation Cart
 
++(NSArray *)bg_unionPrimaryKeys{
+    
+    return @[@"Sku",@"DiningCarNo"];
+}
+
 @end
 
 @implementation AddCartResult

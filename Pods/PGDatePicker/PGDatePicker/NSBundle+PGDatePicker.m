@@ -27,7 +27,7 @@
     if (bundle == nil) {
         NSString *language = [NSLocale preferredLanguages].firstObject;
         if ([language hasPrefix:@"en"]) {
-            language = @"en";
+            language = @"zh-Hans";
         } else if ([language hasPrefix:@"zh"]) {
             if ([language rangeOfString:@"Hans"].location != NSNotFound) {
                 language = @"zh-Hans";

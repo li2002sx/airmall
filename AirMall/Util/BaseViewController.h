@@ -10,10 +10,13 @@
 #import "AFNetworking/AFNetworking.h"
 #import "CommonUtil.h"
 #import "BGFMDB.h"
+#import "NetworkUtil.h"
+#import "SAMKeychain.h"
 
 @interface BaseViewController : UIViewController{
     NSUserDefaults *_userInfo;
     NSDictionary* _userDict;
+    NSString* _identifierNumber;
 }
 
 @end

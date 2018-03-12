@@ -17,4 +17,8 @@ target 'AirMall' do
   pod 'LBXScan/UI','~> 2.3'
   pod 'PGDatePicker', '>= 2.0.6'
   pod 'HMQRCodeScanner'
+  pod 'YYWebImage'
+  pod 'SAMKeychain'
+  pod 'SSZipArchive'
+  pod 'IQKeyboardManager'
 end

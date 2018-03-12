@@ -10,4 +10,13 @@
 
 @implementation HandoverMaster
 
++(NSArray *)bg_unionPrimaryKeys{
+    
+    return @[@"HandoverNo"];
+}
+
++(NSArray *)bg_ignoreKeys{
+    return @[@"Items"];
+}
+
 @end

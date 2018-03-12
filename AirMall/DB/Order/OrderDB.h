@@ -15,16 +15,17 @@
 #import "CommonDB.h"
 #import "Inventory.h"
 #import "LogDB.h"
+#import "ReceiptDB.h"
 
 @interface OrderDB : NSObject
 
-+(Cart*) getCartBySku:(NSString*)sku;
++(Cart*) getCartBySku:(NSString*)sku diningCarNo:(NSString*)diningCarNo;
 
-+(NSString*) addCart:(NSString*)sku num:(NSInteger)num;
++(NSString*) addCart:(NSString*)sku  diningCarNo:(NSString*)diningCarNo num:(NSInteger)num;
 
-+(NSString*) deleteCartSku:(NSString*) sku;
++(NSString*) deleteCartSku:(NSString*) sku  diningCarNo:(NSString*)diningCarNo;
 
-+(NSString*) updateNum:(NSString*) sku updateType:(NSInteger)updateType;
++(NSString*) updateNum:(NSString*) sku diningCarNo:(NSString*)diningCarNo updateType:(NSInteger)updateType;
 
 +(NSString*) createOrder:(CreateOrderParam*)createOrderParam userDict:(NSDictionary*) userDict;
 
