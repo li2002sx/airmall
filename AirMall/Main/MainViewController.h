@@ -17,6 +17,8 @@
 #import "ReceiptDB.h"
 #import "OrderDB.h"
 #import "HMScannerController.h"
+#import "AppDelegate.h"
+#import "SCLAlertView.h"
 
 @interface MainViewController : BaseViewController<WKNavigationDelegate,UITableViewDataSource,UITableViewDelegate,UINavigationControllerDelegate,UIImagePickerControllerDelegate>
 

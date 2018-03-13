@@ -8,7 +8,10 @@
 
 #import "MainViewController.h"
 
-@interface MainViewController ()
+@interface MainViewController (){
+    
+    AppDelegate* _appDelegate;
+}
 
 @property WebViewJavascriptBridge *bridge;
 
@@ -31,6 +34,8 @@
     [super viewDidLoad];
     
      _hud = [MBProgressHUD showHUDAddedTo:self.navigationController.view animated:YES];
+    
+    _appDelegate = [[UIApplication sharedApplication] delegate];
     
     _userDict = [_userInfo objectForKey:_UserKey];
     _thisFlightNoLabel.text = [NSString stringWithFormat:@"%@%@",[_userDict objectForKey:@"Carrier"],[_userDict objectForKey:@"FlightNo"]];
@@ -86,6 +91,7 @@
     [_bridge registerHandler:@"scan" handler:^(id data, WVJBResponseCallback responseCallback) {
         
         HMScannerController *scanner = [HMScannerController scannerWithCardName:nil avatar:nil completion:^(NSString *result) {
+            _appDelegate.openCamera = NO;
             [_bridge callHandler:@"getScanResult" data:@{ @"info":result } responseCallback:^(id response) {
                 NSLog(@"result responded: %@", response); //传入data 参数，并且拿到js的回调，自行处理自己的逻辑
             }];
@@ -93,6 +99,9 @@
         }];
         
         [scanner setTitleColor:[UIColor whiteColor] tintColor:[UIColor greenColor]];
+        
+        _appDelegate.openCamera = YES;
+//        [self presentViewController:scanner animated:YES completion:nil];
         [self showDetailViewController:scanner sender:nil];
         //        responseCallback(json);
     }];
@@ -215,7 +224,15 @@
 }
 
 - (void)viewWillAppear:(BOOL)animated {
+    
+    [super viewWillAppear:animated];
+//    [IQKeyboardManager sharedManager].enable = NO;
+}
 
+- (void)viewWillDisappear:(BOOL)animated{
+    
+    [super viewWillDisappear:animated];
+//    [IQKeyboardManager sharedManager].enable = YES;
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
@@ -269,11 +286,11 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     NSInteger row = [indexPath row];
-    if(row == 7){
-        [_userInfo setValue:@"" forKey:_UserKey];
+//    if(row == 7){
+//        [_userInfo setValue:@"" forKey:_UserKey];
 //        LoginViewController *loginView= [[LoginViewController alloc] initWithNibName:@"LoginViewController" bundle:nil];
-        [self.navigationController popViewControllerAnimated:YES];
-    }
+//        [self.navigationController popViewControllerAnimated:YES];
+//    }
     if(tableView == _shrinkTableView){
         if(row == 0){
             [_popup showWithLayout:_layout];
@@ -283,22 +300,59 @@
             [self loadHtmlUrl:[arr objectAtIndex:2]];
 //             [self loadHtmlPage:@"Pages/Index"];
             [self updateTableViewIcon: row];
+        }else if(row == 7){
+             [self logout];
         }else{
             [self loadHtmlPage:@"Index"];
         }
     }else if(tableView == _openTableView){
         if(row == 0){
-            dispatch_time_t delayTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.20 * NSEC_PER_SEC));
-            
-            __weak typeof(self) weakSelf = self;
-            dispatch_after(delayTime, dispatch_get_main_queue(), ^{
-                [weakSelf.shrinkView setHidden:NO];
-            });
-            [_popup dismiss:YES];
-        }else{
+
+        }else if(row < 7){
+            NSArray *arr = [_tableViewArr objectAtIndex:row];
+            [self loadHtmlUrl:[arr objectAtIndex:2]];
+            //             [self loadHtmlPage:@"Pages/Index"];
             [self updateTableViewIcon: row];
+        }else if(row == 7){
+            [self logout];
+        }else{
+            [self loadHtmlPage:@"Index"];
         }
+        dispatch_time_t delayTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.20 * NSEC_PER_SEC));
+        
+        __weak typeof(self) weakSelf = self;
+        dispatch_after(delayTime, dispatch_get_main_queue(), ^{
+            [weakSelf.shrinkView setHidden:NO];
+        });
+        [_popup dismiss:YES];
     }
+}
+
+-(void) logout{
+
+     SCLAlertView *alert = [[SCLAlertView alloc] init];
+    
+    //Using Block
+    [alert addButton:@"确定" actionBlock:^(void) {
+        [self.navigationController popViewControllerAnimated:YES];
+    }];
+    
+    [alert showNotice:self title:@"提示" subTitle:@"确定要退出登录吗？" closeButtonTitle:@"取消" duration:0.0f];
+    
+//    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"确定要退出吗？" message:@"" preferredStyle:UIAlertControllerStyleAlert];
+//
+//    UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+//        [self.navigationController popViewControllerAnimated:YES];
+////        NSLog(@"OK Action");
+//    }];
+//    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+////        NSLog(@"Cancel Action");
+//    }];
+//
+//    [alertController addAction:okAction];           // A
+//    [alertController addAction:cancelAction];
+//
+//    [self presentViewController:alertController animated:YES completion:nil];
 }
 
 - (void)updateTableViewIcon:(NSInteger) row{
@@ -475,6 +529,11 @@
         }]];
         [self presentViewController:alertController animated:YES completion:nil];
     }
+}
+
+- (BOOL)shouldAutorotate{
+    
+    return NO;
 }
 
 

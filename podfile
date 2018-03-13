@@ -21,4 +21,5 @@ target 'AirMall' do
   pod 'SAMKeychain'
   pod 'SSZipArchive'
   pod 'IQKeyboardManager'
+  pod 'SCLAlertView-Objective-C'
 end

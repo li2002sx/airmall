@@ -11,6 +11,8 @@
 		AA2D90E820551E0F00741337 /* ProductAttribute.m in Sources */ = {isa = PBXBuildFile; fileRef = AA2D90E720551E0F00741337 /* ProductAttribute.m */; };
 		AA2D90EB20551E6A00741337 /* DamagedProductPicture.m in Sources */ = {isa = PBXBuildFile; fileRef = AA2D90EA20551E6A00741337 /* DamagedProductPicture.m */; };
 		AA2D90ED2056A47E00741337 /* icon-cart-select@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = AA2D90EC2056A47D00741337 /* icon-cart-select@2x.png */; };
+		AA3130C02057B86C004E2CF9 /* UIImagePickerController+LandScapeImagePicker.m in Sources */ = {isa = PBXBuildFile; fileRef = AA3130BF2057B86C004E2CF9 /* UIImagePickerController+LandScapeImagePicker.m */; };
+		AA3DE1FB2057AA3A006A41CE /* icon-hangban@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = AA3DE1FA2057AA3A006A41CE /* icon-hangban@2x.png */; };
 		AA43132C204A6BB000E28C2B /* icon-succ@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = AA43131F204A6BAF00E28C2B /* icon-succ@2x.png */; };
 		AA43132E204A6BB000E28C2B /* btn-blue-bg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = AA431321204A6BAF00E28C2B /* btn-blue-bg@2x.png */; };
 		AA43132F204A6BB000E28C2B /* icon-loading@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = AA431322204A6BB000E28C2B /* icon-loading@2x.png */; };
@@ -49,7 +51,6 @@
 		AA431379204B04D800E28C2B /* icon-goods-select@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = AA431373204B04D800E28C2B /* icon-goods-select@2x.png */; };
 		AA43137A204B04D800E28C2B /* icon-store-select@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = AA431374204B04D800E28C2B /* icon-store-select@2x.png */; };
 		AA43137B204B04D800E28C2B /* icon-log-select@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = AA431375204B04D800E28C2B /* icon-log-select@2x.png */; };
-		AA43137C204B04D800E28C2B /* icon-hangban@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = AA431376204B04D800E28C2B /* icon-hangban@2x.png */; };
 		AA43137D204B04D800E28C2B /* icon-logout-select@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = AA431377204B04D800E28C2B /* icon-logout-select@2x.png */; };
 		AA431393204D16B000E28C2B /* icon-back@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = AA43138D204D16AD00E28C2B /* icon-back@2x.png */; };
 		AA431394204D16B000E28C2B /* icon-close@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = AA43138E204D16AD00E28C2B /* icon-close@2x.png */; };
@@ -118,6 +119,9 @@
 		AA2D90E920551E6A00741337 /* DamagedProductPicture.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DamagedProductPicture.h; sourceTree = "<group>"; };
 		AA2D90EA20551E6A00741337 /* DamagedProductPicture.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DamagedProductPicture.m; sourceTree = "<group>"; };
 		AA2D90EC2056A47D00741337 /* icon-cart-select@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-cart-select@2x.png"; sourceTree = "<group>"; };
+		AA3130BE2057B86C004E2CF9 /* UIImagePickerController+LandScapeImagePicker.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIImagePickerController+LandScapeImagePicker.h"; sourceTree = "<group>"; };
+		AA3130BF2057B86C004E2CF9 /* UIImagePickerController+LandScapeImagePicker.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIImagePickerController+LandScapeImagePicker.m"; sourceTree = "<group>"; };
+		AA3DE1FA2057AA3A006A41CE /* icon-hangban@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-hangban@2x.png"; sourceTree = "<group>"; };
 		AA43131F204A6BAF00E28C2B /* icon-succ@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-succ@2x.png"; sourceTree = "<group>"; };
 		AA431321204A6BAF00E28C2B /* btn-blue-bg@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "btn-blue-bg@2x.png"; sourceTree = "<group>"; };
 		AA431322204A6BB000E28C2B /* icon-loading@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-loading@2x.png"; sourceTree = "<group>"; };
@@ -157,7 +161,6 @@
 		AA431373204B04D800E28C2B /* icon-goods-select@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-goods-select@2x.png"; sourceTree = "<group>"; };
 		AA431374204B04D800E28C2B /* icon-store-select@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-store-select@2x.png"; sourceTree = "<group>"; };
 		AA431375204B04D800E28C2B /* icon-log-select@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-log-select@2x.png"; sourceTree = "<group>"; };
-		AA431376204B04D800E28C2B /* icon-hangban@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-hangban@2x.png"; sourceTree = "<group>"; };
 		AA431377204B04D800E28C2B /* icon-logout-select@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-logout-select@2x.png"; sourceTree = "<group>"; };
 		AA43138D204D16AD00E28C2B /* icon-back@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-back@2x.png"; sourceTree = "<group>"; };
 		AA43138E204D16AD00E28C2B /* icon-close@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-close@2x.png"; sourceTree = "<group>"; };
@@ -322,6 +325,7 @@
 		AA43131E204A6B7500E28C2B /* Main */ = {
 			isa = PBXGroup;
 			children = (
+				AA3DE1FA2057AA3A006A41CE /* icon-hangban@2x.png */,
 				AA2D90EC2056A47D00741337 /* icon-cart-select@2x.png */,
 				AA4313AC204D34DB00E28C2B /* line-bg@2x.png */,
 				AA43138D204D16AD00E28C2B /* icon-back@2x.png */,
@@ -329,7 +333,6 @@
 				AA43138E204D16AD00E28C2B /* icon-close@2x.png */,
 				AA431390204D16AF00E28C2B /* icon-close@3x.png */,
 				AA431391204D16AF00E28C2B /* menu-logo@2x.png */,
-				AA431376204B04D800E28C2B /* icon-hangban@2x.png */,
 				AA431372204B04D800E28C2B /* icon-huanban-select@2x.png */,
 				AA431373204B04D800E28C2B /* icon-goods-select@2x.png */,
 				AA431374204B04D800E28C2B /* icon-store-select@2x.png */,
@@ -591,6 +594,8 @@
 				AA4F0D7E20456B4200081B94 /* CommonUtil.m */,
 				AA4F0D832046503900081B94 /* NetworkUtil.h */,
 				AA4F0D842046503900081B94 /* NetworkUtil.m */,
+				AA3130BE2057B86C004E2CF9 /* UIImagePickerController+LandScapeImagePicker.h */,
+				AA3130BF2057B86C004E2CF9 /* UIImagePickerController+LandScapeImagePicker.m */,
 			);
 			path = Util;
 			sourceTree = "<group>";
@@ -735,11 +740,11 @@
 				AA431371204AF57D00E28C2B /* icon-photo@2x.png in Resources */,
 				AA43141E205297F700E28C2B /* gif-syn.gif in Resources */,
 				AA43137A204B04D800E28C2B /* icon-store-select@2x.png in Resources */,
+				AA3DE1FB2057AA3A006A41CE /* icon-hangban@2x.png in Resources */,
 				AA431349204A6BD100E28C2B /* icon-huanban@2x.png in Resources */,
 				AA43136F204AE14C00E28C2B /* index-bg@2x.png in Resources */,
 				AA431332204A6BB000E28C2B /* login-bg@2x.png in Resources */,
 				AA43136A204AC47C00E28C2B /* login-network-bg@2x.png in Resources */,
-				AA43137C204B04D800E28C2B /* icon-hangban@2x.png in Resources */,
 				AA48B91B204514070075C94D /* Assets.xcassets in Resources */,
 				AA431333204A6BB000E28C2B /* btn-red-bg@2x.png in Resources */,
 				AA431397204D16B000E28C2B /* menu-logo@2x.png in Resources */,
@@ -785,6 +790,7 @@
 				"${BUILT_PRODUCTS_DIR}/PGDatePicker/PGDatePicker.framework",
 				"${BUILT_PRODUCTS_DIR}/PGPickerView/PGPickerView.framework",
 				"${BUILT_PRODUCTS_DIR}/SAMKeychain/SAMKeychain.framework",
+				"${BUILT_PRODUCTS_DIR}/SCLAlertView-Objective-C/SCLAlertView_Objective_C.framework",
 				"${BUILT_PRODUCTS_DIR}/SDWebImage/SDWebImage.framework",
 				"${BUILT_PRODUCTS_DIR}/SQLCipher/SQLCipher.framework",
 				"${BUILT_PRODUCTS_DIR}/SSZipArchive/SSZipArchive.framework",
@@ -808,6 +814,7 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/PGDatePicker.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/PGPickerView.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SAMKeychain.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SCLAlertView_Objective_C.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SDWebImage.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SQLCipher.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SSZipArchive.framework",
@@ -866,6 +873,7 @@
 				AA4313A5204D32D700E28C2B /* OpenMenuTableViewCell.m in Sources */,
 				AA4F0D852046503900081B94 /* NetworkUtil.m in Sources */,
 				AA48B921204514070075C94D /* main.m in Sources */,
+				AA3130C02057B86C004E2CF9 /* UIImagePickerController+LandScapeImagePicker.m in Sources */,
 				AA4F0D772045676700081B94 /* BaseViewController.m in Sources */,
 				AA4313CD204D571B00E28C2B /* ProductItem.m in Sources */,
 				AA48B913204514070075C94D /* AppDelegate.m in Sources */,
@@ -1017,12 +1025,17 @@
 			baseConfigurationReference = 56BAD70CA3999EDC89B73F81 /* Pods-AirMall.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = RPZ7568R2S;
 				INFOPLIST_FILE = AirMall/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.2;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.project.airmall;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				TARGETED_DEVICE_FAMILY = 2;
 			};
 			name = Debug;
@@ -1032,12 +1045,16 @@
 			baseConfigurationReference = F2E2984E4E62AA9E76A8826A /* Pods-AirMall.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = RPZ7568R2S;
 				INFOPLIST_FILE = AirMall/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.2;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.project.airmall;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				TARGETED_DEVICE_FAMILY = 2;
 			};
 			name = Release;

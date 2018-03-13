@@ -12,6 +12,7 @@
 #import "BGFMDB.h"
 #import "NetworkUtil.h"
 #import "SAMKeychain.h"
+#import "IQKeyboardManager.h"
 
 @interface BaseViewController : UIViewController{
     NSUserDefaults *_userInfo;

@@ -19,6 +19,8 @@
     NSInteger _signal;
     
     NSArray* _signalTextArr;
+    
+    NSMutableArray* _imageArr;
 }
 
 @end
@@ -261,6 +263,7 @@
                     for(id picture in product.Pictures){
                         ProductPicture* productPicture = [ProductPicture yy_modelWithDictionary:picture];
                         [productPicture bg_save];
+                        [_imageArr addObject:productPicture.PictureUrl];
                     }
                 }
                 
@@ -297,9 +300,20 @@
                 [self process:arr type:1];
             }
         }
+        [manager removeItemAtPath:unzipPath error:nil];
+        
+    }else if([fileType isEqualToString:@"picture"]){
+        
+        for(NSString* imageStr in _imageArr){
+            NSString* imagePath = [unzipPath stringByAppendingString:[imageStr stringByReplacingOccurrencesOfString:@"jpg" withString:@"jpeg"]];
+            UIImage *image=[[UIImage alloc]initWithContentsOfFile:imagePath];
+            NSString *imageBase64 = [CommonUtil image2DataURL:image];
+            NSString* update = [NSString stringWithFormat:@"set PictureUrl = '%@' where PictureUrl='%@'",imageBase64,imageStr];
+            [ProductPicture bg_update:@"ProductPicture" where:update];
+        }
+        [manager removeItemAtPath:unzipPath error:nil];
     }
     [manager removeItemAtPath:zipPath error:nil];
-//    [manager removeItemAtPath:unzipPath error:nil];
 }
 
 - (void)downData:(NSString*)fileType{
@@ -372,7 +386,7 @@
         
         NSData *zipData = [NSData dataWithContentsOfFile:uploadZipPath];
         
-        [NetworkUtil upload:@"api/ipad/upload" params:dict fileData:zipData name:@"upload.zip" fileName:@"upload.zip" mimeType:@"" progress:^(NSProgress *progress) {
+        [NetworkUtil upload:@"api/ipad/upload" params:nil fileData:zipData name:@"upload" fileName:@"upload.zip" mimeType:@"application/zip" progress:^(NSProgress *progress) {
             
             NSLog(@"上传进度：%f",1.0 * progress.completedUnitCount / progress.totalUnitCount);
             
@@ -385,8 +399,10 @@
             NSLog(@"success");
         } fail:^(NSURLSessionDataTask *task, NSError *error) {
             [self process:arr type:1];
-            NSLog(@"error");
+            NSLog(@"error:%@",error);
         }];
+    } else {
+        [self process:arr type:1];
     }
 }
 
@@ -405,6 +421,8 @@
     
     _tableViewDict = [NSMutableDictionary new];
     [_synTableView reloadData];
+    
+    _imageArr = [NSMutableArray new];
     
     for(NSArray* arr in _processContentArr){
         [self processStart:[arr objectAtIndex:0] text:[arr objectAtIndex:1]];

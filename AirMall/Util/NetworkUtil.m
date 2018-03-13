@@ -58,13 +58,13 @@
      progress:(Progress)progress success:(Success)success fail:(Fail)fail{
     params = [CommonUtil createCommonArgs: params];
     AFHTTPSessionManager *manager = [self managerWithBaseURL:@_ApiUrl sessionConfiguration:NO];
-    
     [manager POST:url parameters:params constructingBodyWithBlock:^(id<AFMultipartFormData>  _Nonnull formData){
             [formData appendPartWithFileData:filedata name:name fileName:filename mimeType:mimeType];
     } progress:^(NSProgress * _Nonnull uploadProgress) {
         progress(uploadProgress);
     } success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-        id dic = [NetworkUtil responseConfiguration:responseObject];
+//        id dic = [NetworkUtil responseConfiguration:responseObject];
+        id dic = responseObject;
         success(task,dic);
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
         fail(task,error);

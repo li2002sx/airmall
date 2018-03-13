@@ -62,4 +62,8 @@
 /// @param tintColor  tintColor
 - (void)setTitleColor:(UIColor *)titleColor tintColor:(UIColor *)tintColor;
 
+- (BOOL)shouldAutorotate;
+
+- (NSUInteger)supportedInterfaceOrientations;
+
 @end

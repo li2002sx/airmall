@@ -8,7 +8,6 @@
 
 #import <UIKit/UIKit.h>
 #import "AFNetworking/AFNetworking.h"
-#import "IQKeyboardManager.h"
 #import "LoginViewController.h"
 #import "CommonUtil.h"
 
@@ -17,6 +16,8 @@
 @property (strong, nonatomic) UIWindow *window;
 
 @property (strong, nonatomic) UINavigationController *navController;
+
+@property (nonatomic) BOOL openCamera;
 
 @end
 
