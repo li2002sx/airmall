@@ -39,4 +39,16 @@
     NSLog(@"%@",result);
 }
 
++(id) getPreFlightInfo:(NSString*) flightNo tailNo:(NSString*) tailNo acType:(NSString*)acType{
+    
+    id result = nil;
+    NSString* sql = [NSString stringWithFormat:@"SELECT * FROM FlightInfo WHERE TailNo = '%@' AND ACType = '%@' AND FlightNo != '%@' AND DeptTime < strftime('%%Y/%%m/%%d %%H:%%M:%%S', 'now', 'localtime')  ORDER BY DeptTime DESC limit 1", tailNo, acType, flightNo];
+    
+    NSArray* arr = bg_executeSql(sql, nil, nil);
+    if([arr count] > 0){
+        result = [arr objectAtIndex:0];
+    }
+    return result;
+}
+
 @end

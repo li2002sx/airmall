@@ -22,4 +22,5 @@ target 'AirMall' do
   pod 'SSZipArchive'
   pod 'IQKeyboardManager'
   pod 'SCLAlertView-Objective-C'
+  pod 'Reachability'
 end

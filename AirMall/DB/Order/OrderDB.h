@@ -27,6 +27,8 @@
 
 +(NSString*) updateNum:(NSString*) sku diningCarNo:(NSString*)diningCarNo updateType:(NSInteger)updateType;
 
++(NSString*) clearCart;
+
 +(NSString*) createOrder:(CreateOrderParam*)createOrderParam userDict:(NSDictionary*) userDict;
 
 @end

@@ -28,6 +28,7 @@
 #import "Cart.h"
 #import "SynInfoTableViewCell.h"
 #import "SSZipArchive.h"
+#import "Reachability.h"
 
 @interface LoginViewController : BaseViewController<PGDatePickerDelegate,UITableViewDataSource,UITableViewDelegate>
 

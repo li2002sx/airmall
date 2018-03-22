@@ -29,8 +29,10 @@
 
 @property(nonatomic)NSString* DamagedReason;
 
-@property(nonatomic)NSString* ImageUrl;
+//@property(nonatomic)NSString* ImageUrl;
+//
+//@property(nonatomic)NSString* CreateTime;
 
-@property(nonatomic)NSString* CreateTime;
+@property(nonatomic)NSString* Remark;
 
 @end

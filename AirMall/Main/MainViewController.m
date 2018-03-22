@@ -26,6 +26,8 @@
 
 @property UIView* leftLayerView;
 
+@property BOOL hasNotTrans;
+
 @end
 
 @implementation MainViewController
@@ -37,8 +39,12 @@
     
     _appDelegate = [[UIApplication sharedApplication] delegate];
     
-    _userDict = [_userInfo objectForKey:_UserKey];
+    _userDict = [NSKeyedUnarchiver unarchiveObjectWithData:[_userInfo objectForKey:_UserKey]];
     _thisFlightNoLabel.text = [NSString stringWithFormat:@"%@%@",[_userDict objectForKey:@"Carrier"],[_userDict objectForKey:@"FlightNo"]];
+    id preFilghtNo = [_userDict objectForKey:@"PreFlightNo"];
+    if(preFilghtNo != nil){
+        _preFlightNoLabel.text = [NSString stringWithFormat:@"%@%@",[_userDict objectForKey:@"Carrier"],[_userDict objectForKey:@"PreFlightNo"]];
+    }
     _lineCHNLabel.text = [_userDict objectForKey:@"LineCHN"];
     NSDate* deptTime = [CommonUtil convertDateTimeFromString:[_userDict objectForKey:@"DeptTime"]];
     NSDate* arrTime = [CommonUtil convertDateTimeFromString:[_userDict objectForKey:@"ArrTime"]];
@@ -50,7 +56,10 @@
     _empJobLabel.text = [_userDict objectForKey:@"EmpType"];
     _lastLoginTimeLabel.text = [_userDict objectForKey:@"LastLoginTime"];
     
-    _tableViewArr = [NSMutableArray arrayWithObjects:[NSMutableArray arrayWithObjects:@"icon-menu",@"LOGO", nil],[NSMutableArray arrayWithObjects:@"icon-hangban-select",@"航班信息",@"Index.html", nil],[NSMutableArray arrayWithObjects:@"icon-huanban",@"换班交接",@"AssociateManage.html", nil],[NSMutableArray arrayWithObjects:@"icon-goods",@"商品列表",@"ProductList.html", nil],[NSMutableArray arrayWithObjects:@"icon-cart",@"订单列表",@"OederList.html", nil],[NSMutableArray arrayWithObjects:@"icon-store",@"库存管理",@"query.html", nil],[NSMutableArray arrayWithObjects:@"icon-log",@"日志查询",@"Log.html", nil],[NSMutableArray arrayWithObjects:@"icon-logout",@"账号退出", nil],[NSMutableArray arrayWithObjects:@"icon-log",@"DEMO", nil], nil];
+    _tableViewArr = [NSMutableArray arrayWithObjects:[NSMutableArray arrayWithObjects:@"icon-menu",@"LOGO",@"", nil],[NSMutableArray arrayWithObjects:@"icon-hangban-select",@"航班信息",@"Index.html", nil],[NSMutableArray arrayWithObjects:@"icon-huanban",@"换班交接",@"AssociateManage.html", nil],[NSMutableArray arrayWithObjects:@"icon-goods",@"商品列表",@"ProductList.html", nil],[NSMutableArray arrayWithObjects:@"icon-cart",@"订单列表",@"OrderList.html", nil],[NSMutableArray arrayWithObjects:@"icon-store",@"库存管理",@"query.html", nil],[NSMutableArray arrayWithObjects:@"icon-log",@"日志查询",@"Log.html", nil],[NSMutableArray arrayWithObjects:@"icon-logout",@"账号退出",@"", nil],[NSMutableArray arrayWithObjects:@"icon-log",@"DEMO",@"", nil], nil];
+//
+    
+    _hasNotTrans = [self hasNotTransfer];
     
     _shrinkTableView.dataSource = self;
     _shrinkTableView.delegate = self;
@@ -69,6 +78,8 @@
     _shrinkView.layer.shadowOffset = CGSizeMake(3,3);//shadowOffset阴影偏移,x向右偏移4，y向下偏移4，默认(0, -3),这个跟shadowRadius配合使用
     _shrinkView.layer.shadowOpacity = 0.1;//阴影透明度，默认0
     _shrinkView.layer.shadowRadius = 2;//阴影半径，默认3
+    
+//    _webView.scrollView.bounces = false;
     
     [self loadHtmlUrl:@"index.html"];
     
@@ -113,6 +124,12 @@
         //        responseCallback(json);
     }];
     
+    //显示菜单
+    [_bridge registerHandler:@"showMenu" handler:^(id data, WVJBResponseCallback responseCallback) {
+        NSString* index = [data objectForKey:@"index"];
+        [self updateTableViewIcon:[index integerValue]];
+    }];
+    
     //显示遮罩
     [_bridge registerHandler:@"showCover" handler:^(id data, WVJBResponseCallback responseCallback) {
         [_topLayerView setHidden:NO];
@@ -129,10 +146,12 @@
     [_bridge registerHandler:@"loginInfo" handler:^(id data, WVJBResponseCallback responseCallback) {
         LoginInfoResult* result = [LoginInfoResult new];
         result.status = 1;
+        result.message = @"查询成功";
         result.userInfo = _userDict;
         NSString* json = [result yy_modelToJSONString];
         NSLog(@"%@",json);
         responseCallback(json);
+        [self createLog:@"loginInfo" data:data result:json];
     }];
     
     //获取单条或多条数据查询结果
@@ -140,6 +159,7 @@
         NSString* sql = [data objectForKey:@"sql"];
         NSString* json = [CommonDB selectList:sql];
         responseCallback(json);
+        [self createLog:@"selectList" data:data result:json];
     }];
     
     //获取列表的查询结果
@@ -149,6 +169,7 @@
         NSInteger pageSize = [[data objectForKey:@"pageSize"] integerValue];
         NSString* json = [CommonDB selectListForPage:sql pageIndex:pageIndex pageSize:pageSize];
         responseCallback(json);
+        [self createLog:@"loginInfo" data:data result:json];
     }];
     
     //确认收货
@@ -156,6 +177,7 @@
         ReceiptParam* receiptParam = [ReceiptParam yy_modelWithJSON:data];
         NSString* json = [ReceiptDB receive:receiptParam userDict:_userDict];
         responseCallback(json);
+        [self createLog:@"selectListForPage" data:data result:json];
     }];
     
     //补货申请
@@ -163,20 +185,25 @@
         ReplenishParam* replenishParam = [ReplenishParam yy_modelWithJSON:data];
         NSString* json = [ReceiptDB replenish:replenishParam userDict:_userDict];
         responseCallback(json);
+        [self createLog:@"loginInfo" data:data result:json];
     }];
     
     //盘点生成交接单
     [_bridge registerHandler:@"inventory" handler:^(id data, WVJBResponseCallback responseCallback) {
         InventoryParam* inventoryParam = [InventoryParam yy_modelWithJSON:data];
         NSString* json = [ReceiptDB inventory:inventoryParam userDict:_userDict];
+        _hasNotTrans = [self hasNotTransfer];
         responseCallback(json);
+        [self createLog:@"inventory" data:data result:json];
     }];
     
     //交接确认
     [_bridge registerHandler:@"transfer" handler:^(id data, WVJBResponseCallback responseCallback) {
         TransferParam* transferParam = [TransferParam yy_modelWithJSON:data];
         NSString* json = [ReceiptDB transfer:transferParam userDict:_userDict];
+        _hasNotTrans = [self hasNotTransfer];
         responseCallback(json);
+        [self createLog:@"transfer" data:data result:json];
     }];
     
     //加入购物车
@@ -186,6 +213,7 @@
         NSString* diningCarNo = [data valueForKey:@"diningCarNo"];
         NSString* json = [OrderDB addCart:sku diningCarNo:diningCarNo num:quantity];
         responseCallback(json);
+        [self createLog:@"addCart" data:data result:json];
     }];
     
     //修改购物车商品数量
@@ -195,6 +223,7 @@
         NSInteger updateType = [[data valueForKey:@"updateType"] integerValue];
         NSString* json = [OrderDB updateNum:sku diningCarNo:diningCarNo updateType:updateType];
         responseCallback(json);
+        [self createLog:@"updateNum" data:data result:json];
     }];
     
     //删除购物车商品
@@ -203,6 +232,14 @@
         NSString* diningCarNo = [data valueForKey:@"diningCarNo"];
         NSString* json = [OrderDB deleteCartSku:sku diningCarNo:diningCarNo];
         responseCallback(json);
+        [self createLog:@"deleteCartSku" data:data result:json];
+    }];
+    
+    //清空购物车商品
+    [_bridge registerHandler:@"clearCart" handler:^(id data, WVJBResponseCallback responseCallback) {
+        NSString* json = [OrderDB clearCart];
+        responseCallback(json);
+        [self createLog:@"clearCart" data:data result:json];
     }];
     
     //创建订单
@@ -210,6 +247,7 @@
         CreateOrderParam* createOrderParam = [CreateOrderParam yy_modelWithJSON:data];
         NSString* json = [OrderDB createOrder:createOrderParam userDict:_userDict];
         responseCallback(json);
+        [self createLog:@"createOrder" data:data result:json];
     }];
     
     //    [_bridge registerHandler:@"testObjcCallback" handler:^(id data, WVJBResponseCallback responseCallback) {
@@ -221,6 +259,20 @@
     
     //    [self renderButtons:_webView];
     //    [self loadHtmlPage:@"Pages/Index"];
+}
+
+- (void) createLog:(NSString*) method data:(id) data result:(NSString*)result{
+    
+    LogList* log = [LogList new];
+    log.EmpNo = [_userDict valueForKey:@"EmpNo"];
+    log.FlightNo = [_userDict valueForKey:@"FlightNo"];
+    log.FlightDate = [_userDict valueForKey:@"FlightDate"];
+    log.Category = @"操作信息";
+    log.DeviceNo = [_userDict valueForKey:@"DeviceNo"];
+    log.Type = @"操作信息";
+    NSString* param = [data yy_modelToJSONString];
+    log.Describe = [NSString stringWithFormat:@"method:%@ \n param:%@ \n result:%@",method,[param stringByReplacingOccurrencesOfString:@"\n" withString:@" "],result];
+    [LogDB createLog:log];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -255,6 +307,9 @@
         NSArray *arr = [_tableViewArr objectAtIndex:row];
         UIImage *image = [UIImage imageNamed:[arr objectAtIndex:0]];
         [shrinkMenuCell.iconImageView setImage:image];
+        if(row == 0){
+            shrinkMenuCell.iconImageView.frame = CGRectMake(10,9,30,30);
+        }
         shrinkMenuCell.selectionStyle = UITableViewCellSelectionStyleNone;
         return shrinkMenuCell;
     }else if(tableView == _openTableView){
@@ -267,6 +322,7 @@
         NSInteger row = [indexPath row];
         if(row == 0){
             UIImage *image = [UIImage imageNamed:@"icon-close"];
+            openMenuCell.iconImageView.frame = CGRectMake(10,9,30,30);
             [openMenuCell.iconImageView setImage:image];
             image = [UIImage imageNamed:@"menu-logo"];
             [openMenuCell.logoImageView setImage:image];
@@ -294,12 +350,16 @@
     if(tableView == _shrinkTableView){
         if(row == 0){
             [_popup showWithLayout:_layout];
-            [_shrinkView setHidden:YES];
+//            [_shrinkView setHidden:YES];
         }else if(row < 7){
-            NSArray *arr = [_tableViewArr objectAtIndex:row];
-            [self loadHtmlUrl:[arr objectAtIndex:2]];
-//             [self loadHtmlPage:@"Pages/Index"];
-            [self updateTableViewIcon: row];
+            if(row > 2 && _hasNotTrans){
+                 [CommonUtil showOnlyText:self.view tips:@"还有未完成的交接单"];
+            }else{
+                NSArray *arr = [_tableViewArr objectAtIndex:row];
+                [self loadHtmlUrl:[arr objectAtIndex:2]];
+    //             [self loadHtmlPage:@"Pages/Index"];
+                [self updateTableViewIcon: row];
+            }
         }else if(row == 7){
              [self logout];
         }else{
@@ -318,14 +378,19 @@
         }else{
             [self loadHtmlPage:@"Index"];
         }
-        dispatch_time_t delayTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.20 * NSEC_PER_SEC));
-        
-        __weak typeof(self) weakSelf = self;
-        dispatch_after(delayTime, dispatch_get_main_queue(), ^{
-            [weakSelf.shrinkView setHidden:NO];
-        });
+//        dispatch_time_t delayTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.20 * NSEC_PER_SEC));
+//
+//        __weak typeof(self) weakSelf = self;
+//        dispatch_after(delayTime, dispatch_get_main_queue(), ^{
+//            [weakSelf.shrinkView setHidden:NO];
+//        });
         [_popup dismiss:YES];
     }
+}
+
+-(BOOL) hasNotTransfer{
+    BOOL result = [ReceiptDB hasNotTrans: [_userDict objectForKey:@"PreFlightNo"] flightDate: [_userDict objectForKey:@"FlightDate"] tailNo: [_userDict objectForKey:@"TailNo"] acType: [_userDict objectForKey:@"ACType"]];
+    return result;
 }
 
 -(void) logout{
@@ -337,6 +402,7 @@
         [self.navigationController popViewControllerAnimated:YES];
     }];
     
+    alert.showAnimationType= SCLAlertViewShowAnimationSlideInToCenter;
     [alert showNotice:self title:@"提示" subTitle:@"确定要退出登录吗？" closeButtonTitle:@"取消" duration:0.0f];
     
 //    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"确定要退出吗？" message:@"" preferredStyle:UIAlertControllerStyleAlert];
@@ -448,6 +514,16 @@
 - (IBAction)btnBackPressed:(id)sender {
     if([_webView canGoBack]){
         [_webView goBack];
+        NSString * realUrl = _webView.URL.absoluteString;
+        NSLog(@"realUrl:%@",realUrl);
+        for(int i = 0;i<[_tableViewArr count];i++){
+            NSArray* arr = [_tableViewArr objectAtIndex:i];
+            id url = [arr objectAtIndex:2];
+            if([realUrl containsString:url]){
+                [self updateTableViewIcon:i];
+                break;
+            }
+        }
     }
 }
 

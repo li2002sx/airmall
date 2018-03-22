@@ -42,6 +42,8 @@
 
 +(NSString*) transfer:(TransferParam*) transferParam userDict:(NSDictionary*) userDict;
 
++(BOOL) hasNotTrans:(NSString*) flightNo flightDate:(NSString*) flightDate tailNo:(NSString*) tailNo acType:(NSString*)acType;
+
 +(void)createReportFile;
 
 @end

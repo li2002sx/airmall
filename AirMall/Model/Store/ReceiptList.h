@@ -36,6 +36,8 @@
 
 @property(nonatomic)NSInteger ConfirmCounts;
 
+@property(nonatomic)NSInteger DamagedCounts;
+
 @property(nonatomic)NSString* DeliveryEmpNo;
 
 @property(nonatomic)NSString* DeliveryEmpName;

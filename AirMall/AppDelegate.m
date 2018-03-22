@@ -27,10 +27,13 @@
     self.window.rootViewController = _navController;
     [self.window makeKeyAndVisible];
     
-    [[AFNetworkReachabilityManager sharedManager]startMonitoring];  // 在AppDelegate 中开启监听
-    [[AFNetworkReachabilityManager sharedManager]setReachabilityStatusChangeBlock:^(AFNetworkReachabilityStatus status) {
+    AFNetworkReachabilityManager* sharedManager = [AFNetworkReachabilityManager sharedManager];
+    [sharedManager setReachabilityStatusChangeBlock:^(AFNetworkReachabilityStatus status) {
         //网络变化时的回调方法
+        NSLog(@"status:%ld",status);
     }];
+    
+    [sharedManager startMonitoring];  // 在AppDelegate 中开启监听
     
     return YES;
 }

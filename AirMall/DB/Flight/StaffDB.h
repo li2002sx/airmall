@@ -10,6 +10,7 @@
 #import "YYModel.h"
 #import "Staff.h"
 #import "LogDB.h"
+#import "FlightInfo.h"
 
 #define tb_staff @"staff"
 
@@ -18,4 +19,7 @@
 +(id) staffLogin:(NSString*) flightNo flightDate:(NSString*) flightDate empNo:(NSString*) empNo password:(NSString*) password deviceNo:(NSString*)deviceNo;
 
 +(void) updateLastLoginTime:(NSString*) empNo;
+
++(id) getPreFlightInfo:(NSString*) flightNo tailNo:(NSString*) tailNo acType:(NSString*)acType;
+
 @end

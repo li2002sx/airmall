@@ -75,7 +75,7 @@
     NSString* update = [NSString stringWithFormat:@"set Quantity=Quantity+%ld where sku='%@' and DiningCarNo = '%@'",updateType,sku,diningCarNo];
     BOOL result = [Cart bg_update:@"Cart" where:update];
     if(result){
-        [commonResult setStatus:0];
+        [commonResult setStatus:1];
         [commonResult setMessage:@"修改商品数量成功"];
     }else{
         [commonResult setMessage:@"修改商品数量失败"];
@@ -84,10 +84,19 @@
     return json;
 }
 
++(NSString*) clearCart{
+    CommonResult* commonResult = [CommonResult new];
+    [Cart bg_delete:@"Cart" where:nil];
+    [commonResult setStatus:1];
+    [commonResult setMessage:@"清空购物车成功"];
+    NSString* json = [commonResult yy_modelToJSONObject];
+    return json;
+}
+
 +(NSString*) createOrder:(CreateOrderParam*)createOrderParam userDict:(NSDictionary*) userDict{
     
-    CommonResult* commonResult = [CommonResult new];
-    [commonResult setStatus:0];
+    OrderResult* orderResult = [OrderResult new];
+    [orderResult setStatus:0];
     
     NSString* empNo = [userDict valueForKey:@"EmpNo"];
     NSString* empName = [userDict valueForKey:@"EmpName"];
@@ -114,6 +123,7 @@
         
         if([skuDicts count] > 0 && [productDicts count] > 0){
          
+            bool canOrder = true;
             float totalPrice = 0;
             float totalDiscountPrice = 0;
             for(Cart* item in arr){
@@ -126,14 +136,15 @@
                 ProductItem* productItem = [skuDicts valueForKey:sku];
                 ProductList* product = [productDicts objectForKey:@(productItem.ProductID)];
                 
-                totalPrice += cart.Price;
-                totalDiscountPrice += cart.Discount;
+                totalPrice += cart.Price * cart.Quantity;
+                totalDiscountPrice += cart.Discount * cart.Quantity;
                 
                 NSString* where = [NSString stringWithFormat:@"where FlightNo='%@' and FlightDate='%@' and Sku='%@' and Qty >= %ld",flightNo,flightDate,sku,cart.Quantity];
                 NSArray* arr = [Inventory bg_find:@"Inventory" where:where];
                 if([arr count] == 0){
-                    commonResult.status = 0;
-                    commonResult.message = [NSString stringWithFormat:@"sku:%@ 库存不够",cart.Sku];
+                    orderResult.status = 0;
+                    orderResult.message = [NSString stringWithFormat:@"sku:%@ 库存不够",cart.Sku];
+                    canOrder = false;
                     break;
                 }
                 
@@ -144,33 +155,34 @@
                 [Inventory bg_update:@"Inventory" where:update];
                 
             }
-            NSString* sql =[NSString stringWithFormat:@"INSERT INTO SalesOrder(OrderNo,FlightNo,FlightDate,OrderStatus,CustomerID,FirstName,LastName,ReceiverMobile,PaymentType,OrderPrice,DiscountPrice,PaymentPrice,EmpNo,DeviceNo,CreateTime,PayTime,Remark)VALUES ('%@','%@','%@',1,0,'%@','%@','%@','现金支付',%.2f,%.2f,%f,'%@','%@',datetime('now','localtime',''),datetime('now','localtime'),'%@')",orderNo,flightNo,flightDate,createOrderParam.firstName,createOrderParam.lastName,createOrderParam.mobile,totalPrice,totalDiscountPrice,totalPrice-totalDiscountPrice,empNo,deviceNo,createOrderParam.remark];
-            bg_executeSql(sql, nil, nil);
-            
-            [Cart bg_delete:@"Cart" where:nil];
-            commonResult.status = 1;
-            
-            LogList* log = [LogList new];
-            log.EmpNo = empNo;
-            log.FlightNo = flightNo;
-            log.FlightDate = [userDict valueForKey:@"FlightDate"];
-            log.Category = @"操作信息";
-            log.DeviceNo = deviceNo;
-            log.Type = @"创建订单";
-            log.Describe = [NSString stringWithFormat:@"创建订单 %@, 金额 %.2f",orderNo,totalPrice];
-            [LogDB createLog:log];
-            
-            [commonResult setStatus:1];
-            [commonResult setMessage:@"创建订单成功"];
-            
+            if(canOrder){
+                NSString* sql =[NSString stringWithFormat:@"INSERT INTO SalesOrder(OrderNo,FlightNo,FlightDate,OrderStatus,CustomerID,FirstName,LastName,ReceiverMobile,PaymentType,OrderPrice,DiscountPrice,PaymentPrice,EmpNo,DeviceNo,CreateTime,PayTime,Remark)VALUES ('%@','%@','%@',1,0,'%@','%@','%@','现金支付',%.2f,%.2f,%f,'%@','%@',datetime('now','localtime'),datetime('now','localtime'),'%@')",orderNo,flightNo,flightDate,createOrderParam.firstName,createOrderParam.lastName,createOrderParam.mobile,totalPrice,totalDiscountPrice,totalPrice-totalDiscountPrice,empNo,deviceNo,createOrderParam.remark];
+                bg_executeSql(sql, nil, nil);
+                
+                [Cart bg_delete:@"Cart" where:nil];
+                
+                LogList* log = [LogList new];
+                log.EmpNo = empNo;
+                log.FlightNo = flightNo;
+                log.FlightDate = [userDict valueForKey:@"FlightDate"];
+                log.Category = @"操作信息";
+                log.DeviceNo = deviceNo;
+                log.Type = @"创建订单";
+                log.Describe = [NSString stringWithFormat:@"创建订单 %@, 金额 %.2f",orderNo,totalPrice];
+                [LogDB createLog:log];
+                
+                [orderResult setStatus:1];
+                [orderResult setOrderNo:orderNo];
+                [orderResult setMessage:@"创建订单成功"];
+            }
         }else{
-             [commonResult setMessage:@"没有找到对应的商品信息"];
+             [orderResult setMessage:@"没有找到对应的商品信息"];
         }
     }else{
-        commonResult.message = @"购物车中没有商品";
+        orderResult.message = @"购物车中没有商品";
     }
     
-    NSString* json = [commonResult yy_modelToJSONObject];
+    NSString* json = [orderResult yy_modelToJSONObject];
     return json;
 }
 

@@ -31,6 +31,8 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
     
+    [self initTable];
+    
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(notifi:) name:AFNetworkingReachabilityDidChangeNotification object:nil];
     
     NSDictionary *infoDic = [[NSBundle mainBundle] infoDictionary];
@@ -46,8 +48,6 @@
     _synCount = 0;
     
     _processContentArr = @[@[@"flight",@"航班数据"],@[@"product",@"商品数据"],@[@"staff",@"用户数据"],@[@"schedule",@"排班数据"],@[@"receipt",@"收货数据"],@[@"upload",@"数据上报"]];
-    
-    [self initTable];
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
@@ -113,7 +113,7 @@
 - (IBAction)loginPressed:(id)sender {
     
 //    [ReceiptDB createReportFile];
-    [self uploadData];
+//    [self uploadData];
     
     NSString *flightNo = _filedFlightNo.text;
     if ([flightNo length] <= 3) {
@@ -146,7 +146,19 @@
         [StaffDB updateLastLoginTime:empNo];
         [result setObject:[CommonUtil convertDateToString:[NSDate new] formatter:@"yyyy年M月d HH:mm:ss"] forKey:@"LastLoginTime"];
         [result setObject:_identifierNumber forKey:@"DeviceNo"];
-        [_userInfo setValue:result forKey:_UserKey];
+        
+        NSString* flightNo = [result valueForKey:@"FlightNo"];
+        NSString* tailNo = [result valueForKey:@"TailNo"];
+        NSString* acType = [result valueForKey:@"ACType"];
+        id preReuslt = [StaffDB getPreFlightInfo:flightNo tailNo:tailNo acType:acType];
+        if(preReuslt != nil){
+            [result setObject:[preReuslt objectForKey:@"FlightNo"] forKey:@"PreFlightNo"];
+            [result setObject:[preReuslt objectForKey:@"FlightDate"] forKey:@"PreFlightDate"];
+        }
+        
+        NSData *userData = [NSKeyedArchiver archivedDataWithRootObject:result];
+        
+        [_userInfo setValue:userData forKey:_UserKey];
         
     MainViewController *mainView= [[MainViewController alloc] initWithNibName:@"MainViewController" bundle:nil];
 
@@ -257,6 +269,7 @@
                         [productItem bg_save];
                         for(id attribute in productItem.Attributes){
                             ProductAttribute* productAttribute = [ProductAttribute yy_modelWithDictionary:attribute];
+                            productAttribute.ProductItemID = productItem.ProductItemID;
                             [productAttribute bg_save];
                         }
                     }
@@ -284,9 +297,38 @@
                             ReceiptItem* receiptItem = [ReceiptItem yy_modelWithDictionary:item];
                             [receiptItem bg_save];
                         }
+                    }else{
+                        ReceiptList* rec = [arr objectAtIndex:0];
+                        if(rec.DeliveryStatus == 0 && rec.DeliveryType == 1){
+                            [ReceiptList bg_delete:@"ReceiptList" where:where];
+                            [ReceiptItem bg_delete:@"ReceiptItem" where:where];
+                            [receipt bg_save];
+                            for(id item in receipt.Items){
+                                ReceiptItem* receiptItem = [ReceiptItem yy_modelWithDictionary:item];
+                                [receiptItem bg_save];
+                            }
+                        }
                     }
                 }
                 [self process:arr type:1];
+            }else if([fileName isEqualToString:@"HandoverMaster.json"]){
+                
+//                NSMutableArray* arr = [_tableViewDict objectForKey:@"receipt"];
+//                [self process:arr type:0];
+                
+                NSArray* handoverArr =  [NSArray yy_modelArrayWithClass:[HandoverMaster class] json:json];
+                for(HandoverMaster* handover in handoverArr){
+                    NSString* where = [NSString stringWithFormat:@"where HandoverNo = '%@'",handover.HandoverNo];
+                    NSArray * arr = [ReceiptList bg_find:@"HandoverMaster" where:where];
+                    if([arr count] == 0){
+                        [handover bg_save];
+                        for(id item in handover.Items){
+                            HandoverItem* handoverItem = [HandoverItem yy_modelWithDictionary:item];
+                            [handoverItem bg_save];
+                        }
+                    }
+                }
+//                [self process:arr type:1];
             }else if([fileName isEqualToString:@"ScheduleInfo.json"]){
                 
                 NSMutableArray* arr = [_tableViewDict objectForKey:@"schedule"];
@@ -305,7 +347,8 @@
     }else if([fileType isEqualToString:@"picture"]){
         
         for(NSString* imageStr in _imageArr){
-            NSString* imagePath = [unzipPath stringByAppendingString:[imageStr stringByReplacingOccurrencesOfString:@"jpg" withString:@"jpeg"]];
+            NSString* imagePath = [unzipPath stringByAppendingString:imageStr];
+//            NSString* imagePath = [unzipPath stringByAppendingString:[imageStr stringByReplacingOccurrencesOfString:@"jpg" withString:@"jpeg"]];
             UIImage *image=[[UIImage alloc]initWithContentsOfFile:imagePath];
             NSString *imageBase64 = [CommonUtil image2DataURL:image];
             NSString* update = [NSString stringWithFormat:@"set PictureUrl = '%@' where PictureUrl='%@'",imageBase64,imageStr];
@@ -374,6 +417,7 @@
     [dict setObject:_identifierNumber forKey:@"DeviceNo"];
     
     NSString *tmpDir = NSTemporaryDirectory();
+    NSString *uploadPath = [tmpDir stringByAppendingPathComponent:@"upload"];
     NSString *uploadZipPath = [NSString stringWithFormat:@"%@/upload.zip",tmpDir];
     
     //文件操作对象
@@ -395,10 +439,12 @@
             bool isSucc = [[response objectForKey:@"IsSuccess"] boolValue];
             if(isSucc){
                [self process:arr type:1];
+               [fileManager removeItemAtPath:uploadPath error:nil];
+               [fileManager removeItemAtPath:uploadZipPath error:nil];
             }
             NSLog(@"success");
         } fail:^(NSURLSessionDataTask *task, NSError *error) {
-            [self process:arr type:1];
+//            [self process:arr type:1];
             NSLog(@"error:%@",error);
         }];
     } else {
@@ -428,6 +474,7 @@
         [self processStart:[arr objectAtIndex:0] text:[arr objectAtIndex:1]];
     }
     [self processStart:@"upload" text:@"数据上报"];
+    [ReceiptDB createReportFile];
     [self uploadData];
     
     [self downData:@"data"];
@@ -465,7 +512,7 @@
             break;
         default:
             break;
-        }
+    }
 }
 
 - (void)getSignalStrength{
@@ -499,10 +546,10 @@
     [inventory bg_createTable];
     
 //    ReceiptList* receiptList = [ReceiptList new];
-//    [receiptList bg_createTime];
+//    [receiptList bg_createTable];
 //
 //    ReceiptItem* receiptItem = [ReceiptItem new];
-//    [receiptItem bg_createTime];
+//    [receiptItem bg_createTable];
     
     HandoverMaster* handoverMaster = [HandoverMaster new];
     [handoverMaster bg_createTable];
@@ -530,5 +577,10 @@
 
     Cart* cart = [Cart new];
     [cart bg_createTable];
+}
+
+- (void)dealloc {
+    //注销监听者
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:AFNetworkingReachabilityDidChangeNotification object:nil];
 }
 @end

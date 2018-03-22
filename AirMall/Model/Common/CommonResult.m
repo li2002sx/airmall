@@ -26,3 +26,7 @@
 @implementation LoginInfoResult
 
 @end
+
+@implementation OrderResult
+
+@end

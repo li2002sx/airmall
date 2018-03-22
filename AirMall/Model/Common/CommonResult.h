@@ -37,3 +37,9 @@
 @property(nonatomic)id userInfo;
 
 @end
+
+@interface OrderResult : CommonResult
+
+@property(nonatomic)NSString* orderNo;
+
+@end

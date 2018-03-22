@@ -66,7 +66,7 @@
                     <nil key="highlightedColor"/>
                 </label>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="tup-Ed-DcO">
-                    <rect key="frame" x="488" y="253" width="432" height="414"/>
+                    <rect key="frame" x="489" y="253" width="432" height="414"/>
                     <subviews>
                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="login-form-bg.png" translatesAutoresizingMaskIntoConstraints="NO" id="SUU-9X-QmI">
                             <rect key="frame" x="0.0" y="0.0" width="432" height="414"/>
@@ -99,7 +99,7 @@
                                     <color key="textColor" red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="calibratedRGB"/>
                                     <nil key="highlightedColor"/>
                                 </label>
-                                <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="MU2343" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="nFc-a6-MHw">
+                                <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="KN2261" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="nFc-a6-MHw">
                                     <rect key="frame" x="140" y="0.0" width="230" height="50"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     <nil key="textColor"/>
@@ -123,7 +123,7 @@
                                     <color key="textColor" red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="calibratedRGB"/>
                                     <nil key="highlightedColor"/>
                                 </label>
-                                <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="EMP001" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="cNV-Zc-N8z">
+                                <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="00001" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="cNV-Zc-N8z">
                                     <rect key="frame" x="140" y="0.0" width="230" height="50"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     <nil key="textColor"/>
@@ -147,7 +147,7 @@
                                     <color key="textColor" red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="calibratedRGB"/>
                                     <nil key="highlightedColor"/>
                                 </label>
-                                <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="123456" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="2n0-XY-ct9">
+                                <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="123123" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="2n0-XY-ct9">
                                     <rect key="frame" x="140" y="0.0" width="230" height="50"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     <nil key="textColor"/>
@@ -171,7 +171,7 @@
                                     <color key="textColor" red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="calibratedRGB"/>
                                     <nil key="highlightedColor"/>
                                 </label>
-                                <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Kb7-Ww-Em5">
+                                <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="2018-03-18" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Kb7-Ww-Em5">
                                     <rect key="frame" x="140" y="0.0" width="189" height="50"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     <nil key="textColor"/>
@@ -332,9 +332,9 @@
                 <constraint firstItem="7Y6-dX-OIk" firstAttribute="leading" secondItem="Q5M-cg-NOt" secondAttribute="leading" constant="104" id="BBD-Lr-toe"/>
                 <constraint firstItem="xDw-oc-ZOg" firstAttribute="centerX" secondItem="iAi-Yn-ruq" secondAttribute="centerX" id="MeF-NB-pRa"/>
                 <constraint firstItem="iAb-pd-8gY" firstAttribute="leading" secondItem="Q5M-cg-NOt" secondAttribute="leading" constant="104" id="Muh-7l-37Q"/>
-                <constraint firstItem="Q5M-cg-NOt" firstAttribute="trailing" secondItem="tup-Ed-DcO" secondAttribute="trailing" constant="104" id="Qf0-nF-RGS"/>
                 <constraint firstItem="eRO-0j-UG2" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="Qjp-jb-VzQ"/>
                 <constraint firstItem="OT6-0w-2E3" firstAttribute="bottom" secondItem="Q5M-cg-NOt" secondAttribute="bottom" id="QoG-7X-z13"/>
+                <constraint firstItem="tup-Ed-DcO" firstAttribute="leading" secondItem="7Y6-dX-OIk" secondAttribute="trailing" constant="30" id="Whv-Ta-K5l"/>
                 <constraint firstItem="OT6-0w-2E3" firstAttribute="leading" secondItem="Q5M-cg-NOt" secondAttribute="leading" id="dpa-Fv-IvU"/>
                 <constraint firstItem="JKW-FO-NcM" firstAttribute="top" secondItem="Q5M-cg-NOt" secondAttribute="top" constant="64" id="gwa-cm-upZ"/>
                 <constraint firstItem="Q5M-cg-NOt" firstAttribute="bottom" secondItem="xDw-oc-ZOg" secondAttribute="bottom" constant="29" id="ipF-oN-q1j"/>

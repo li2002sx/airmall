@@ -77,10 +77,10 @@
                         where = [NSString stringWithFormat:@"where FlightNo ='%@' and FlightDate='%@' and Sku='%@' and DiningCarNo = '%@'",flightNo,flightDate,sku,diningCarNo];
                         NSArray* arr = [Inventory bg_find:@"Inventory" where:where];
                         if([arr count] > 0){
-                            where = [NSString stringWithFormat:@"set Qty=Qty+%ld where FlightNo ='%@' and FlightDate='%@' and Sku='%@' and DiningCarNo = '%@'",confirmCount - damagedCount,flightNo,flightDate,sku,diningCarNo];
+                            where = [NSString stringWithFormat:@"set Qty=Qty+%ld where FlightNo ='%@' and FlightDate='%@' and Sku='%@' and DiningCarNo = '%@'",confirmCount ,flightNo,flightDate,sku,diningCarNo];
                             [Inventory bg_update:@"Inventory" where:where];
                         }else{
-                            sql=[NSString stringWithFormat:@"INSERT INTO Inventory(FlightNo,FlightDate,ProductID,ProductItemID,Sku,DiningCarNo,Barcode,ProductName,Unit,Qty) values('%@','%@',%ld,%ld,'%@','%@','%@','%@','%@',%ld)",flightNo,flightDate,product.ProductID,productItem.ProductItemID,sku,diningCarNo,productItem.Barcode,product.ProductName,product.Unit,confirmCount - damagedCount];
+                            sql=[NSString stringWithFormat:@"INSERT INTO Inventory(FlightNo,FlightDate,ProductID,ProductItemID,Sku,DiningCarNo,Barcode,ProductName,Unit,Qty) values('%@','%@',%ld,%ld,'%@','%@','%@','%@','%@',%ld)",flightNo,flightDate,product.ProductID,productItem.ProductItemID,sku,diningCarNo,productItem.Barcode,product.ProductName,product.Unit,confirmCount];
                             bg_executeSql(sql, nil, nil);
                         }
                         if(damagedCount>0){
@@ -171,7 +171,7 @@
                 ProductList* product = [productDicts objectForKey:@(productItem.ProductID)];
                 
                 
-                sql = [NSString stringWithFormat:@"INSERT INTO ReceiptItem(DeliveryNo,DiningCarNo,ProductID,ProductItemID,Sku,Barcode,ProductName,Unit,NeedCounts,ConfirmCounts,DamagedCounts,DamagedReason,Remark) VALUES('%@','%@',%ld,%ld,'%@','%@','%@','%@',%ld,0,0,'','','')",deliveryNo,diningCarNo,product.ProductID,productItem.ProductItemID,sku,productItem.Barcode,product.ProductName,product.Unit,needCount];
+                sql = [NSString stringWithFormat:@"INSERT INTO ReceiptItem(DeliveryNo,DiningCarNo,ProductID,ProductItemID,Sku,Barcode,ProductName,Unit,NeedCounts,ConfirmCounts,DamagedCounts,DamagedReason,Remark) VALUES('%@','%@',%ld,%ld,'%@','%@','%@','%@',%ld,0,0,'','')",deliveryNo,diningCarNo,product.ProductID,productItem.ProductItemID,sku,productItem.Barcode,product.ProductName,product.Unit,needCount];
                 bg_executeSql(sql, nil, nil);
                 totalNeedCount += needCount;
                 
@@ -259,7 +259,7 @@
                 [logStrArray addObject:logStr];
             }
             
-            sql = [NSString stringWithFormat:@"INSERT INTO HandoverMaster (HandoverNo,PreFlightNo,FlightNo,FlightDate,TailNo,ACType,Status,HandoverCounts,HandoverDamagedCounts,HandoverEmpNo,HandoverEmpName,HandoverDeviceNo, HandoverTime,UndertakeCounts,UndertakeDamagedCounts,UndertakeEmpNo,UndertakeEmpName,HandoverDeviceNo,UndertakeTime,Remark)VALUES ('%@','%@','','%@','%@','%@',0,%ld,%ld,'%@','%@','%@',datetime('now','localtime'),0,0,'','','','','')",handoverNo,flightNo,flightDate,tailNo,acType,totalHandoverCount,totalDamagedCount,empNo,empName,deviceNo];
+            sql = [NSString stringWithFormat:@"INSERT INTO HandoverMaster (HandoverNo,PreFlightNo,FlightNo,FlightDate,TailNo,ACType,Type,Status,HandoverCounts,HandoverDamagedCounts,HandoverEmpNo,HandoverEmpName,HandoverDeviceNo, HandoverTime,UndertakeCounts,UndertakeDamagedCounts,UndertakeEmpNo,UndertakeEmpName,HandoverDeviceNo,UndertakeTime,Remark)VALUES ('%@','%@','','%@','%@','%@',1,0,%ld,%ld,'%@','%@','%@',datetime('now','localtime'),0,0,'','','','','')",handoverNo,flightNo,flightDate,tailNo,acType,totalHandoverCount,totalDamagedCount,empNo,empName,deviceNo];
             bg_executeSql(sql, nil, nil);
             
             LogList* log = [LogList new];
@@ -302,7 +302,7 @@
         NSString* handoverNo = transferParam.handoverNo;
         
         NSString* where = [NSString stringWithFormat:@"where HandoverNo = '%@'",handoverNo];
-        NSArray* handoverArr = [ReceiptList bg_find:@"HandoverMaster" where:where];
+        NSArray* handoverArr = [HandoverMaster bg_find:@"HandoverMaster" where:where];
         if([handoverArr count]>0){
             HandoverMaster* handove = [handoverArr objectAtIndex:0];
             if(handove.Status == 0){
@@ -346,10 +346,10 @@
                          where = [NSString stringWithFormat:@"where FlightNo ='%@' and FlightDate='%@' and Sku='%@' and DiningCarNo = '%@'",flightNo,flightDate,sku,diningCarNo];
                          NSArray* arr = [Inventory bg_find:@"Inventory" where:where];
                          if([arr count] > 0){
-                             where = [NSString stringWithFormat:@"set Qty=Qty+%ld where FlightNo ='%@' and FlightDate='%@' and Sku='%@' and DiningCarNo = '%@'",handoverCount - damagedCount,flightNo,flightDate,sku,diningCarNo];
+                             where = [NSString stringWithFormat:@"set Qty=Qty+%ld where FlightNo ='%@' and FlightDate='%@' and Sku='%@' and DiningCarNo = '%@'",handoverCount ,flightNo,flightDate,sku,diningCarNo];
                              [Inventory bg_update:@"Inventory" where:where];
                          }else{
-                             sql=[NSString stringWithFormat:@"INSERT INTO Inventory(FlightNo,FlightDate,ProductID,ProductItemID,Sku,DiningCarNo,Barcode,ProductName,Unit,Qty) values('%@','%@',%ld,%ld,'%@','%@','%@','%@','%@',%ld)",flightNo,flightDate,product.ProductID,productItem.ProductItemID,sku,diningCarNo,productItem.Barcode,product.ProductName,product.Unit,handoverCount - damagedCount];
+                             sql=[NSString stringWithFormat:@"INSERT INTO Inventory(FlightNo,FlightDate,ProductID,ProductItemID,Sku,DiningCarNo,Barcode,ProductName,Unit,Qty) values('%@','%@',%ld,%ld,'%@','%@','%@','%@','%@',%ld)",flightNo,flightDate,product.ProductID,productItem.ProductItemID,sku,diningCarNo,productItem.Barcode,product.ProductName,product.Unit,handoverCount];
                              bg_executeSql(sql, nil, nil);
                          }
                          if(damagedCount>0){
@@ -403,6 +403,18 @@
     return json;
 }
 
++(BOOL) hasNotTrans:(NSString*) flightNo flightDate:(NSString*) flightDate tailNo:(NSString*) tailNo acType:(NSString*)acType{
+    
+    NSString* sql = [NSString stringWithFormat:@"SELECT * FROM HandoverMaster WHERE PreFlightNo = '%@' AND FlightDate = '%@' AND TailNo = '%@' AND ACType ='%@' AND Status = 0",flightNo,flightDate, tailNo, acType];
+    
+    NSArray* arr = bg_executeSql(sql, nil, nil);
+    if([arr count]>0){
+        return YES;
+    }
+    
+    return NO;
+}
+
 +(void)createReportFile{
     
     NSString *tmpDir = NSTemporaryDirectory();
@@ -437,7 +449,7 @@
         
         [fileManager createFileAtPath:filePath contents:[[damageArr yy_modelToJSONString] dataUsingEncoding:NSUTF8StringEncoding] attributes:nil];
         
-        where = [NSString stringWithFormat:@"update syn = 1 where syn is null"];
+        where = [NSString stringWithFormat:@"set syn = 1 where syn is null"];
         [DamageList bg_update:@"DamageList" where:where];
     }
     
@@ -455,7 +467,7 @@
         
         [fileManager createFileAtPath:filePath contents:[[handoverArr yy_modelToJSONString] dataUsingEncoding:NSUTF8StringEncoding] attributes:nil];
         
-        where = [NSString stringWithFormat:@"update syn = 1 where syn is null"];
+        where = [NSString stringWithFormat:@"set syn = 1 where syn is null"];
         [HandoverMaster bg_update:@"HandoverMaster" where:where];
     }
     
@@ -467,7 +479,7 @@
 
         [fileManager createFileAtPath:filePath contents:[[inventoryArr yy_modelToJSONString] dataUsingEncoding:NSUTF8StringEncoding] attributes:nil];
         
-        where = [NSString stringWithFormat:@"update syn = 1 where syn is null"];
+        where = [NSString stringWithFormat:@"set syn = 1 where syn is null"];
         [Inventory bg_update:@"Inventory" where:where];
     }
     
@@ -479,13 +491,13 @@
         
         [fileManager createFileAtPath:filePath contents:[[logArr yy_modelToJSONString] dataUsingEncoding:NSUTF8StringEncoding] attributes:nil];
         
-        where = [NSString stringWithFormat:@"update syn = 1 where syn is null"];
+        where = [NSString stringWithFormat:@"set syn = 1 where syn is null"];
         [LogList bg_update:@"LogList" where:where];
     }
     
     filePath = [NSString stringWithFormat:@"%@/ReceiptList.json",uploadPath];
     [fileManager removeItemAtPath:filePath error:nil];
-    where = [NSString stringWithFormat:@"where syn is null"];
+    where = [NSString stringWithFormat:@"where syn is null or syn = 0"];
     NSArray* receiptArr = [ReceiptList bg_find:@"ReceiptList" where:where];
     if([receiptArr count] > 0){
         
@@ -495,9 +507,9 @@
             [receipt setItems:receiptItemArr];
         }
         
-        [fileManager createFileAtPath:filePath contents:[[handoverArr yy_modelToJSONString] dataUsingEncoding:NSUTF8StringEncoding] attributes:nil];
+        [fileManager createFileAtPath:filePath contents:[[receiptArr yy_modelToJSONString] dataUsingEncoding:NSUTF8StringEncoding] attributes:nil];
         
-        where = [NSString stringWithFormat:@"update syn = 1 where syn is null"];
+        where = [NSString stringWithFormat:@"set syn = 1 where syn is null or syn = 0"];
         [ReceiptList bg_update:@"ReceiptList" where:where];
     }
     
@@ -513,9 +525,9 @@
             [order setItems:orderItemArr];
         }
         
-        [fileManager createFileAtPath:filePath contents:[[handoverArr yy_modelToJSONString] dataUsingEncoding:NSUTF8StringEncoding] attributes:nil];
+        [fileManager createFileAtPath:filePath contents:[[orderArr yy_modelToJSONString] dataUsingEncoding:NSUTF8StringEncoding] attributes:nil];
         
-        where = [NSString stringWithFormat:@"update syn = 1 where syn is null"];
+        where = [NSString stringWithFormat:@"set syn = 1 where syn is null"];
         [SalesOrder bg_update:@"SalesOrder" where:where];
     }
     
