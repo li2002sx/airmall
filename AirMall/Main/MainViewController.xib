@@ -4,7 +4,6 @@
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
-        <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -19,6 +18,7 @@
                 <outlet property="empPhotoImageView" destination="WFB-KB-kNs" id="jZS-qr-dP1"/>
                 <outlet property="flightDurationLabel" destination="8jE-qA-WZC" id="aTz-CO-JCE"/>
                 <outlet property="flightTimeLabel" destination="2Kd-cn-tNJ" id="HKE-b9-WCC"/>
+                <outlet property="frashButtom" destination="Tzh-wg-f9x" id="ay1-ek-96V"/>
                 <outlet property="lastLoginTimeLabel" destination="XcQ-tC-OKm" id="RG7-VZ-Fof"/>
                 <outlet property="lineCHNLabel" destination="DKb-o4-8rS" id="HDh-ju-WxY"/>
                 <outlet property="openTableView" destination="QDB-oK-ezF" id="WXt-NA-7VL"/>
@@ -26,6 +26,7 @@
                 <outlet property="preFlightNoLabel" destination="LoD-RV-YU2" id="sK5-jk-19j"/>
                 <outlet property="shrinkTableView" destination="wSS-gU-gsn" id="T9Y-UV-QwC"/>
                 <outlet property="shrinkView" destination="77j-hp-WRx" id="ps0-Al-gf8"/>
+                <outlet property="synButtom" destination="mdV-7B-hVQ" id="geS-lJ-PVV"/>
                 <outlet property="thisFlightNoLabel" destination="oDD-Vn-jci" id="foN-tn-9Q3"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
                 <outlet property="webView" destination="cnT-zD-TkH" id="dgR-dC-yKV"/>
@@ -143,37 +144,37 @@
                             <nil key="highlightedColor"/>
                         </label>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="SIZ-aP-qAp">
-                            <rect key="frame" x="894" y="13" width="0.5" height="20"/>
+                            <rect key="frame" x="911" y="13" width="0.5" height="20"/>
                             <color key="backgroundColor" red="0.84313725490000002" green="0.078431372550000003" blue="0.062745098040000002" alpha="1" colorSpace="calibratedRGB"/>
                             <constraints>
-                                <constraint firstAttribute="height" constant="20" id="XU8-i2-NJH"/>
-                                <constraint firstAttribute="width" constant="0.5" id="j4K-Mc-YjM"/>
+                                <constraint firstAttribute="height" constant="20" id="41y-Zf-O4u"/>
+                                <constraint firstAttribute="width" constant="0.5" id="VA7-cE-4Zu"/>
                             </constraints>
                         </view>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Tzh-wg-f9x">
-                            <rect key="frame" x="914" y="12" width="22" height="22"/>
+                            <rect key="frame" x="928" y="12" width="22" height="22"/>
                             <constraints>
-                                <constraint firstAttribute="height" constant="22" id="5YP-Nh-STz"/>
-                                <constraint firstAttribute="width" constant="22" id="x1s-Ch-atM"/>
+                                <constraint firstAttribute="height" constant="22" id="dgi-Ii-Q0J"/>
+                                <constraint firstAttribute="width" constant="22" id="hVC-gb-tpW"/>
                             </constraints>
                             <state key="normal" image="icon-fresh.png"/>
                             <connections>
-                                <action selector="btnFrashPressed:" destination="-1" eventType="touchUpInside" id="XiZ-dV-wzT"/>
+                                <action selector="frashButtomPressed:" destination="-1" eventType="touchUpInside" id="4Hf-ak-bZl"/>
                             </connections>
                         </button>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Gkv-PP-xTV">
-                            <rect key="frame" x="959" y="15" width="0.5" height="20"/>
+                            <rect key="frame" x="965" y="13" width="0.5" height="20"/>
                             <color key="backgroundColor" red="0.84313725490000002" green="0.078431372550000003" blue="0.062745098040000002" alpha="1" colorSpace="calibratedRGB"/>
                             <constraints>
-                                <constraint firstAttribute="width" constant="0.5" id="44h-i3-bhm"/>
-                                <constraint firstAttribute="height" constant="20" id="tCG-Sn-lNF"/>
+                                <constraint firstAttribute="width" constant="0.5" id="Fa0-aZ-nHe"/>
+                                <constraint firstAttribute="height" constant="20" id="M0u-oH-uIt"/>
                             </constraints>
                         </view>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bMe-CP-fSL">
                             <rect key="frame" x="980" y="12" width="22" height="22"/>
                             <constraints>
-                                <constraint firstAttribute="width" constant="22" id="XoE-1r-Inm"/>
-                                <constraint firstAttribute="height" constant="22" id="Xvy-kP-Z4J"/>
+                                <constraint firstAttribute="width" constant="22" id="MWg-m3-Wgf"/>
+                                <constraint firstAttribute="height" constant="22" id="fiS-bP-dN8"/>
                             </constraints>
                             <state key="normal" image="icon-back_gray.png"/>
                             <connections>
@@ -194,19 +195,42 @@
                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <nil key="highlightedColor"/>
                         </label>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="GEa-rA-yMQ">
+                            <rect key="frame" x="857" y="13" width="0.5" height="20"/>
+                            <color key="backgroundColor" red="0.84313725490000002" green="0.078431372550000003" blue="0.062745098040000002" alpha="1" colorSpace="calibratedRGB"/>
+                            <constraints>
+                                <constraint firstAttribute="width" constant="0.5" id="47W-N4-lob"/>
+                                <constraint firstAttribute="height" constant="20" id="iDo-Pp-Gmo"/>
+                            </constraints>
+                        </view>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mdV-7B-hVQ">
+                            <rect key="frame" x="874" y="12" width="22" height="22"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="22" id="0tI-k7-SUB"/>
+                                <constraint firstAttribute="width" constant="22" id="eVn-C4-wxT"/>
+                            </constraints>
+                            <state key="normal" image="icon-fresh.png"/>
+                            <connections>
+                                <action selector="synButtomPressed:" destination="-1" eventType="touchUpInside" id="x7r-gY-cB7"/>
+                            </connections>
+                        </button>
                     </subviews>
                     <color key="backgroundColor" red="1" green="0.32549019607843138" blue="0.33725490196078434" alpha="1" colorSpace="calibratedRGB"/>
                     <constraints>
-                        <constraint firstItem="Gkv-PP-xTV" firstAttribute="leading" secondItem="Tzh-wg-f9x" secondAttribute="trailing" constant="23" id="4nR-dE-r60"/>
-                        <constraint firstItem="Tzh-wg-f9x" firstAttribute="top" secondItem="VWl-Xu-qbU" secondAttribute="top" constant="12" id="Bs3-36-Xh7"/>
-                        <constraint firstItem="Tzh-wg-f9x" firstAttribute="leading" secondItem="SIZ-aP-qAp" secondAttribute="trailing" constant="19.5" id="Cjf-ak-y70"/>
-                        <constraint firstItem="bMe-CP-fSL" firstAttribute="top" secondItem="VWl-Xu-qbU" secondAttribute="top" constant="12" id="FCL-j7-dO5"/>
-                        <constraint firstAttribute="trailing" secondItem="bMe-CP-fSL" secondAttribute="trailing" constant="22" id="GbS-3R-EUV"/>
-                        <constraint firstItem="bMe-CP-fSL" firstAttribute="leading" secondItem="Gkv-PP-xTV" secondAttribute="trailing" constant="20.5" id="H4r-GB-6qq"/>
+                        <constraint firstItem="mdV-7B-hVQ" firstAttribute="top" secondItem="VWl-Xu-qbU" secondAttribute="top" constant="12" id="J7f-hI-dy4"/>
                         <constraint firstAttribute="height" constant="50" id="Jq9-Fd-eQZ"/>
+                        <constraint firstItem="SIZ-aP-qAp" firstAttribute="top" secondItem="VWl-Xu-qbU" secondAttribute="top" constant="13" id="KaC-PG-6DY"/>
                         <constraint firstAttribute="width" constant="1024" id="T6M-Xl-QhB"/>
-                        <constraint firstItem="SIZ-aP-qAp" firstAttribute="top" secondItem="VWl-Xu-qbU" secondAttribute="top" constant="13" id="ria-Oi-zNc"/>
-                        <constraint firstItem="Gkv-PP-xTV" firstAttribute="top" secondItem="VWl-Xu-qbU" secondAttribute="top" constant="15" id="wC0-38-JsB"/>
+                        <constraint firstItem="GEa-rA-yMQ" firstAttribute="top" secondItem="VWl-Xu-qbU" secondAttribute="top" constant="13" id="bb0-Bv-SZ5"/>
+                        <constraint firstItem="Tzh-wg-f9x" firstAttribute="leading" secondItem="SIZ-aP-qAp" secondAttribute="trailing" constant="16.5" id="byo-hV-RCf"/>
+                        <constraint firstAttribute="trailing" secondItem="bMe-CP-fSL" secondAttribute="trailing" constant="22" id="dom-ww-KIv"/>
+                        <constraint firstItem="bMe-CP-fSL" firstAttribute="top" secondItem="VWl-Xu-qbU" secondAttribute="top" constant="12" id="eO1-S5-gWQ"/>
+                        <constraint firstItem="Gkv-PP-xTV" firstAttribute="leading" secondItem="Tzh-wg-f9x" secondAttribute="trailing" constant="15" id="mD6-MG-Z6E"/>
+                        <constraint firstItem="Gkv-PP-xTV" firstAttribute="top" secondItem="VWl-Xu-qbU" secondAttribute="top" constant="13" id="mbF-Tv-rAk"/>
+                        <constraint firstItem="bMe-CP-fSL" firstAttribute="leading" secondItem="Gkv-PP-xTV" secondAttribute="trailing" constant="14.5" id="mrA-Ey-Raz"/>
+                        <constraint firstItem="Tzh-wg-f9x" firstAttribute="top" secondItem="VWl-Xu-qbU" secondAttribute="top" constant="12" id="nUc-re-MPH"/>
+                        <constraint firstItem="mdV-7B-hVQ" firstAttribute="leading" secondItem="GEa-rA-yMQ" secondAttribute="trailing" constant="16.5" id="x8r-Fq-u4V"/>
+                        <constraint firstItem="SIZ-aP-qAp" firstAttribute="leading" secondItem="mdV-7B-hVQ" secondAttribute="trailing" constant="15" id="xlb-qW-pKA"/>
                     </constraints>
                 </view>
                 <wkWebView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="cnT-zD-TkH">

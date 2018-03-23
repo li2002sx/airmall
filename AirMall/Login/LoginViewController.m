@@ -20,6 +20,8 @@
     
     NSArray* _signalTextArr;
     
+    dispatch_source_t _timer;
+    
     NSMutableArray* _imageArr;
 }
 
@@ -43,9 +45,9 @@
     _synTableView.dataSource = self;
     _synTableView.delegate = self;
     
-    _signalTextArr = @[@"无",@"差",@"中",@"优"];
-    
     _synCount = 0;
+    
+    _signalTextArr = @[@"无",@"差",@"中",@"优"];
     
     _processContentArr = @[@[@"flight",@"航班数据"],@[@"product",@"商品数据"],@[@"staff",@"用户数据"],@[@"schedule",@"排班数据"],@[@"receipt",@"收货数据"],@[@"upload",@"数据上报"]];
 }
@@ -150,6 +152,7 @@
         NSString* flightNo = [result valueForKey:@"FlightNo"];
         NSString* tailNo = [result valueForKey:@"TailNo"];
         NSString* acType = [result valueForKey:@"ACType"];
+//        NSString* deptTime = [result valueForKey:@"DeptTime"];
         id preReuslt = [StaffDB getPreFlightInfo:flightNo tailNo:tailNo acType:acType];
         if(preReuslt != nil){
             [result setObject:[preReuslt objectForKey:@"FlightNo"] forKey:@"PreFlightNo"];
@@ -497,17 +500,21 @@
     switch (status) {
         case AFNetworkReachabilityStatusUnknown:
             [self noSignal];
+            [self resumeTimer];
             NSLog(@"无法获取网络状态");
             break;
         case AFNetworkReachabilityStatusReachableViaWWAN:
+            [self pauseTimer];
             NSLog(@"移动蜂窝网络");
             break;
         case AFNetworkReachabilityStatusReachableViaWiFi:
+            [self pauseTimer];
             [self getSignalStrength];
             NSLog(@"Wifi上网");
             break;
         case AFNetworkReachabilityStatusNotReachable:
             [self noSignal];
+            [self resumeTimer];
             NSLog(@"无网络连接");
             break;
         default:
@@ -536,8 +543,47 @@
         [_synButtom setEnabled:YES];
     }
     _wifiLabel.text = [_signalTextArr objectAtIndex:_signal];
-    
     NSLog(@"signal %d", signalStrength);
+    if(_signal > 0){
+        [self pauseTimer];
+    }
+}
+
+-(void) startGCDTimer{
+    NSTimeInterval period = 2.0; //设置时间间隔
+    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+    _timer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, queue);
+    dispatch_source_set_timer(_timer, dispatch_walltime(NULL, 0), period * NSEC_PER_SEC, 0); //每秒执行
+    __weak typeof(self) weakSelf = self;
+    dispatch_source_set_event_handler(_timer, ^{
+        //在这里执行事件
+        [weakSelf getSignalStrength];
+        NSLog(@"每2秒执行test");
+    });
+    
+    dispatch_resume(_timer);
+}
+
+
+-(void) pauseTimer{
+    if(_timer){
+        dispatch_suspend(_timer);
+    }
+}
+
+-(void) resumeTimer{
+    if(_timer){
+        dispatch_resume(_timer);
+    }else{
+        [self startGCDTimer];
+    }
+}
+
+-(void) stopTimer{
+    if(_timer){
+        dispatch_source_cancel(_timer);
+        _timer = nil;
+    }
 }
 
 -(void)initTable{
@@ -582,5 +628,6 @@
 - (void)dealloc {
     //注销监听者
     [[NSNotificationCenter defaultCenter] removeObserver:self name:AFNetworkingReachabilityDidChangeNotification object:nil];
+    [self stopTimer];
 }
 @end

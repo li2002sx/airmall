@@ -11,6 +11,17 @@
 @interface MainViewController (){
     
     AppDelegate* _appDelegate;
+    
+    NSInteger _synCount;
+    
+    NSInteger _networkingStatus;
+    NSInteger _signal;
+    
+    NSArray* _signalTextArr;
+    
+    dispatch_source_t _timer;
+    
+    NSMutableArray* _imageArr;
 }
 
 @property WebViewJavascriptBridge *bridge;
@@ -35,9 +46,11 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-     _hud = [MBProgressHUD showHUDAddedTo:self.navigationController.view animated:YES];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(notifi:) name:AFNetworkingReachabilityDidChangeNotification object:nil];
     
     _appDelegate = [[UIApplication sharedApplication] delegate];
+    
+    _synCount = 0;
     
     _userDict = [NSKeyedUnarchiver unarchiveObjectWithData:[_userInfo objectForKey:_UserKey]];
     _thisFlightNoLabel.text = [NSString stringWithFormat:@"%@%@",[_userDict objectForKey:@"Carrier"],[_userDict objectForKey:@"FlightNo"]];
@@ -56,8 +69,8 @@
     _empJobLabel.text = [_userDict objectForKey:@"EmpType"];
     _lastLoginTimeLabel.text = [_userDict objectForKey:@"LastLoginTime"];
     
-    _tableViewArr = [NSMutableArray arrayWithObjects:[NSMutableArray arrayWithObjects:@"icon-menu",@"LOGO",@"", nil],[NSMutableArray arrayWithObjects:@"icon-hangban-select",@"航班信息",@"Index.html", nil],[NSMutableArray arrayWithObjects:@"icon-huanban",@"换班交接",@"AssociateManage.html", nil],[NSMutableArray arrayWithObjects:@"icon-goods",@"商品列表",@"ProductList.html", nil],[NSMutableArray arrayWithObjects:@"icon-cart",@"订单列表",@"OrderList.html", nil],[NSMutableArray arrayWithObjects:@"icon-store",@"库存管理",@"query.html", nil],[NSMutableArray arrayWithObjects:@"icon-log",@"日志查询",@"Log.html", nil],[NSMutableArray arrayWithObjects:@"icon-logout",@"账号退出",@"", nil],[NSMutableArray arrayWithObjects:@"icon-log",@"DEMO",@"", nil], nil];
-//
+    _tableViewArr = [NSMutableArray arrayWithObjects:[NSMutableArray arrayWithObjects:@"icon-menu",@"LOGO",@"", nil],[NSMutableArray arrayWithObjects:@"icon-hangban-select",@"航班信息",@"Index.html", nil],[NSMutableArray arrayWithObjects:@"icon-huanban",@"换班交接",@"AssociateManage.html", nil],[NSMutableArray arrayWithObjects:@"icon-goods",@"商品列表",@"ProductList.html", nil],[NSMutableArray arrayWithObjects:@"icon-cart",@"订单列表",@"OrderList.html", nil],[NSMutableArray arrayWithObjects:@"icon-store",@"库存管理",@"query.html", nil],[NSMutableArray arrayWithObjects:@"icon-log",@"日志查询",@"Log.html", nil],[NSMutableArray arrayWithObjects:@"icon-logout",@"账号退出",@"", nil], nil];
+//      ,[NSMutableArray arrayWithObjects:@"icon-log",@"DEMO",@"", nil]
     
     _hasNotTrans = [self hasNotTransfer];
     
@@ -437,6 +450,7 @@
 }
 
 - (void)webView:(WKWebView *)webView didStartProvisionalNavigation:(WKNavigation *)navigation {
+    _hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     [CommonUtil showLoading:@"正在加载" andHud:_hud];
     NSLog(@"webViewDidStartLoad");
 }
@@ -507,10 +521,6 @@
 }
 */
 
-- (IBAction)btnFrashPressed:(id)sender {
-//    [_popup dismiss:YES];
-    [_webView reload];
-}
 - (IBAction)btnBackPressed:(id)sender {
     if([_webView canGoBack]){
         [_webView goBack];
@@ -612,5 +622,366 @@
     return NO;
 }
 
+- (IBAction)synButtomPressed:(id)sender{
+    
+    [_synButtom setEnabled:NO];
+    
+    _hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    [CommonUtil showLoading:@"数据同步中" andHud:_hud];
+    
+    _synCount = 0;
+    
+    [ReceiptDB createReportFile];
+    [self uploadData];
+    
+    [self downData:@"data"];
+    [self downData:@"picture"];
+}
+
+
+- (IBAction)frashButtomPressed:(id)sender {
+    [_popup dismiss:YES];
+    [_webView reload];
+}
+
+- (void)analysisData:(NSString*)fileType{
+    
+    NSString *tmpDir = NSTemporaryDirectory();
+    NSString *zipPath = [NSString stringWithFormat:@"%@/%@.zip",tmpDir,fileType];
+    NSString *unzipPath = [NSString stringWithFormat:@"%@/%@/",tmpDir,fileType];
+    [SSZipArchive unzipFileAtPath:zipPath toDestination:unzipPath];
+    
+    //文件操作对象
+    NSFileManager *manager = [NSFileManager defaultManager];
+    
+    if([fileType isEqualToString:@"data"]){
+        //目录迭代器
+        NSDirectoryEnumerator *direnum = [manager enumeratorAtPath:unzipPath];
+        //遍历目录迭代器，获取各个文件路径
+        NSString *fileName;
+        while (fileName = [direnum nextObject]) {
+            NSString* json = [NSString stringWithContentsOfFile:[NSString stringWithFormat:@"%@%@",unzipPath,fileName] encoding:NSUTF8StringEncoding error:nil];
+            json = [json stringByReplacingOccurrencesOfString:@"\n" withString:@""];
+            json = [json stringByReplacingOccurrencesOfString:@"\r" withString:@""];
+            json = [json stringByReplacingOccurrencesOfString:@"\t" withString:@""];
+            
+            if([fileName isEqualToString:@"Employee.json"]){
+                
+                [Staff bg_clear:@"Staff"];
+                NSArray* staffArr =  [NSArray yy_modelArrayWithClass:[Staff class] json:json];
+                for(Staff* staff in staffArr){
+                    [staff bg_save];
+                }
+                
+            }else if([fileName isEqualToString:@"FlightInfo.json"]){
+                
+                [FlightInfo bg_clear:@"FlightInfo"];
+                NSArray* flightArr =  [NSArray yy_modelArrayWithClass:[FlightInfo class] json:json];
+                for(FlightInfo* flight in flightArr){
+                    [flight bg_save];
+                }
+                
+            }else if([fileName isEqualToString:@"ProductList.json"]){
+                
+                [ProductList bg_clear:@"ProductList"];
+                [ProductItem bg_clear:@"ProductItem"];
+                [ProductAttribute bg_clear:@"ProductAttribute"];
+                [ProductPicture bg_clear:@"ProductPicture"];
+                NSArray* productArr =  [NSArray yy_modelArrayWithClass:[ProductList class] json:json];
+                for(ProductList* product in productArr){
+                    [product bg_save];
+                    for(id item in product.Items){
+                        ProductItem* productItem =  [ProductItem yy_modelWithDictionary:item];
+                        [productItem bg_save];
+                        for(id attribute in productItem.Attributes){
+                            ProductAttribute* productAttribute = [ProductAttribute yy_modelWithDictionary:attribute];
+                            productAttribute.ProductItemID = productItem.ProductItemID;
+                            [productAttribute bg_save];
+                        }
+                    }
+                    for(id picture in product.Pictures){
+                        ProductPicture* productPicture = [ProductPicture yy_modelWithDictionary:picture];
+                        [productPicture bg_save];
+                        [_imageArr addObject:productPicture.PictureUrl];
+                    }
+                }
+                
+            }else if([fileName isEqualToString:@"ReceiptList.json"]){
+                
+                NSArray* receiptArr =  [NSArray yy_modelArrayWithClass:[ReceiptList class] json:json];
+                for(ReceiptList* receipt in receiptArr){
+                    NSString* where = [NSString stringWithFormat:@"where DeliveryNo = '%@'",receipt.DeliveryNo];
+                    NSArray * arr = [ReceiptList bg_find:@"ReceiptList" where:where];
+                    if([arr count] == 0){
+                        [receipt bg_save];
+                        for(id item in receipt.Items){
+                            ReceiptItem* receiptItem = [ReceiptItem yy_modelWithDictionary:item];
+                            [receiptItem bg_save];
+                        }
+                    }else{
+                        ReceiptList* rec = [arr objectAtIndex:0];
+                        if(rec.DeliveryStatus == 0 && rec.DeliveryType == 1){
+                            [ReceiptList bg_delete:@"ReceiptList" where:where];
+                            [ReceiptItem bg_delete:@"ReceiptItem" where:where];
+                            [receipt bg_save];
+                            for(id item in receipt.Items){
+                                ReceiptItem* receiptItem = [ReceiptItem yy_modelWithDictionary:item];
+                                [receiptItem bg_save];
+                            }
+                        }
+                    }
+                }
+
+            }else if([fileName isEqualToString:@"HandoverMaster.json"]){
+                NSArray* handoverArr =  [NSArray yy_modelArrayWithClass:[HandoverMaster class] json:json];
+                for(HandoverMaster* handover in handoverArr){
+                    NSString* where = [NSString stringWithFormat:@"where HandoverNo = '%@'",handover.HandoverNo];
+                    NSArray * arr = [ReceiptList bg_find:@"HandoverMaster" where:where];
+                    if([arr count] == 0){
+                        [handover bg_save];
+                        for(id item in handover.Items){
+                            HandoverItem* handoverItem = [HandoverItem yy_modelWithDictionary:item];
+                            [handoverItem bg_save];
+                        }
+                    }
+                }
+            }else if([fileName isEqualToString:@"ScheduleInfo.json"]){
+            
+                [ScheduleInfo bg_clear:@"ScheduleInfo"];
+                NSArray* scheduleArr =  [NSArray yy_modelArrayWithClass:[ScheduleInfo class] json:json];
+                for(ScheduleInfo* schedule in scheduleArr){
+                    [schedule bg_save];
+                }
+            }
+            _synCount++;
+            if(_synCount == 6){
+                [self synSucc:@"数据同步成功"];
+            }
+        }
+        [manager removeItemAtPath:unzipPath error:nil];
+        
+    }else if([fileType isEqualToString:@"picture"]){
+        
+        for(NSString* imageStr in _imageArr){
+            NSString* imagePath = [unzipPath stringByAppendingString:imageStr];
+            //            NSString* imagePath = [unzipPath stringByAppendingString:[imageStr stringByReplacingOccurrencesOfString:@"jpg" withString:@"jpeg"]];
+            UIImage *image=[[UIImage alloc]initWithContentsOfFile:imagePath];
+            NSString *imageBase64 = [CommonUtil image2DataURL:image];
+            NSString* update = [NSString stringWithFormat:@"set PictureUrl = '%@' where PictureUrl='%@'",imageBase64,imageStr];
+            [ProductPicture bg_update:@"ProductPicture" where:update];
+        }
+        [manager removeItemAtPath:unzipPath error:nil];
+    }
+    [manager removeItemAtPath:zipPath error:nil];
+}
+
+- (void)downData:(NSString*)fileType{
+    
+    NSMutableDictionary* dict = [NSMutableDictionary new];
+    [dict setObject:_identifierNumber forKey:@"DeviceNo"];
+    [dict setObject:fileType forKey:@"FileType"];
+    
+    [NetworkUtil post:@"api/ipad/downloadquery" params:dict success:^(NSURLSessionDataTask *task, id responseObject) {
+        NSDictionary* response = [NetworkUtil responseConfiguration:responseObject];
+        bool isSucc = [[response objectForKey:@"IsSuccess"] boolValue];
+        if(isSucc){
+            NSMutableDictionary* param = [NSMutableDictionary new];
+            id data = [response objectForKey:@"Data"];
+            [param setObject:_identifierNumber forKey:@"DeviceNo"];
+            NSString* fileBatchNo = [[data valueForKey:@"FileBatchNo"] objectAtIndex:0];
+            [param setObject:fileBatchNo forKey:@"FileBatchNo"];
+            
+            NSString* fileType = [[data valueForKey:@"FileType"] objectAtIndex:0];
+            [param setObject:fileType forKey:@"FileType"];
+            
+            NSString* fileFullPath = [[data valueForKey:@"FileFullPath"] objectAtIndex:0];
+            [param setObject:fileFullPath forKey:@"FileFullPath"];
+            
+            [NetworkUtil post:@"api/ipad/download" params:param success:^(NSURLSessionDataTask *task, id response) {
+                
+                NSString *tmpDir = NSTemporaryDirectory();
+                NSString *path = [NSString stringWithFormat:@"%@/%@.zip",tmpDir,fileType];
+                
+                NSError *error = nil;
+                BOOL written = [response writeToFile:path options:0 error:&error];
+                
+                if (written){
+                    [param removeObjectForKey:@"FileFullPath"];
+                    [param removeObjectForKey:@"Signature"];
+                    [NetworkUtil post:@"api/ipad/downloadnotify" params:param success:^(NSURLSessionDataTask *task, id response) {
+                        response = [NetworkUtil responseConfiguration:responseObject];
+                        NSLog(@"%@ notify:%@",fileType,[response yy_modelToJSONString]);
+                    } fail:^(NSURLSessionDataTask *task, NSError *error) {
+                        NSLog(@"error");
+                        [self synFail:@"通知下载文件失败"];
+                    }];
+                    [self analysisData:fileType];
+                }
+                NSLog(@"success");
+            } fail:^(NSURLSessionDataTask *task, NSError *error) {
+                NSLog(@"error");
+                [self synFail:@"下载文件失败"];
+            }];
+        }
+    } fail:^(NSURLSessionDataTask *task, NSError *error) {
+        NSLog(@"error");
+        [self synFail:@"调用接口失败"];
+    }];
+}
+
+
+- (void)uploadData{
+    
+    NSMutableDictionary* dict = [NSMutableDictionary new];
+    [dict setObject:_identifierNumber forKey:@"DeviceNo"];
+    
+    NSString *tmpDir = NSTemporaryDirectory();
+    NSString *uploadPath = [tmpDir stringByAppendingPathComponent:@"upload"];
+    NSString *uploadZipPath = [NSString stringWithFormat:@"%@/upload.zip",tmpDir];
+    
+    //文件操作对象
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    
+    if([fileManager fileExistsAtPath:uploadZipPath]){
+        
+        NSData *zipData = [NSData dataWithContentsOfFile:uploadZipPath];
+        
+        [NetworkUtil upload:@"api/ipad/upload" params:nil fileData:zipData name:@"upload" fileName:@"upload.zip" mimeType:@"application/zip" progress:^(NSProgress *progress) {
+            
+            NSLog(@"上传进度：%f",1.0 * progress.completedUnitCount / progress.totalUnitCount);
+            
+        } success:^(NSURLSessionDataTask *task, id responseObject) {
+            NSDictionary* response = [NetworkUtil responseConfiguration:responseObject];
+            bool isSucc = [[response objectForKey:@"IsSuccess"] boolValue];
+            if(isSucc){
+                [fileManager removeItemAtPath:uploadPath error:nil];
+                [fileManager removeItemAtPath:uploadZipPath error:nil];
+            }
+            NSLog(@"success");
+        } fail:^(NSURLSessionDataTask *task, NSError *error) {
+            //            [self process:arr type:1];
+            NSLog(@"error:%@",error);
+            [self synFail:@"上报文件失败"];
+        }];
+    } else {
+        
+    }
+}
+
+-(void)synSucc:(NSString*) tip{
+    
+    [_synButtom setEnabled:YES];
+    [_hud hideAnimated:YES];
+    [CommonUtil showOnlyText:self.view tips:tip];
+}
+
+-(void) synFail:(NSString*) tip{
+    
+    [_hud hideAnimated:YES];
+    [_synButtom setEnabled:YES];
+    [CommonUtil showOnlyText:self.view tips:tip];
+}
+
+-(void) noSignal{
+    [_synButtom setEnabled:NO];
+}
+
+- (void)notifi:(NSNotification *)notifi{
+    NSDictionary *dic = notifi.userInfo;
+    //获取网络状态
+    NSInteger status = [[dic objectForKey:@"AFNetworkingReachabilityNotificationStatusItem"] integerValue];
+    _networkingStatus = status;
+    switch (status) {
+        case AFNetworkReachabilityStatusUnknown:
+            [self noSignal];
+            [self resumeTimer];
+            NSLog(@"无法获取网络状态");
+            break;
+        case AFNetworkReachabilityStatusReachableViaWWAN:
+            [self pauseTimer];
+            NSLog(@"移动蜂窝网络");
+            break;
+        case AFNetworkReachabilityStatusReachableViaWiFi:
+            [self pauseTimer];
+            [self getSignalStrength];
+            NSLog(@"Wifi上网");
+            break;
+        case AFNetworkReachabilityStatusNotReachable:
+            [self noSignal];
+            [self resumeTimer];
+            NSLog(@"无网络连接");
+            break;
+        default:
+            break;
+    }
+}
+
+- (void)getSignalStrength{
+    UIApplication *app = [UIApplication sharedApplication];
+    NSArray *subviews = [[[app valueForKey:@"statusBar"] valueForKey:@"foregroundView"] subviews];
+    NSString *dataNetworkItemView = nil;
+    
+    for (id subview in subviews) {
+        if([subview isKindOfClass:[NSClassFromString(@"UIStatusBarDataNetworkItemView") class]]) {
+            dataNetworkItemView = subview;
+            break;
+        }
+    }
+    
+    int signalStrength = [[dataNetworkItemView valueForKey:@"_wifiStrengthBars"] intValue];
+    _signal = signalStrength;
+    if(_signal < 2){
+        [CommonUtil showOnlyText:self.view tips:@"当前WIFI信号差，请切换到4G网络"];
+    }else{
+        [_synButtom setEnabled:YES];
+    }
+    NSLog(@"signal %d", signalStrength);
+    if(_signal > 0){
+        [self pauseTimer];
+    }
+}
+
+-(void) startGCDTimer{
+    NSTimeInterval period = 2.0; //设置时间间隔
+    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+    _timer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, queue);
+    dispatch_source_set_timer(_timer, dispatch_walltime(NULL, 0), period * NSEC_PER_SEC, 0); //每秒执行
+    __weak typeof(self) weakSelf = self;
+    dispatch_source_set_event_handler(_timer, ^{
+        //在这里执行事件
+        [weakSelf getSignalStrength];
+        NSLog(@"每2秒执行test");
+    });
+    
+    dispatch_resume(_timer);
+}
+
+
+-(void) pauseTimer{
+    if(_timer){
+        dispatch_suspend(_timer);
+    }
+}
+
+-(void) resumeTimer{
+    if(_timer){
+        dispatch_resume(_timer);
+    }else{
+        [self startGCDTimer];
+    }
+}
+
+-(void) stopTimer{
+    if(_timer){
+        dispatch_source_cancel(_timer);
+        _timer = nil;
+    }
+}
+
+- (void)dealloc {
+    //注销监听者
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:AFNetworkingReachabilityDidChangeNotification object:nil];
+    [self stopTimer];
+}
 
 @end

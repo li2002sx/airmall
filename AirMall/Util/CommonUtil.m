@@ -62,8 +62,8 @@
     // Set the text mode to show only text.
     hud.mode = MBProgressHUDModeText;
     hud.label.text = tips;
-//    hud.backgroundView.style = MBProgressHUDBackgroundStyleSolidColor;
-//    hud.backgroundView.color = [UIColor colorWithWhite:0.f alpha:0.5f];
+    hud.backgroundView.style = MBProgressHUDBackgroundStyleSolidColor;
+    hud.backgroundView.color = [UIColor colorWithWhite:0.f alpha:0.5f];
     // Move to bottm center.
 //    hud.offset = CGPointMake(0.f, MBProgressMaxOffset);
     [hud hideAnimated:YES afterDelay:2.f];
@@ -71,7 +71,7 @@
 
 + (void)showLoading:(NSString *)text andHud:(MBProgressHUD *)hud{
     
-    hud.label.text = NSLocalizedString(text, @"");
+    hud.label.text = text;
 //    // Change the background view style and color.
     hud.backgroundView.style = MBProgressHUDBackgroundStyleSolidColor;
     hud.backgroundView.color = [UIColor colorWithWhite:0.f alpha:0.5f];

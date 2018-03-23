@@ -104,8 +104,8 @@
 		AA4F0D992048F49900081B94 /* Staff.m in Sources */ = {isa = PBXBuildFile; fileRef = AA4F0D982048F49900081B94 /* Staff.m */; };
 		AA4F0DA1204940D200081B94 /* StaffDB.m in Sources */ = {isa = PBXBuildFile; fileRef = AA4F0DA0204940D200081B94 /* StaffDB.m */; };
 		AA57AF1E2052CD3D0063D488 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA57AF1D2052CD3D0063D488 /* Security.framework */; };
+		AA67850E2064CA2400F3C80C /* icon-close@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = AA67850D2064CA2400F3C80C /* icon-close@2x.png */; };
 		AACBC77D205E1AF1001CA14B /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AACBC77C205E1AF1001CA14B /* SystemConfiguration.framework */; };
-		AACBC77F205E7D93001CA14B /* icon-close@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = AACBC77E205E7D93001CA14B /* icon-close@2x.png */; };
 		AACBC799206229EB001CA14B /* icon-76@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = AACBC781206229E7001CA14B /* icon-76@2x.png */; };
 		AACBC79A206229EB001CA14B /* icon-29@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = AACBC782206229E7001CA14B /* icon-29@3x.png */; };
 		AACBC79B206229EB001CA14B /* icon-1024.png in Resources */ = {isa = PBXBuildFile; fileRef = AACBC783206229E8001CA14B /* icon-1024.png */; };
@@ -273,8 +273,8 @@
 		AA4F0D9F204940D200081B94 /* StaffDB.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = StaffDB.h; sourceTree = "<group>"; };
 		AA4F0DA0204940D200081B94 /* StaffDB.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = StaffDB.m; sourceTree = "<group>"; };
 		AA57AF1D2052CD3D0063D488 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
+		AA67850D2064CA2400F3C80C /* icon-close@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-close@2x.png"; sourceTree = "<group>"; };
 		AACBC77C205E1AF1001CA14B /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
-		AACBC77E205E7D93001CA14B /* icon-close@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "icon-close@2x.png"; path = "../../../../../空中/PSD/ios/icon-close@2x.png"; sourceTree = "<group>"; };
 		AACBC781206229E7001CA14B /* icon-76@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-76@2x.png"; sourceTree = "<group>"; };
 		AACBC782206229E7001CA14B /* icon-29@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-29@3x.png"; sourceTree = "<group>"; };
 		AACBC783206229E8001CA14B /* icon-1024.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-1024.png"; sourceTree = "<group>"; };
@@ -375,7 +375,7 @@
 		AA43131E204A6B7500E28C2B /* Main */ = {
 			isa = PBXGroup;
 			children = (
-				AACBC77E205E7D93001CA14B /* icon-close@2x.png */,
+				AA67850D2064CA2400F3C80C /* icon-close@2x.png */,
 				AA3DE1FA2057AA3A006A41CE /* icon-hangban@2x.png */,
 				AA2D90EC2056A47D00741337 /* icon-cart-select@2x.png */,
 				AA4313AC204D34DB00E28C2B /* line-bg@2x.png */,
@@ -795,6 +795,7 @@
 				AACBC7A9206229EB001CA14B /* icon-40@2x.png in Resources */,
 				AA43134C204A6BD100E28C2B /* icon-logout@2x.png in Resources */,
 				AA43135E204A8FD500E28C2B /* icon-wifi@2x.png in Resources */,
+				AA67850E2064CA2400F3C80C /* icon-close@2x.png in Resources */,
 				AA4F0D73204566A100081B94 /* LoginViewController.xib in Resources */,
 				AA43134E204A6BD100E28C2B /* icon-cart@2x.png in Resources */,
 				AA43141F205297F700E28C2B /* gif-loading.gif in Resources */,
@@ -814,7 +815,6 @@
 				AACBC7A2206229EB001CA14B /* icon-76.png in Resources */,
 				AA43134D204A6BD100E28C2B /* icon-menu-more@2x.png in Resources */,
 				AA4F0D7C2045680C00081B94 /* MainViewController.xib in Resources */,
-				AACBC77F205E7D93001CA14B /* icon-close@2x.png in Resources */,
 				AA431393204D16B000E28C2B /* icon-back@2x.png in Resources */,
 				AA4313AD204D34DB00E28C2B /* line-bg@2x.png in Resources */,
 				AA431363204A9C5100E28C2B /* SynInfoTableViewCell.xib in Resources */,
@@ -1140,8 +1140,8 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.project.airmall;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "da1e4ff0-1ae6-4b51-a39f-0a485a3332eb";
-				PROVISIONING_PROFILE_SPECIFIER = disairmall;
+				PROVISIONING_PROFILE = "861453f2-7a0d-49e5-ae4f-927d34461edd";
+				PROVISIONING_PROFILE_SPECIFIER = airmall;
 				TARGETED_DEVICE_FAMILY = 2;
 			};
 			name = Debug;
@@ -1160,8 +1160,8 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.project.airmall;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "da1e4ff0-1ae6-4b51-a39f-0a485a3332eb";
-				PROVISIONING_PROFILE_SPECIFIER = disairmall;
+				PROVISIONING_PROFILE = "861453f2-7a0d-49e5-ae4f-927d34461edd";
+				PROVISIONING_PROFILE_SPECIFIER = airmall;
 				TARGETED_DEVICE_FAMILY = 2;
 			};
 			name = Release;

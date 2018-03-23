@@ -50,7 +50,13 @@
 
 @property (weak, nonatomic) IBOutlet UITableView *openTableView;
 
-- (IBAction)btnFrashPressed:(id)sender;
+@property (weak, nonatomic) IBOutlet UIButton *synButtom;
+
+- (IBAction)synButtomPressed:(id)sender;
+
+@property (weak, nonatomic) IBOutlet UIButton *frashButtom;
+
+- (IBAction)frashButtomPressed:(id)sender;
 
 @property (weak, nonatomic) IBOutlet UIButton *btnBack;
 

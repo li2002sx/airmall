@@ -126,6 +126,7 @@
             bool canOrder = true;
             float totalPrice = 0;
             float totalDiscountPrice = 0;
+            int totalQuantity = 0;
             for(Cart* item in arr){
                 NSString* json = [item yy_modelToJSONString];
                 Cart* cart = [Cart yy_modelWithJSON:json];
@@ -136,6 +137,7 @@
                 ProductItem* productItem = [skuDicts valueForKey:sku];
                 ProductList* product = [productDicts objectForKey:@(productItem.ProductID)];
                 
+                totalQuantity += cart.Quantity;
                 totalPrice += cart.Price * cart.Quantity;
                 totalDiscountPrice += cart.Discount * cart.Quantity;
                 
@@ -168,7 +170,7 @@
                 log.Category = @"操作信息";
                 log.DeviceNo = deviceNo;
                 log.Type = @"创建订单";
-                log.Describe = [NSString stringWithFormat:@"创建订单 %@, 金额 %.2f",orderNo,totalPrice];
+                log.Describe = [NSString stringWithFormat:@"创建订单 %@ 数量 %d, 金额 %.2f",orderNo,totalQuantity,totalPrice];
                 [LogDB createLog:log];
                 
                 [orderResult setStatus:1];
