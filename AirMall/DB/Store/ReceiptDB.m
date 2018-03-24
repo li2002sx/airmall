@@ -121,7 +121,7 @@
                     [result setMessage:@"没有找到对应的商品信息"];
                 }
             }else{
-                [result setMessage:@"改收货单已收货"];
+                [result setMessage:@"该收货单已收货"];
             }
         }else{
             [result setMessage:@"没有找到收货单"];

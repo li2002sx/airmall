@@ -50,6 +50,10 @@
     _signalTextArr = @[@"无",@"差",@"中",@"优"];
     
     _processContentArr = @[@[@"flight",@"航班数据"],@[@"product",@"商品数据"],@[@"staff",@"用户数据"],@[@"schedule",@"排班数据"],@[@"receipt",@"收货数据"],@[@"upload",@"数据上报"]];
+    
+    _synTableView.scrollEnabled = NO;
+    
+//    [self startGCDTimer];
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
@@ -400,16 +404,19 @@
                          NSLog(@"%@ notify:%@",fileType,[response yy_modelToJSONString]);
                      } fail:^(NSURLSessionDataTask *task, NSError *error) {
                          NSLog(@"error");
+                         [self synFail:@"通知下载文件失败"];
                      }];
                     [self analysisData:fileType];
                 }
                 NSLog(@"success");
             } fail:^(NSURLSessionDataTask *task, NSError *error) {
                 NSLog(@"error");
+                [self synFail:@"下载文件失败"];
             }];
         }
     } fail:^(NSURLSessionDataTask *task, NSError *error) {
         NSLog(@"error");
+        [self synFail:@"调用接口失败"];
     }];
 }
 
@@ -449,6 +456,7 @@
         } fail:^(NSURLSessionDataTask *task, NSError *error) {
 //            [self process:arr type:1];
             NSLog(@"error:%@",error);
+            [self synFail:@"上报文件失败"];
         }];
     } else {
         [self process:arr type:1];
@@ -485,9 +493,23 @@
     
 }
 
+-(void)synSucc:(NSString*) tip{
+    
+    [_synButtom setEnabled:YES];
+    [_hud hideAnimated:YES];
+    [CommonUtil showOnlyText:self.view tips:tip];
+}
+
+-(void) synFail:(NSString*) tip{
+    
+    [_hud hideAnimated:YES];
+    [_synButtom setEnabled:YES];
+    [CommonUtil showOnlyText:self.view tips:tip];
+}
+
 -(void) noSignal{
     _wifiImageView.image = [UIImage imageNamed:@"icon-wifi-0"];
-    _wifiLabel.text = @"无";
+    _wifiLabel.text = @"请切换到4G";
     [CommonUtil showOnlyText:self.view tips:@"当前无网络连接"];
     [_synButtom setEnabled:NO];
 }
@@ -500,21 +522,22 @@
     switch (status) {
         case AFNetworkReachabilityStatusUnknown:
             [self noSignal];
-            [self resumeTimer];
+//            [self resumeTimer];
             NSLog(@"无法获取网络状态");
             break;
         case AFNetworkReachabilityStatusReachableViaWWAN:
-            [self pauseTimer];
+//            [self pauseTimer];
+            [self setWWANSignal];
             NSLog(@"移动蜂窝网络");
             break;
         case AFNetworkReachabilityStatusReachableViaWiFi:
-            [self pauseTimer];
+//            [self pauseTimer];
             [self getSignalStrength];
             NSLog(@"Wifi上网");
             break;
         case AFNetworkReachabilityStatusNotReachable:
             [self noSignal];
-            [self resumeTimer];
+//            [self resumeTimer];
             NSLog(@"无网络连接");
             break;
         default:
@@ -522,31 +545,50 @@
     }
 }
 
+- (void)setWWANSignal{
+    _signal = 3;
+    _wifiImageView.image = [UIImage imageNamed:[NSString stringWithFormat:@"icon-wifi-%ld",_signal]];
+    _wifiLabel.text = [_signalTextArr objectAtIndex:_signal];
+    [_synButtom setEnabled:YES];
+}
+
 - (void)getSignalStrength{
     UIApplication *app = [UIApplication sharedApplication];
-    NSArray *subviews = [[[app valueForKey:@"statusBar"] valueForKey:@"foregroundView"] subviews];
-    NSString *dataNetworkItemView = nil;
+//    NSArray *subviews = [[[app valueForKey:@"statusBar"] valueForKey:@"foregroundView"] subviews];
+//    NSString *dataNetworkItemView = nil;
+    int signalStrength = 3;
     
-    for (id subview in subviews) {
-        if([subview isKindOfClass:[NSClassFromString(@"UIStatusBarDataNetworkItemView") class]]) {
-            dataNetworkItemView = subview;
-            break;
-        }
-    }
-    
-    int signalStrength = [[dataNetworkItemView valueForKey:@"_wifiStrengthBars"] intValue];
+//    if(subviews != nil){
+//        for (id subview in subviews) {
+//            if([subview isKindOfClass:[NSClassFromString(@"UIStatusBarDataNetworkItemView") class]]) {
+//                dataNetworkItemView = subview;
+//                break;
+//            }
+//        }
+//        signalStrength = [[dataNetworkItemView valueForKey:@"_wifiStrengthBars"] intValue];
+//    }
     _signal = signalStrength;
     _wifiImageView.image = [UIImage imageNamed:[NSString stringWithFormat:@"icon-wifi-%ld",_signal]];
-    if(_signal < 2){
-        [CommonUtil showOnlyText:self.view tips:@"当前WIFI信号差，请切换到4G网络"];
-    }else{
-        [_synButtom setEnabled:YES];
-    }
+     [_synButtom setEnabled:YES];
+//    if(_signal < 2){
+//        [CommonUtil showOnlyText:self.view tips:@"当前WIFI信号差，请切换到4G网络"];
+//    }else{
+//
+//    }
     _wifiLabel.text = [_signalTextArr objectAtIndex:_signal];
     NSLog(@"signal %d", signalStrength);
-    if(_signal > 0){
-        [self pauseTimer];
+//    if(_signal > 0){
+//        [self pauseTimer];
+//    }
+}
+
+-(BOOL)isExistNetWork{
+    Reachability *reachability = [Reachability reachabilityWithHostName:@_ApiUrl];
+    
+    if ([reachability currentReachabilityStatus] == NotReachable){
+        return NO;
     }
+    return YES;
 }
 
 -(void) startGCDTimer{
@@ -557,10 +599,18 @@
     __weak typeof(self) weakSelf = self;
     dispatch_source_set_event_handler(_timer, ^{
         //在这里执行事件
-        [weakSelf getSignalStrength];
+        if([weakSelf isExistNetWork]){
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [weakSelf.synButtom setEnabled:YES];
+            });
+        }else{
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [weakSelf.synButtom setEnabled:NO];
+            });
+        }
         NSLog(@"每2秒执行test");
     });
-    
+
     dispatch_resume(_timer);
 }
 
@@ -625,9 +675,26 @@
     [cart bg_createTable];
 }
 
-- (void)dealloc {
+- (void) viewWillDisappear:(BOOL)animated{
+    
+    [super viewWillDisappear:animated];
     //注销监听者
     [[NSNotificationCenter defaultCenter] removeObserver:self name:AFNetworkingReachabilityDidChangeNotification object:nil];
-    [self stopTimer];
+    //    [self stopTimer];
 }
+
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    if([self.navigationController respondsToSelector:@selector(interactivePopGestureRecognizer)]) {
+        self.navigationController.interactivePopGestureRecognizer.enabled = NO;
+    }
+}
+
+- (void)viewDidDisappear:(BOOL)animated {
+    [super viewDidDisappear:animated];
+    if([self.navigationController respondsToSelector:@selector(interactivePopGestureRecognizer)]) {
+        self.navigationController.interactivePopGestureRecognizer.enabled = YES;
+    }
+}
+
 @end

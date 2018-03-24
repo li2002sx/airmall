@@ -17,7 +17,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    bg_setDebug(YES);//打开调试模式,打印输出调试信息.
+    bg_setDebug(NO);//打开调试模式,打印输出调试信息.
     self.navigationController.navigationBar.hidden = YES;
     [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleLightContent;
     _userInfo = [NSUserDefaults standardUserDefaults];
@@ -44,6 +44,7 @@
 
 - (void)viewWillAppear:(BOOL)animated{
     
+
 }
 
 - (void)didReceiveMemoryWarning {

@@ -76,15 +76,17 @@
     
     _shrinkTableView.dataSource = self;
     _shrinkTableView.delegate = self;
+    _shrinkTableView.scrollEnabled = NO;
     
     _openTableView.dataSource = self;
     _openTableView.delegate = self;
+    _shrinkTableView.scrollEnabled = NO;
     
     
     // Show in popup
     _layout = KLCPopupLayoutMake(KLCPopupHorizontalLayoutLeft,KLCPopupVerticalLayoutTop);
     
-    _popup = [KLCPopup popupWithContentView:_openView showType:KLCPopupShowTypeSlideInFromLeft dismissType:KLCPopupDismissTypeBounceOutToLeft maskType:KLCPopupMaskTypeDimmed dismissOnBackgroundTouch:YES dismissOnContentTouch:NO];
+    _popup = [KLCPopup popupWithContentView:_openView showType:KLCPopupShowTypeSlideInFromLeft dismissType:KLCPopupDismissTypeSlideOutToLeft maskType:KLCPopupMaskTypeDimmed dismissOnBackgroundTouch:YES dismissOnContentTouch:NO];
     // Do any additional setup after loading the view from its nib.
     
     _shrinkView.layer.shadowColor = [UIColor colorWithHexString:@"22304d"].CGColor;;//shadowColor阴影颜色
@@ -292,12 +294,6 @@
     
     [super viewWillAppear:animated];
 //    [IQKeyboardManager sharedManager].enable = NO;
-}
-
-- (void)viewWillDisappear:(BOOL)animated{
-    
-    [super viewWillDisappear:animated];
-//    [IQKeyboardManager sharedManager].enable = YES;
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
@@ -899,6 +895,7 @@
             break;
         case AFNetworkReachabilityStatusReachableViaWWAN:
             [self pauseTimer];
+            [self setWWANSignal];
             NSLog(@"移动蜂窝网络");
             break;
         case AFNetworkReachabilityStatusReachableViaWiFi:
@@ -916,25 +913,31 @@
     }
 }
 
+- (void)setWWANSignal{
+    [_synButtom setEnabled:YES];
+}
+
 - (void)getSignalStrength{
     UIApplication *app = [UIApplication sharedApplication];
     NSArray *subviews = [[[app valueForKey:@"statusBar"] valueForKey:@"foregroundView"] subviews];
     NSString *dataNetworkItemView = nil;
-    
-    for (id subview in subviews) {
-        if([subview isKindOfClass:[NSClassFromString(@"UIStatusBarDataNetworkItemView") class]]) {
-            dataNetworkItemView = subview;
-            break;
+    int signalStrength = 3;
+    if(subviews != nil){
+        for (id subview in subviews) {
+            if([subview isKindOfClass:[NSClassFromString(@"UIStatusBarDataNetworkItemView") class]]) {
+                dataNetworkItemView = subview;
+                break;
+            }
         }
+        signalStrength = [[dataNetworkItemView valueForKey:@"_wifiStrengthBars"] intValue];
     }
-    
-    int signalStrength = [[dataNetworkItemView valueForKey:@"_wifiStrengthBars"] intValue];
     _signal = signalStrength;
-    if(_signal < 2){
-        [CommonUtil showOnlyText:self.view tips:@"当前WIFI信号差，请切换到4G网络"];
-    }else{
-        [_synButtom setEnabled:YES];
-    }
+    [_synButtom setEnabled:YES];
+//    if(_signal < 2){
+//        [CommonUtil showOnlyText:self.view tips:@"当前WIFI信号差，请切换到4G网络"];
+//    }else{
+//        [_synButtom setEnabled:YES];
+//    }
     NSLog(@"signal %d", signalStrength);
     if(_signal > 0){
         [self pauseTimer];
@@ -942,18 +945,18 @@
 }
 
 -(void) startGCDTimer{
-    NSTimeInterval period = 2.0; //设置时间间隔
-    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
-    _timer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, queue);
-    dispatch_source_set_timer(_timer, dispatch_walltime(NULL, 0), period * NSEC_PER_SEC, 0); //每秒执行
-    __weak typeof(self) weakSelf = self;
-    dispatch_source_set_event_handler(_timer, ^{
-        //在这里执行事件
-        [weakSelf getSignalStrength];
-        NSLog(@"每2秒执行test");
-    });
-    
-    dispatch_resume(_timer);
+//    NSTimeInterval period = 2.0; //设置时间间隔
+//    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+//    _timer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, queue);
+//    dispatch_source_set_timer(_timer, dispatch_walltime(NULL, 0), period * NSEC_PER_SEC, 0); //每秒执行
+//    __weak typeof(self) weakSelf = self;
+//    dispatch_source_set_event_handler(_timer, ^{
+//        //在这里执行事件
+//        [weakSelf getSignalStrength];
+//        NSLog(@"每2秒执行test");
+//    });
+//
+//    dispatch_resume(_timer);
 }
 
 
@@ -978,10 +981,28 @@
     }
 }
 
-- (void)dealloc {
+- (void)viewWillDisappear:(BOOL)animated{
+    
+    [super viewWillDisappear:animated];
+    //    [IQKeyboardManager sharedManager].enable = YES;
     //注销监听者
     [[NSNotificationCenter defaultCenter] removeObserver:self name:AFNetworkingReachabilityDidChangeNotification object:nil];
-    [self stopTimer];
+//    [self stopTimer];
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    if([self.navigationController respondsToSelector:@selector(interactivePopGestureRecognizer)]) {
+        self.navigationController.interactivePopGestureRecognizer.enabled = NO;
+    }
+}
+
+- (void)viewDidDisappear:(BOOL)animated {
+    [super viewDidDisappear:animated];
+    //在其他离开改页面的方法同样加上下面代码
+    if([self.navigationController respondsToSelector:@selector(interactivePopGestureRecognizer)]) {
+        self.navigationController.interactivePopGestureRecognizer.enabled = YES;
+    }
 }
 
 @end
