@@ -12,11 +12,13 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="LoginViewController">
             <connections>
+                <outlet property="changeDateButton" destination="tXb-Bb-PJo" id="IjE-up-KOm"/>
                 <outlet property="fieldDate" destination="Kb7-Ww-Em5" id="ezy-qB-6D0"/>
                 <outlet property="fieldName" destination="cNV-Zc-N8z" id="7R1-sA-B6R"/>
                 <outlet property="fieldPass" destination="2n0-XY-ct9" id="NbH-rN-921"/>
                 <outlet property="filedFlightNo" destination="nFc-a6-MHw" id="IoL-66-b8q"/>
                 <outlet property="finishLabel" destination="0Ta-xz-I7U" id="BIq-cE-gmR"/>
+                <outlet property="loginButton" destination="wht-3a-dRW" id="ood-tz-w8b"/>
                 <outlet property="synButtom" destination="OdH-2F-vfV" id="Gwo-41-H7e"/>
                 <outlet property="synDataView" destination="iAb-pd-8gY" id="iYH-Zc-Iaa"/>
                 <outlet property="synTableView" destination="7Tg-G4-6tX" id="Oz7-AP-oAk"/>
@@ -98,7 +100,7 @@
                                     <color key="textColor" red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="calibratedRGB"/>
                                     <nil key="highlightedColor"/>
                                 </label>
-                                <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="KN2261" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="nFc-a6-MHw">
+                                <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="KN5631" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="nFc-a6-MHw">
                                     <rect key="frame" x="140" y="0.0" width="230" height="50"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     <nil key="textColor"/>
@@ -170,7 +172,7 @@
                                     <color key="textColor" red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="calibratedRGB"/>
                                     <nil key="highlightedColor"/>
                                 </label>
-                                <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="2018-03-18" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Kb7-Ww-Em5">
+                                <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="2018-03-23" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Kb7-Ww-Em5">
                                     <rect key="frame" x="140" y="0.0" width="189" height="50"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     <nil key="textColor"/>
@@ -190,7 +192,7 @@
                         <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wht-3a-dRW">
                             <rect key="frame" x="150" y="321" width="150" height="50"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                            <state key="normal" title="登陆" backgroundImage="btn-red-bg.png">
+                            <state key="normal" title="登录" backgroundImage="btn-red-bg.png">
                                 <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                             </state>
                             <connections>

@@ -21,6 +21,8 @@
 
 @property(nonatomic,copy)NSString* EmpType;
 
+@property(nonatomic,copy)NSString* Avatar;
+
 @property(nonatomic,assign)int IsActive;
 
 @property(nonatomic,strong)NSString* CreateTime;

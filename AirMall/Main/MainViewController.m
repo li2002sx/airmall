@@ -750,9 +750,9 @@
                 }
             }
             _synCount++;
-            if(_synCount == 6){
-                [self synSucc:@"数据同步成功"];
-            }
+//            if(_synCount == 6){
+//
+//            }
         }
         [manager removeItemAtPath:unzipPath error:nil];
         
@@ -769,6 +769,7 @@
         [manager removeItemAtPath:unzipPath error:nil];
     }
     [manager removeItemAtPath:zipPath error:nil];
+    [self synSucc:@"数据同步成功"];
 }
 
 - (void)downData:(NSString*)fileType{

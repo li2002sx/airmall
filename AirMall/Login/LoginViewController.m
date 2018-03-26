@@ -56,6 +56,12 @@
 //    [self startGCDTimer];
 }
 
+-(void) viewWillAppear:(BOOL)animated{
+    
+    [super viewWillAppear:animated];
+    [self setButtonStatus:NO];
+}
+
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
     return 1;
 }
@@ -200,12 +206,13 @@
         [arr replaceObjectAtIndex:2 withObject:@"正在同步"];
     }else{
         [arr replaceObjectAtIndex:0 withObject:@"icon-succ"];
-        [arr replaceObjectAtIndex:2 withObject:@"已完成"];
+        [arr replaceObjectAtIndex:2 withObject:@"同步完成"];
         [arr replaceObjectAtIndex:3 withObject:[CommonUtil convertDateToString:[NSDate new] formatter:@"yyyy.MM.dd HH:mm:ss"]];
         _synCount++;
         if(_synCount==[_processContentArr count]){
             [_synButtom setEnabled:YES];
             [_finishLabel setHidden:NO];
+            [self setButtonStatus:YES];
         }
     }
     
@@ -440,7 +447,7 @@
         
         NSData *zipData = [NSData dataWithContentsOfFile:uploadZipPath];
         
-        [NetworkUtil upload:@"api/ipad/upload" params:nil fileData:zipData name:@"upload" fileName:@"upload.zip" mimeType:@"application/zip" progress:^(NSProgress *progress) {
+        [NetworkUtil upload:@"api/ipad/upload" params:dict fileData:zipData name:@"upload" fileName:@"upload.zip" mimeType:@"application/zip" progress:^(NSProgress *progress) {
             
             NSLog(@"上传进度：%f",1.0 * progress.completedUnitCount / progress.totalUnitCount);
             
@@ -464,7 +471,7 @@
 }
 
 -(void) processStart:(NSString*) key text:(NSString*)text{
-    NSMutableArray* arr = [[NSMutableArray alloc] initWithObjects:@"icon-tongxu",text,@"正在通讯",@"", nil];
+    NSMutableArray* arr = [[NSMutableArray alloc] initWithObjects:@"icon-tongxu",text,@"正在同步",@"", nil];
     [_tableViewDict setObject:arr forKey:key];
     [_synTableView reloadData];
 }
@@ -484,13 +491,13 @@
     for(NSArray* arr in _processContentArr){
         [self processStart:[arr objectAtIndex:0] text:[arr objectAtIndex:1]];
     }
-    [self processStart:@"upload" text:@"数据上报"];
-    [ReceiptDB createReportFile];
-    [self uploadData];
     
     [self downData:@"data"];
     [self downData:@"picture"];
     
+    [self processStart:@"upload" text:@"数据上报"];
+    [ReceiptDB createReportFile];
+    [self uploadData];
 }
 
 -(void)synSucc:(NSString*) tip{
@@ -505,6 +512,24 @@
     [_hud hideAnimated:YES];
     [_synButtom setEnabled:YES];
     [CommonUtil showOnlyText:self.view tips:tip];
+}
+
+-(void) setButtonStatus:(BOOL) flag{
+    if(flag){
+        [_filedFlightNo setEnabled:YES];
+        [_fieldDate setEnabled:YES];
+        [_changeDateButton setEnabled:YES];
+        [_fieldName setEnabled:YES];
+        [_fieldPass setEnabled:YES];
+        [_loginButton setEnabled:YES];
+    }else{
+        [_filedFlightNo setEnabled:NO];
+        [_fieldDate setEnabled:NO];
+        [_changeDateButton setEnabled:NO];
+        [_fieldName setEnabled:NO];
+        [_fieldPass setEnabled:NO];
+        [_loginButton setEnabled:NO];
+    }
 }
 
 -(void) noSignal{

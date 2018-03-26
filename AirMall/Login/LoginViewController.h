@@ -56,7 +56,12 @@
 
 @property (weak, nonatomic) IBOutlet UILabel *versionLabel;
 
+@property (weak, nonatomic) IBOutlet UIButton *changeDateButton;
+
 - (IBAction)dateChange:(id)sender;
+
+@property (weak, nonatomic) IBOutlet UIButton *loginButton;
+
 
 - (IBAction)loginPressed:(id)sender;
 
