@@ -1,0 +1,211 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>系统日志管理</title>
+    <link href="../Component/Bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="../Content/Style.css?v=1020" rel="stylesheet" />
+    <script src="../Scripts/jquery-1.10.2.min.js"></script>
+    <script src="../Scripts/dispatch.js"></script>
+    <script src="../Component/Bootstrap/js/bootstrap.min.js"></script>
+    <script src="../Component/art-template/arttemplate.js"></script>
+    <script src="../Scripts/common.js?v=103"></script>
+    <style>
+        .content-body {
+            height: calc(100% - 80px);
+            border-radius: 0 0 20px 20px;
+        }
+
+        .list-group {
+            height: calc(100% - 115px);
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .info-list li {
+            height: 120px
+        }
+
+        .order-block {
+            padding-bottom: 10px;
+        }
+
+        .content-header {
+            height: 65px;
+        }
+
+        #search, .order-item {
+            cursor: pointer;
+        }
+
+        .seach-block {
+            background-color: #f5f5f5;
+        }
+
+        .list-group {
+            padding-top: 0px !important;
+        }
+
+        .des_content {
+            display: flex;
+        }
+
+        .describe-title {
+            width: 40px;
+            float: left;
+        }
+
+        .describe-txt {
+            width: calc(100% - 56px);
+            float: left;
+            display: block;
+            max-height: 578px;
+            overflow-y: auto;
+            word-break: break-all;
+        }
+    </style>
+</head>
+<body>
+    <div class="content">
+        <div class="content-header">
+            <div class="content-title">
+                <span></span><h3>系统日志管理</h3>
+            </div>
+        </div>
+
+        <div class="content-body">
+            <div class="seach-block">
+                <!--<div class="btn-group">
+                    <button type="button" class="btn btn-dark btn-fliter">所有记录类型</button>
+                    <button type="button" class="btn btn-dark dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <span class="caret"></span>
+                        <span class="sr-only">Toggle Dropdown</span>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a href="#">Action</a></li>
+                        <li><a href="#">Another action</a></li>
+                        <li><a href="#">Something else here</a></li>
+                        <li role="separator" class="divider"></li>
+                        <li><a href="#">Separated link</a></li>
+                    </ul>
+                </div>-->
+                <div class="serach-group">
+                    <input class="search-control" placeholder="请输入描述内容" />
+                    <div class="search-icon" id="search">
+                        <span class="iconfont icon-search"></span>
+                    </div>
+                </div>
+                <div class="order-block" data-callback="initLog" id="log">
+                    <div class="order-item" data-colname="ID">
+                        <span>编号排序</span><i class="iconfont icon-triangle-up"></i><i class="iconfont icon-triangle-down"></i>
+                    </div>
+                    <div class="order-item" data-colname="EmpNo">
+                        <span>用户ID排序</span><i class="iconfont icon-triangle-up"></i><i class="iconfont icon-triangle-down"></i>
+                    </div>
+                    <div class="order-item" data-colname="Type">
+                        <span>类型排序</span><i class="iconfont icon-triangle-up"></i><i class="iconfont icon-triangle-down"></i>
+                    </div>
+                </div>
+            </div>
+            <ul class="list-group" id="logList"></ul>
+        </div>
+    </div>
+    <div class="appmodal" id="modal-msg">
+        <div class="mask"></div>
+        <div class="appmodal-content">
+            <div class="appmodal-header ">
+                <span></span>
+            </div>
+            <div class="appmodal-body text-center">
+                <span></span>
+            </div>
+            <div class="appmodal-footer">
+                <button class="btn btn-cancel" type="button">取消</button>
+                <button class="btn btn-major btn-confirm" type="button">确认</button>
+            </div>
+        </div>
+    </div>
+    <div class="toast">
+        <div class="mask"></div>
+        <div class="toast-msg"><span></span></div>
+    </div>
+    <script id="s_logList" type="text/html">
+        {{each list logItem index}}
+        <li class="list-group-item clearfix">
+            <ul class="info-list">
+                <li class="col-30">
+                    <label class="lb-60">编号</label><span>{{logItem.ID}}</span><br />
+                    <label class="lb-60">用户ID</label><span>{{logItem.EmpNo}}</span><br />
+                    <label class="lb-60">类型</label><span>{{logItem.Type}}</span><br />
+                    <label class="lb-60">时间</label><span>{{logItem.CreateTime}}</span>
+                </li>
+                <li class="col-70 des_content">
+                    <label class="lb-35 describe-title">描述</label>
+                    <span class="describe-txt">{{logItem.Describe}}</span>
+                </li>
+            </ul>
+        </li>
+        {{/each}}
+    </script>
+
+    <script>
+        $(function () {
+            getLoginInfo(function () {
+                initLog();
+            });
+            $("#search").click(function () {
+                initLog();
+            });
+            $(".order-item").click(function () {
+                var that = this;
+                var itemindex = $(this).index();
+                var callback = $(this).parent().data("callback");
+                if ($(that).hasClass("up")) {
+                    $(that).removeClass("up");
+                    $(that).addClass("down");
+                }
+                else if ($(that).hasClass("down")) {
+                    $(that).removeClass("down");
+                    $(that).addClass("up");
+                } else {
+                    $(that).addClass("up");
+                }
+
+                var items = $(that).parent().find(".order-item");
+                for (var i = 0; i < items.length; i++) {
+                    if (i != itemindex) {
+                        $(items[i]).removeClass("up").removeClass("down");
+                    }
+                }
+                var fn = eval(callback);
+                fn.call(this);
+            });
+        });
+
+        function initLog() {
+            //排序
+            var sqlorder = "";
+            var orderbycol = "";
+            if ($("#log .order-item.up").length > 0) {
+                orderbycol = $("#log .order-item.up").data("colname");
+                sqlorder = " order by " + orderbycol + " asc";
+            } else if ($("#log .order-item.down").length > 0) {
+                orderbycol = $("#log .order-item.down").data("colname");
+                sqlorder = " order by " + orderbycol + " desc";
+            }
+
+            var txt = $("#search").prev().val();
+            console.log(txt);
+            var sqlwhere = " and Describe like '%" + txt + "%'";
+            var param = {
+                sql: "select ID,EmpNo,Type,Describe,CreateTime from LogList where  1=1" + sqlwhere + sqlFliteFlight + sqlorder,
+                type: "log"
+            }
+            initScroll("logList", param, 10);
+        }
+
+    </script>
+</body>
+</html>

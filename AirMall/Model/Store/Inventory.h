@@ -33,5 +33,6 @@
 
 @property(nonatomic)NSInteger Qty;
 
+@property(nonatomic)NSInteger Syn;
 
 @end

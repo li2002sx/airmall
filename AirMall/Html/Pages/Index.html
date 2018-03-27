@@ -1,0 +1,396 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <title>航班信息</title>
+    <link href="../Component/Bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="../Component/bootstrap-table/bootstrap-table.min.css" rel="stylesheet" />
+    <link href="../Content/Style.css?v=1020?aaa=1" rel="stylesheet" />
+    <!--<link href="../Content/menu.css" rel="stylesheet" />-->
+    <script src="../Scripts/jquery-1.10.2.min.js"></script>
+    <script src="../Scripts/dispatch.js"></script>
+    <script src="../Scripts/dispatch.js"></script>
+    <script src="../Scripts/common.js?v=103"></script>
+    <style>
+        .content-index {
+            background: initial;
+        }
+
+        .flight-block {
+            border-radius: 20px;
+            background: #fff;
+            margin-top: 20px;
+            width: 100%;
+            text-align: center;
+            position: relative;
+            padding-top: 60px;
+            margin-bottom: 35px;
+        }
+
+        .flight-NO {
+            width: 164px;
+            height: 82px;
+            border-radius: 0 0 82px 82px;
+            background: #ED3737;
+            position: absolute;
+            top: -34px;
+            padding-top: 10px;
+            left: calc((100% - 160px)/2);
+            color: #fff0f5;
+            font-size: 20px;
+        }
+
+        .flight-time label {
+            font-size: 50px;
+            color: #000;
+        }
+
+        .flight-airport label {
+            color: #666;
+            vertical-align:top;
+        }
+
+        .flight-time .iconfont {
+            font-size: 46px;
+            color: #ccc;
+            margin: 0 60px;
+        }
+
+        .flight-flytime {
+            /*margin: 0 66px;*/
+            color: #FF5356;
+            width: 100px;
+        }
+
+        .flight-param {
+            width: 100%;
+            margin: 30px 0 15px;
+        }
+
+        .param-item {
+            margin-right: 20px;
+        }
+
+            .param-item:last-child {
+                margin-right: 0;
+            }
+
+            .param-item .iconfont {
+                margin-right: 20px;
+                font-size: 24px;
+            }
+
+            .param-item .icon-chair {
+                color: #ff5356;
+            }
+
+            .param-item .icon-head {
+                color: #2EC0FF;
+            }
+
+            .param-item .icon-flight {
+                color: #27C550;
+            }
+
+        .flight-footer {
+            height: 100px;
+            line-height: 100px;
+        }
+
+            .flight-footer .btn {
+                width: 140px;
+            }
+
+                .flight-footer .btn:first-child {
+                    margin-right: 60px;
+                }
+
+        .table-container {
+            width: 100%;
+            border-radius: 20px !important;
+        }
+
+        .table {
+            margin-bottom: 0;
+        }
+
+            .table tr {
+                height: 60px;
+            }
+
+        .table-striped tr:nth-last-of-type(odd) {
+            background: #E6E6E6;
+        }
+
+        .table, .table th {
+            text-align: center;
+        }
+
+        .table-container .table tr:first-child th {
+            border-top: 0;
+            vertical-align: middle;
+        }
+
+        .table-container .table tr > td {
+            vertical-align: middle;
+        }
+
+        .table-container .table tr:first-child th:first-child {
+            border-radius: 20px 0 0 0;
+        }
+
+        .table-container .table tr:first-child th:last-child {
+            border-radius: 0 20px 0 0;
+        }
+
+        .table-container .table tr:last-child td:first-child {
+            border-radius: 0 0 0 20px;
+        }
+
+        .table-container .table tr:last-child td:last-child {
+            border-radius: 0 0 20px 0;
+        }
+
+        .table-striped {
+            background-color: #fff;
+            border-radius: 20px;
+        }
+
+        #other-table > tbody > tr {
+            height: 80px;
+        }
+
+            #other-table > tbody > tr > td {
+                vertical-align: middle;
+            }
+
+        .ft {
+            font-weight: bold;
+        }
+        .time{
+            margin:0px 66px;
+            display:inline-block;
+            text-align:center;
+            color:#666;
+        }
+        .time > span:first-child{
+            display:inline-block;
+            width:100%;
+        }
+    </style>
+</head>
+<body>
+    <div class="content content-index">
+        <div class="flight-block">
+            <div class="flight-NO">
+                <span id="txt_flightno"></span>
+            </div>
+            <div class="flight-time">
+                <label id="txt_stime"></label>
+                <span class="iconfont icon-flight"></span>
+                <label id="txt_etime"></label>
+            </div>
+            <div class="flight-airport">
+                <label id="txt_sport"></label>
+                <div class="time">
+                    <span class="flight-flytime"></span>
+                    <!--<span>经停-杭州</span>-->
+                </div>
+                <label id="txt_eport"></label>
+            </div>
+            <div class="flight-param">
+                <span class="param-item"><i class="iconfont icon-chair"></i><label>订座人数--</label><span id="txt_chairno"></span></span>
+                <span class="param-item"><i class="iconfont icon-head"></i><label>值机人数--</label><span id="txt_personno"></span></span>
+                <span class="param-item"><i class="iconfont icon-flight"></i><label>值机状态--</label><span id="txt_status"></span></span>
+            </div>
+            <div class="flight-footer">
+                <button type="button" class="btn" id="btnchange">换班交接</button>
+                <button type="button" class="btn btn-major" id="btnsure">送货单确认</button>
+            </div>
+        </div>
+        <div class="table-container clearfix">
+            <table class="table table-striped" style="width:49%;float:left">
+                <tr>
+                    <th>舱位</th>
+                    <th>总人数</th>
+
+                </tr>
+                <tr>
+                    <td>W</td>
+                    <td class="person-w">-</td>
+                </tr>
+                <tr>
+                    <td>Y</td>
+                    <td class="person-y">-</td>
+                </tr>
+                <tr>
+                    <td>总计</td>
+                    <td class="person-total">-</td>
+                </tr>
+            </table>
+            <table class="table table-striped" id="other-table" style="width:49%;float:right;overflow:hidden">
+                <tr>
+                    <td class="ft">销售总金额</td>
+                    <td class="sales-price">-</td>
+                </tr>
+                <tr>
+                    <td class="ft">销售总件数</td>
+                    <td class="sales-number">-</td>
+                </tr>
+                <tr>
+                    <td class="ft">时间</td>
+                    <td class="time-total">-</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <div class="appmodal" id="modal-msg">
+        <div class="mask"></div>
+        <div class="appmodal-content">
+            <div class="appmodal-header ">
+                <span></span>
+            </div>
+            <div class="appmodal-body text-center">
+                <span></span>
+            </div>
+            <div class="appmodal-footer">
+                <button class="btn btn-cancel" type="button">取消</button>
+                <button class="btn btn-major btn-confirm" type="button">确认</button>
+            </div>
+        </div>
+    </div>
+<div class="loading">
+    <div class="loading-mask"></div>
+    <div class="loading-content">
+        <div class="icon-loading">
+            <img src="../Images/loading.png"/>
+        </div>
+        <span>数据上传中</span>
+    </div>
+</div>
+<div class="toast">
+    <div class="mask"></div>
+    <div class="toast-msg"><span></span></div>
+</div>
+    <script>
+
+        $(function () {
+			var orderid = "";
+            getLoginInfo(function () {
+                var getDisTime = function (eTime, sTime) {                    
+                    /*var time = "";
+                    var disTime = (new Date(eTime).getTime() / 60000 - new Date(sTime).getTime() / 60000);
+                    time = Math.floor(disTime / 60) + "小时" + Math.round(disTime % 60) + "分";*/
+                    //$(".flight-flytime").text(time);
+
+                }
+				
+				var calcTime=function(a){
+		var minutes=0;
+
+		if(a[0]=="0"){
+			minutes+=a[1]*60;
+		} else {
+			minutes+=a.substring(0,2)*60;
+		}
+
+		if(a[3]=="0"){
+			minutes+=a[4]*1;
+		} else {
+			minutes+=a.substring(3,5)*1;
+		}
+		return minutes;
+	}
+	
+	var getResTime = function(a,b){
+		var c=calcTime(b)-calcTime(a);
+		var hour = parseInt(c/60);
+		var minutes = Math.round((c/60-parseInt(c/60))*60);
+		return hour+"小时"+ minutes +"分钟";
+	}
+
+                var param = {
+                    sql: "select DeliveryNo from ReceiptList where 1=1" + sqlFliteFlight,
+                    type: "getorderid"
+                }
+
+                appJsBridge.callHandler("selectList", param, function (result) {
+                    checkSuccess(result, function () {
+                        orderid = result.list[0].DeliveryNo;
+
+                    });
+                });
+
+                var airport = flightInfo.LineCHN.split("-");
+
+                var startTime="";
+				var endTime="";
+                if (!flightInfo.ActualDeptTime||!flightInfo.ActualArrTime) {
+
+                    $("#txt_stime").text(flightInfo.DeptTime);
+                    $("#txt_etime").text(flightInfo.ArrTime);
+                    startTime = flightInfo.DeptTime;
+                    endTime = flightInfo.ArrTime;
+					//AppAlert(parseInt(calcTime(endTime)-calcTime(startTime))/60)
+                    //getDisTime(endTime,startTime);
+
+                    $(".flight-flytime").text(getResTime(startTime,endTime));
+                } else {
+                    $("#txt_stime").text(flightInfo.ActualDeptTime);
+                    $("#txt_etime").text(flightInfo.ActualArrTime);
+                    startTime = flightInfo.ActualDeptTime;
+                    endTime = flightInfo.ActualArrTime;
+                    //getDisTime(endTime, startTime);
+                    $(".flight-flytime").text(getResTime(startTime,endTime));
+                }
+
+                $("#txt_flightno").text(flightInfo.Carrier+flightInfo.FlightNo);
+                $("#txt_sport").text(airport[0]);
+                $("#txt_eport").text(airport[1]);
+
+
+                var indexparam = {
+                    sql: "select FirstClassAmount,EconomyClassAmount from FlightInfo A " +
+                       " where A.FlightNo = '" + flightInfo.FlightNo + " ' and A.FlightDate = '"+flightInfo.FlightDate + "' " ,
+                    type: "getindex"
+                }
+                appJsBridge.callhandler("selectList", indexparam, function (result) {
+                    checkSuccess(result, function () {
+                        $(".person-w").html(result.list[0].FirstClassAmount);
+                        $(".person-y").html(result.list[0].EconomyClassAmount);
+                        $(".person-total").html(result.list[0].FirstClassAmount * 1 + result.list[0].EconomyClassAmount * 1);
+                     });
+                 });
+                var getprice = {
+                    sql: "select sum(OrderPrice) as SellTotalPrice " +
+                       "from SalesOrder where 1=1" + sqlFliteFlight,
+                    type: "getprice"
+                }
+
+                var getQty = {
+                    sql: "select sum(B.Quantity) as QtyTotal from SalesOrder as A inner join SalesOrderItem as B on A.OrderNo=B.OrderNo and A.FlightNo='" + flightInfo.FlightNo + "' and  A.FlightDate ='" + flightInfo.FlightDate + "'"
+                }
+                appJsBridge.callHandler("selectList", getprice, function (result) {
+                    checkSuccess(result, function () {
+                        $(".sales-price").html("￥" + formatNumber(result.list[0].SellTotalPrice));
+                    });
+                });
+                appJsBridge.callHandler("selectList", getQty, function (result) {
+                    checkSuccess(result, function () {
+                        $(".sales-number").html(formatNumber(result.list[0].QtyTotal));
+                    });
+                });
+                $(".time-total").html(flightInfo.FlightDate);
+            });
+            $("#btnchange").click(function() {
+                window.location.href = "AssociateManage.html";
+            });
+            //送货确认
+            $("#btnsure").click(function () {
+                window.location.href = "ReceivingOrderList.html?rorderid=" + orderid;
+            });
+        });
+    </script>
+</body>
+</html>

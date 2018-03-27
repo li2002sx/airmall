@@ -16,7 +16,7 @@
 
 @property(nonatomic)NSString* FlightNo;
 
-@property(nonatomic)NSDate* FlightDate;
+@property(nonatomic)NSString* FlightDate;
 
 @property(nonatomic)NSInteger OrderStatus;
 

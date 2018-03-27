@@ -23,6 +23,9 @@
     dispatch_source_t _timer;
     
     NSMutableArray* _imageArr;
+    
+    BOOL _dataDwonOver;
+    BOOL _picDownOver;
 }
 
 @end
@@ -46,6 +49,9 @@
     _synTableView.delegate = self;
     
     _synCount = 0;
+    
+    _dataDwonOver = false;
+    _picDownOver = false;
     
     _signalTextArr = @[@"无",@"差",@"中",@"优"];
     
@@ -127,25 +133,25 @@
 //    [ReceiptDB createReportFile];
 //    [self uploadData];
     
-    NSString *flightNo = _filedFlightNo.text;
+    NSString *flightNo = [_filedFlightNo.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
     if ([flightNo length] <= 3) {
         [CommonUtil showOnlyText:self.view tips:@"航班号不能为空"];
         return;
     }
     
-    NSString *flightDate = _fieldDate.text;
+    NSString *flightDate = [_fieldDate.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
     if ([flightDate length] <= 3) {
         [CommonUtil showOnlyText:self.view tips:@"航班日期不能为空"];
         return;
     }
     
-    NSString *empNo = _fieldName.text;
+    NSString *empNo = [_fieldName.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
     if ([empNo length] <= 0) {
         [CommonUtil showOnlyText:self.view tips:@"员工号不能为空"];
         return;
     }
 
-    NSString *password = _fieldPass.text;
+    NSString *password = [_fieldPass.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
     if ([password length] < 1) {
         [CommonUtil showOnlyText:self.view tips:@"密码不能为空"];
         return;
@@ -153,17 +159,19 @@
     
     password = [[CommonUtil md5:password] uppercaseString];
     
-    id result = [StaffDB staffLogin:flightNo flightDate:flightDate empNo:empNo password:password deviceNo:_identifierNumber];
-    if(result != nil){
+    LoginInfoResult* loginInfoReuslt = [StaffDB staffLogin:flightNo flightDate:flightDate empNo:empNo password:password deviceNo:_identifierNumber];
+    if(loginInfoReuslt != nil && loginInfoReuslt.status == 1){
         [StaffDB updateLastLoginTime:empNo];
+        id result = loginInfoReuslt.userInfo;
         [result setObject:[CommonUtil convertDateToString:[NSDate new] formatter:@"yyyy年M月d HH:mm:ss"] forKey:@"LastLoginTime"];
         [result setObject:_identifierNumber forKey:@"DeviceNo"];
+        [result setObject:@"" forKey:@"EmpPassword"];
         
         NSString* flightNo = [result valueForKey:@"FlightNo"];
         NSString* tailNo = [result valueForKey:@"TailNo"];
         NSString* acType = [result valueForKey:@"ACType"];
-//        NSString* deptTime = [result valueForKey:@"DeptTime"];
-        id preReuslt = [StaffDB getPreFlightInfo:flightNo tailNo:tailNo acType:acType];
+        NSString* deptTime = [NSString stringWithFormat:@"%@%@",[result valueForKey:@"FlightDate"],[result valueForKey:@"DeptTime"]];
+        id preReuslt = [StaffDB getPreFlightInfo:flightNo tailNo:tailNo acType:acType deptTime:deptTime];
         if(preReuslt != nil){
             [result setObject:[preReuslt objectForKey:@"FlightNo"] forKey:@"PreFlightNo"];
             [result setObject:[preReuslt objectForKey:@"FlightDate"] forKey:@"PreFlightDate"];
@@ -173,15 +181,15 @@
         
         [_userInfo setValue:userData forKey:_UserKey];
         
-    MainViewController *mainView= [[MainViewController alloc] initWithNibName:@"MainViewController" bundle:nil];
+        MainViewController *mainView= [[MainViewController alloc] initWithNibName:@"MainViewController" bundle:nil];
 
-//    [self presentViewController:mainView animated:YES completion:nil];
+//      [self presentViewController:mainView animated:YES completion:nil];
         
-    [self.navigationController pushViewController:mainView animated:YES];
+        [self.navigationController pushViewController:mainView animated:YES];
         
 //      NSLog(@"%@", [staff yy_modelToJSONObject]);
     }else{
-        [CommonUtil showOnlyText:self.navigationController.view tips:@"没有找到对应的信息，请检查输入！"];
+        [CommonUtil showOnlyText:self.view tips:loginInfoReuslt.message];
     }
 }
 
@@ -209,11 +217,11 @@
         [arr replaceObjectAtIndex:2 withObject:@"同步完成"];
         [arr replaceObjectAtIndex:3 withObject:[CommonUtil convertDateToString:[NSDate new] formatter:@"yyyy.MM.dd HH:mm:ss"]];
         _synCount++;
-        if(_synCount==[_processContentArr count]){
-            [_synButtom setEnabled:YES];
-            [_finishLabel setHidden:NO];
-            [self setButtonStatus:YES];
-        }
+//        if(_synCount==[_processContentArr count]){
+//            [_synButtom setEnabled:YES];
+//            [_finishLabel setHidden:NO];
+//            [self setButtonStatus:YES];
+//        }
     }
     
     [_synTableView reloadData];
@@ -357,6 +365,7 @@
             }
         }
         [manager removeItemAtPath:unzipPath error:nil];
+        _dataDwonOver = true;
         
     }else if([fileType isEqualToString:@"picture"]){
         
@@ -369,8 +378,14 @@
             [ProductPicture bg_update:@"ProductPicture" where:update];
         }
         [manager removeItemAtPath:unzipPath error:nil];
+        _picDownOver = true;
     }
     [manager removeItemAtPath:zipPath error:nil];
+    if(_dataDwonOver){
+        [_synButtom setEnabled:YES];
+        [_finishLabel setHidden:NO];
+        [self setButtonStatus:YES];
+    }
 }
 
 - (void)downData:(NSString*)fileType{
@@ -471,7 +486,7 @@
 }
 
 -(void) processStart:(NSString*) key text:(NSString*)text{
-    NSMutableArray* arr = [[NSMutableArray alloc] initWithObjects:@"icon-tongxu",text,@"正在同步",@"", nil];
+    NSMutableArray* arr = [[NSMutableArray alloc] initWithObjects:@"icon-tongxu",text,@"正在通讯",@"", nil];
     [_tableViewDict setObject:arr forKey:key];
     [_synTableView reloadData];
 }
@@ -523,12 +538,20 @@
         [_fieldPass setEnabled:YES];
         [_loginButton setEnabled:YES];
     }else{
-        [_filedFlightNo setEnabled:NO];
-        [_fieldDate setEnabled:NO];
-        [_changeDateButton setEnabled:NO];
-        [_fieldName setEnabled:NO];
-        [_fieldPass setEnabled:NO];
-        [_loginButton setEnabled:NO];
+//        [_filedFlightNo setEnabled:NO];
+//        [_fieldDate setEnabled:NO];
+//        [_changeDateButton setEnabled:NO];
+//        [_fieldName setEnabled:NO];
+//        [_fieldPass setEnabled:NO];
+//        [_loginButton setEnabled:NO];
+        
+        [_filedFlightNo setText:@""];
+        [_fieldDate setText:@""];
+        [_fieldName setText:@""];
+        [_fieldPass setText:@""];
+        
+        _tableViewDict = [NSMutableDictionary new];
+        [_synTableView reloadData];
     }
 }
 

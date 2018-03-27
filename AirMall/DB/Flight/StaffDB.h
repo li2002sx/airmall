@@ -11,15 +11,16 @@
 #import "Staff.h"
 #import "LogDB.h"
 #import "FlightInfo.h"
+#import "CommonResult.h"
 
 #define tb_staff @"staff"
 
 @interface StaffDB : NSObject
 
-+(id) staffLogin:(NSString*) flightNo flightDate:(NSString*) flightDate empNo:(NSString*) empNo password:(NSString*) password deviceNo:(NSString*)deviceNo;
++(LoginInfoResult*) staffLogin:(NSString*) flightNo flightDate:(NSString*) flightDate empNo:(NSString*) empNo password:(NSString*) password deviceNo:(NSString*)deviceNo;
 
 +(void) updateLastLoginTime:(NSString*) empNo;
 
-+(id) getPreFlightInfo:(NSString*) flightNo tailNo:(NSString*) tailNo acType:(NSString*)acType;
++(id) getPreFlightInfo:(NSString*) flightNo tailNo:(NSString*) tailNo acType:(NSString*)acType deptTime:(NSString*) deptTime;
 
 @end

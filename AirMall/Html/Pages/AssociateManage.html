@@ -1,0 +1,714 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>换班交接管理</title>
+    <link href="../Component/Bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="../Content/Style.css?v=1020" rel="stylesheet" />
+    <script src="../Scripts/jquery-1.10.2.min.js"></script>
+    <script src="../Scripts/dispatch.js"></script>
+    <script src="../Component/Bootstrap/js/bootstrap.min.js"></script>
+    <script src="../Component/art-template/arttemplate.js"></script>
+    <script src="../Scripts/common.js?v=103"></script>
+    <style>
+        .flight-before-block {
+            float: left;
+            height: 50px;
+            line-height: 50px;
+            margin-left: 30px;
+        }
+
+        .dinnercar-list-block {
+            margin-bottom: 10px;
+        }
+
+            .dinnercar-list-block .dinnercar-list {
+                width: auto;
+            }
+
+        .fliter-block {
+            margin-top: 0;
+        }
+
+        .barcode-block {
+            float: right;
+            margin-right: 40px;
+        }
+
+            .barcode-block .lb {
+                float: left;
+                height: 50px;
+                line-height: 50px;
+                margin-right: 10px;
+                color: #666;
+            }
+
+            .barcode-block .control {
+                width: 262px;
+                height: 50px;
+                border: 0;
+                background: #EBEBEB;
+                line-height: 50px;
+                padding: 0 8px;
+                border-radius: 4px;
+                float: left;
+                margin-right: 10px;
+            }
+
+        .btn-barcode {
+            background: url(../Images/barcode.png);
+            background-repeat: no-repeat;
+            background-position: center;
+            border: 0;
+            background-size: contain;
+            height: 50px;
+            width: 100px;
+            float: left;
+            display: inline;
+        }
+
+        .associate-block {
+            width: 100%;
+            padding-left: 13px;
+            float: left;
+        }
+
+        .text-number {
+            font-size: 30px;
+        }
+
+        .f-w {
+            font-size: 18px;
+        }
+
+        .appmodal-header2 {
+            font-size: 16px;
+            border-bottom: none;
+        }
+
+        .appmodal-body {
+            padding: 0;
+        }
+
+        /*.prd-manage-modal .appmodal-footer {
+            height: 120px;
+            line-height: 120px;
+        }*/
+
+        .prd-manage-modal .appmodal-footer .btn {
+            width: 146px;
+            height: 48px;
+        }
+
+
+
+        .xiugai {
+            cursor: pointer;
+        }
+
+        .list-container {
+            height: calc(100% - 115px);
+        }
+
+        #search, .fliter-item, .dinnercar-item, .iconradio, .btn-skuupdate {
+            cursor: pointer;
+        }
+
+        .h-modal-form-wrapper .h-modal-form-item .btn-fliter {
+            width: 129px;
+        }
+
+        .h-modal-form-item .point-r {
+            width: 45px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="content">
+        <div class="content-header">
+            <div class="content-title">
+                <span></span><h3>换班交接单</h3>
+            </div>
+            <div class="flight-before-block">
+                <label>前序航班：</label>
+                <span id="txt_prevflightno">--</span>
+            </div>
+            <!--<div class="barcode-block">
+                <label class="lb">扫描商品条形码</label>
+                <input class="control" type="text" value="NO.20187383">
+                <button class="btn-barcode"></button>
+            </div>-->
+            <div class="associate-block">
+                <label>交接单号：</label>
+                <span id="txt_orderno">--</span>
+            </div>
+        </div>
+        <div class="content-body">
+            <!--<div class="seach-block on">
+                <div class="btn-group">
+                    <button type="button" class="btn btn-dark btn-fliter">筛选</button>
+                    <button type="button" class="btn btn-dark dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <span class="caret"></span>
+                        <span class="sr-only">Toggle Dropdown</span>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a href="#">Action</a></li>
+                        <li><a href="#">Another action</a></li>
+                        <li><a href="#">Something else here</a></li>
+                        <li role="separator" class="divider"></li>
+                        <li><a href="#">Separated link</a></li>
+                    </ul>
+                </div>
+                <div class="serach-group">
+                    <input class="search-control" placeholder="请输入商品名称">
+                    <div class="search-icon">
+                        <span class="iconfont icon-search" id="search"></span>
+                    </div>
+                </div>
+            </div>-->
+            <div class="dinnercar-list-block">
+                <ul class="dinnercar-list" id="dinnercarlist"></ul>
+                <div class="fliter-block">
+                    <span class="fliter-item on"><i class="iconfont icon-dinnercar"></i>按餐车号显示</span>
+                    <span class="fliter-item"><i class="iconfont icon-menu"></i>全部显示</span>
+                </div>
+            </div>
+
+            <div class="list-container clearfix" id="prodlist">
+
+            </div>
+        </div>
+        <div class="content-footer text-center">
+            <!--<div class="footer-checkallgroup">
+                <span class="check-box" style="display: block"><i class="uncheck"></i>全选</span>
+                <span class="pull-right">餐车内共<span class="text-number">20</span>件商品</span>
+            </div>
+
+            <div class="footer-btngroup">-->
+            <button type="button" class="btn" id="btn_transfer">交接清点确认</button>
+            <button type="button" class="btn btn-major lishi">交接历史</button>
+            <button type="button" class="btn goback">返回</button>
+            <!--</div>-->
+        </div>
+    </div>
+    <div class="appmodal" id="modal-msg">
+        <div class="mask"></div>
+        <div class="appmodal-content">
+            <div class="appmodal-header ">
+                <span></span>
+            </div>
+            <div class="appmodal-body text-center">
+                <span></span>
+            </div>
+            <div class="appmodal-footer">
+                <button class="btn btn-cancel" type="button">取消</button>
+                <button class="btn btn-major btn-confirm" type="button">确认</button>
+            </div>
+        </div>
+    </div>
+    <div class="appmodal" id="modal_checkDetail">
+        <div class="mask"></div>
+        <div class="appmodal-content">
+            <div class="appmodal-header ">
+                <span>提示</span>
+            </div>
+            <div class="appmodal-body text-center">
+                <div class="content-row"><label>交接总数：</label><span id="txt_hand_num"></span></div>
+                <div class="content-row"><label>破损总数：</label><span id="txt_damaged_num"></span></div>
+            </div>
+            <div class="appmodal-footer">
+                <button class="btn quxiao1" type="button">取消</button>
+                <button class="btn btn-major queren2" type="button">确认</button>
+            </div>
+        </div>
+    </div>
+    <div class="appmodal prd-manage-modal">
+        <div class="mask"></div>
+        <div class="appmodal-content">
+            <div class="appmodal-header">
+                <span class="weight"></span>
+            </div>
+            <div class="appmodal-body">
+                <div class="h-modal-form-wrapper">
+                    <div class="h-modal-form-item">
+                        <span class="key">结余数量：</span>
+                        <span class="value" id="txt_balancenum"></span>
+                    </div>
+                    <div class="h-modal-form-item">
+                        <span class="key">实物总数：</span>
+                        <span class="value" id="txt_totalnum"></span>
+                    </div>
+                    <div class="h-modal-form-item">
+                        <span class="key">餐车编号：</span>
+                        <span class="value"><span id="txt_dinnercarno"></span><span>(该餐车应收数量:<span id="txt_dinnercarnum"></span>)</span></span>
+                    </div>
+                    <div class="h-modal-form-item mg-12">
+                        <span class="key">差异数量：</span>
+                        <div class="calc-wrapper">
+                            <div class="operate-calc btn-group operate-item" min="0">
+                                <button type="button" class="btn btn-point point-l" data-point="-1">-</button>
+                                <input type="number" id="num_damagedCount" readonly="readonly" class="calc-input" value="0">
+                                <button type="button" class="btn btn-point point-r" data-point="1">+</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="h-modal-form-item mg-12">
+                        <span class="key">差异原因：</span>
+                        <div class="btn-group operate-item">
+                            <button type="button" class="btn btn-dark btn-fliter">请选择差异原因</button>
+                            <button type="button" class="btn btn-dark dropdown-toggle" id="drop_diffreson" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <span class="caret"></span>
+                                <span class="sr-only">Toggle Dropdown</span>
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li data-text="缺货"><a href="#">缺货</a></li>
+                                <li data-text="破损"><a href="#">破损</a></li>
+                                <li data-text="退单"><a href="#">退单</a></li>
+                                <li data-text="其它"><a href="#">其它</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="h-modal-form-item vertical-top mg-12" style="display: none" id="block_diffreson">
+                        <span class="key">差异原因：</span>
+                        <textarea rows="4" class="operate-item" id="txt_damagedreson" placeholder="请输入差异内容"></textarea>
+                    </div>
+                    <div class="h-modal-form-item vertical-top last-item" style="display: none">
+                        <span class="key">商品照片：</span>
+                        <div class="photo-wrapper" id="block_photos">
+
+                            <div class="photo-item">
+                                <div class="file-mask">
+                                    <span class="iconfont icon-xiangji"></span>
+                                </div>
+                                <!--<input type="file" />-->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <input type="hidden" id="hd_sku" />
+            </div>
+            <div class="appmodal-footer">
+                <button class="btn quxiao" type="button">取消</button>
+                <button class="btn btn-major" id="btn_updateNum" type="button">确认</button>
+            </div>
+        </div>
+    </div>
+    <div class="toast">
+        <div class="mask"></div>
+        <div class="toast-msg"><span></span></div>
+    </div>
+    <script id="s_dinnercarlist" type="text/html">
+        {{each list value index}}
+        {{if index==0}}
+        <li class="dinnercar-item on" data-carid="{{value.DiningCarNo}}">餐车{{value.DiningCarNo}}</li>
+        {{else}}
+        <li class="dinnercar-item" data-carid="{{value.DiningCarNo}}">餐车{{value.DiningCarNo}}</li>
+        {{/if}}
+        {{/each}}
+    </script>
+    <script id="s_prodlist" type="text/html">
+        {{each list value index}}
+        <div class="box" data-prodid="{{value.ProductID}}" data-prodsku="{{value.Sku}}" data-carno="{{value.DiningCarNo}}">
+            <dl>
+                {{if value.Status==1}}
+                <dt class="disabled">
+                    {{else}}
+                <dt>
+                    {{/if}}
+                    <span class="iconradio">
+                        {{if value.IsCheck==0}}
+                        <i class="uncheck"></i>
+                        {{else}}
+                        <i class="iconfont icon-duigou"></i>
+                        {{/if}}
+                    </span>
+                    <span class="btn-skuupdate"><i class="iconfont icon-edit"></i>修改</span>
+                </dt>
+                <dd><img class="icon-barcode" src="../Images/barcode.png" />{{value.Sku}}</dd>
+                <dd>{{value.ProductName}}</dd>
+                <dd><span>结余数</span><span>{{value.HandoverCounts}}</span></dd>
+                <dd><span>实际数</span><span>{{value.UndertakeCounts}}</span></dd>
+                <dd><span>破损数</span><span>{{value.HandoverDamagedCounts}}</span></dd>
+            </dl>
+        </div>
+        {{/each}}
+    </script>
+    <script id="s_prodlist_all" type="text/html">
+        {{each list value index}}
+        <div class="box" data-prodid="{{value.ProductID}}" data-prodsku="{{value.Sku}}" data-carno="{{value.DiningCarNo}}">
+            <dl>
+                {{if value.Status==1}}
+                <dt class="disabled">
+                    {{else}}
+                <dt>
+                    {{/if}}
+                    <span class="iconradio">
+                        {{if value.IsCheck==0}}
+                        <i class="uncheck"></i>
+                        {{else}}
+                        <i class="iconfont icon-duigou"></i>
+                        {{/if}}
+                    </span>
+                    <span class="btn-skuupdate"><i class="iconfont icon-edit"></i>修改</span>
+                </dt>
+                <dd><img class="icon-barcode" src="../Images/barcode.png" />{{value.Sku}}</dd>
+                <dd>{{value.ProductName}}</dd>
+                <dd><span>结余数</span><span>{{value.HandoverCounts}}</span></dd>
+                <dd><span>实际数</span><span>{{value.UndertakeCounts}}</span></dd>
+                <dd><span>破损数</span><span>{{value.HandoverDamagedCounts}}</span></dd>
+                <dd><span>餐车号</span><span>{{value.DiningCarNo}}</span></dd>
+            </dl>
+        </div>
+        {{/each}}
+    </script>
+    <script>
+        var damagedprodList = new Array();
+        var prodList = new Array();
+        var orderid = "";
+        $(function () {
+            initNumbox();
+            getLoginInfo(function () {
+                $("#txt_prevflightno").text();
+                getHandoverInfo(function () {
+                    getDinnercarList();
+                });
+
+            });
+
+            $(document).on("click", ".dinnercar-item", function () {
+                if ($(this).hasClass("on")) {
+                    return;
+                } else {
+                    $(".dinnercar-item.on").removeClass("on");
+                    $(this).addClass("on");
+                    var dinnerCarNo = $(this).data("carid");
+                    fliterProdByCar(dinnerCarNo);
+                }
+            });
+
+            $(document).on("click", ".iconradio", function () {
+                if ($(this).parents("dt").hasClass("disabled")) {
+                    return;
+                }
+                var prodsku = $(this).parents(".box").data("prodsku");
+                var carno = $(this).parents(".box").data("carno");
+                var radio = $(this).find("i");
+                var checked = radio.hasClass("iconfont");
+                var plist = prodList.list;
+
+                if (checked) {
+                    radio.removeClass("iconfont").removeClass("icon-duigou").addClass("uncheck");
+                    for (var i = 0; i < plist.length; i++) {
+                        if (plist[i].Sku == prodsku && plist[i].DiningCarNo == carno) {
+                            plist[i].IsCheck = 0;
+                            removeChecked(prodsku, carno);
+                        }
+                    }
+                } else {
+                    radio.removeClass("uncheck").addClass("iconfont").addClass("icon-duigou");
+                    for (var i = 0; i < plist.length; i++) {
+                        if (plist[i].Sku == prodsku && plist[i].DiningCarNo == carno) {
+                            plist[i].IsCheck = 1;
+                            addChecked(prodsku, carno);
+                        }
+                    }
+                }
+
+            });
+
+            $(document).on("click", ".btn-skuupdate", function () {
+                if ($(this).parents("dt").hasClass("disabled")) {
+                    return;
+                }
+                var sku = $(this).parents(".box").data("prodsku");
+                var carno = $(this).parents(".box").data("carno");
+                if ($(".fliter-item:first").hasClass("on")) {
+                    getProductBySku(sku, carno);
+                } else {
+                    getProductBySku(sku, carno);
+                }
+                for (var i = 0; i < prodList.list.length; i++) {
+                    if (prodList.list[i].Sku == sku && prodList.list[i].DiningCarNo == carno) {
+                        $("#num_damagedCount").val(prodList.list[i].HandoverDamagedCounts);
+                        $("#txt_dinnercarnum").text(prodList.list[i].HandoverCounts);
+                        break;
+                    }
+                }
+                $(".prd-manage-modal").show();
+            });
+
+            //餐车号显示与隐藏
+            $('.fliter-item').click(function () {
+                var q = $(this).index();
+                $(this).addClass('on').siblings('.fliter-item').removeClass('on');
+                if (q == 0) {
+                    var dinnerCarNo = $(".dinnercar-item.on").data("carid");
+                    fliterProdByCar(dinnerCarNo);
+                    $('.dinnercar-list').css('display', 'block');
+                    //$('.list-container').css('height', 'calc(100% - 115px)');
+                } else {
+                    $('.dinnercar-list').css('display', 'none');
+                    //$('.list-container').css('height', 'calc(100% - 115px)');
+                    fliterProdByCar();
+                }
+            });
+
+            $("#drop_diffreson").next().find("li").click(function () {
+                var resontxt = $(this).data("text");
+                $("#drop_diffreson").prev().text(resontxt);
+                if (resontxt === "其它") {
+                    $("#block_diffreson").show();
+                } else {
+                    $("#block_diffreson").hide();
+                }
+            });
+            //取消
+            $(".quxiao").click(function () {
+                $(".prd-manage-modal").hide();
+            });
+            $(".quxiao1").click(function () {
+                $("#modal_checkDetail").hide();
+            });
+            //确认
+            $('#btn_transfer').click(function () {
+                checkSubmit();
+            });
+            $('#btn_updateNum').click(function () {
+                updateProdStock();
+            });
+
+            $(".queren2").click(function () {
+                var transferparam = {
+                    handoverNo: orderid,
+                    transferList: damagedprodList
+                }
+
+                //AppAlert("",JSON.stringify(transferparam))
+                appJsBridge.callHandler("transfer", transferparam, function (result) {
+                    checkSuccess(result, function () {
+                        AppAlert("提示", "交接清点确认成功!", function (data) {
+                            window.location.href = "Query.html?type=2";
+                        });
+                    });
+                });
+                $("#modal_checkDetail").hide();
+            });
+            //交接历史：
+            $('.lishi').click(function () {
+                window.location.href = 'Query.html?type=2';
+            });
+            //返回
+            $('.goback').click(function () {
+                window.history.go(-1);
+            });
+        });
+
+        function getDinnercarList() {
+            var param = {
+                sql: "select distinct DiningCarNo from HandoverItem ",
+                type: "dinnercarList"
+            }
+
+            appJsBridge.callHandler("selectList", param, function (result) {
+                checkSuccess(result, function () {
+                    $("#dinnercarlist").html(template("s_dinnercarlist", result));
+                    getProductList(result.list[0].DiningCarNo);
+                });
+            });
+        }
+
+        function getProductList(carNo) {
+            var param = {
+                type: "prodStockList"
+            }
+            param.sql = "select A.HandoverNo,A.PreFlightNo,A.FlightNo,A.Status,B.ProductName,B.Sku," +
+                "B.ProductID,B.DiningCarNo,ifnull(B.HandoverCounts,0)+ifnull(B.HandoverDamagedCounts,0) as HandoverCounts,B.HandoverDamagedCounts," +
+                "ifnull(B.HandoverCounts,0)+ifnull(B.HandoverDamagedCounts,0) as UndertakeCounts,B.UndertakeDamagedCounts, " +
+                "0 as IsCheck, '' as DamagedReson,B.Remark from HandoverMaster as A " +
+                "Left Join HandoverItem as B on A.HandoverNo=B.HandoverNo  where A.HandoverNo='" + orderid + "'";
+            appJsBridge.callHandler("selectList", param, function (result) {
+                checkSuccess(result, function () {
+                    prodList = result;
+                    fliterProdByCar(carNo);
+                });
+            });
+
+        }
+
+        function fliterProdByCar(carNo) {
+            var flitedProdList = {
+                list: []
+            };
+            if (carNo) {
+                for (var i = 0; i < prodList.list.length; i++) {
+                    if (prodList.list[i].DiningCarNo == carNo) {
+                        flitedProdList.list.push(prodList.list[i]);
+                    }
+                }
+                $("#prodlist").html(template("s_prodlist", flitedProdList));
+            } else {
+                $("#prodlist").html(template("s_prodlist_all", prodList));
+            }
+            if (prodList.list[0].Status == 1) {
+                $("#btn_transfer").attr("disabled", true);
+            }
+        }
+
+        function getProductBySku(sku, carno) {
+            var param = {
+                sql: "select b.* from HandoverMaster as a left Join HandoverItem as b on a.HandoverNo=b.HandoverNo " +
+                    "where b.Sku='" + sku + "'" + " and b.DiningCarNo='" + carno + "' and b.handoverNo='" + orderid + "'",
+                type: "prodobj"
+            }
+            //AppAlert("",param.sql);
+            var paramtotal = {
+                sql: "select sum(HandoverCounts) as TotalQty from HandoverItem where Sku='" + sku + "' and handoverNo='" + orderid + "' group by HandoverCounts",
+                type: "prodtotal"
+            }
+            //AppAlert("",paramtotal.sql);
+            appJsBridge.callHandler("selectList", paramtotal, function (result) {
+                checkSuccess(result, function () {
+                    var prod = result.list[0];
+                    $("#txt_balancenum").text(prod.TotalQty);
+                    $("#txt_totalnum").text(prod.TotalQty);
+
+                });
+            });
+
+            appJsBridge.callHandler("selectList", param, function (result) {
+                checkSuccess(result, function () {
+                    var prod = result.list[0];
+                    $(".prd-manage-modal .appmodal-header span").text(prod.ProductName);
+                    $("#txt_dinnercarno").text(prod.DiningCarNo);
+                    // $("#txt_dinnercarnum").text(prod.HandoverCounts);
+                    $("#num_damagedCount").parents(".operate-item").attr("max", prod.HandoverCounts);
+                    $("#hd_sku").val(prod.Sku);
+                });
+            });
+        }
+
+        function getHandoverInfo(callback) {
+            var param = {
+                sql: "select * from HandoverMaster where PreFlightNo !='" + flightInfo.FlightNo + "'",
+                type: "getHandoverInfo"
+            }
+
+            appJsBridge.callHandler("selectList", param, function (result) {
+                checkSuccess(result, function () {
+
+                    $("#txt_prevflightno").text(flightInfo.Carrier + result.list[0].PreFlightNo);
+                    $("#txt_orderno").text(result.list[0].HandoverNo);
+                    orderid = result.list[0].HandoverNo;
+                    callback();
+                });
+            });
+
+        }
+
+        //交接清点确认
+        function checkSubmit() {
+            for (var i = 0; i < prodList.list.length; i++) {
+                if (prodList.list[i].IsCheck == 0) {
+                    AppAlert("提示", "您还有商品未清点！");
+                    return;
+                }
+            }
+            var damagednum = 0,
+                taotalnum = 0;
+            for (var i = 0; i < damagedprodList.length; i++) {
+                damagednum += damagedprodList[i].damagedCount * 1;
+                taotalnum += damagedprodList[i].handoverCount * 1;
+            }
+            $("#txt_hand_num").text(taotalnum);
+            $("#txt_damaged_num").text(damagednum);
+            $("#modal_checkDetail").show();
+
+        }
+
+        function updateProdStock() {
+
+            var damagedprod = {
+                sku: $("#hd_sku").val(),//sku编号
+                diningCarNo: $("#txt_dinnercarno").text(), //餐车号
+                handoverCount: $("#txt_dinnercarnum").text() * 1 - $("#num_damagedCount").val() * 1,//交接数量
+                damagedCount: $("#num_damagedCount").val(), //破损数量
+                damagedReason: $("#drop_diffreson").prev().text(),//破损原因
+                damagedReasonDesc: $("#txt_damagedreson").val(),//破损原因描述
+                imageBase64: [] //破损图片base64格式
+            }
+
+
+            if (damagedprod.damagedCount > 0 && damagedprod.damagedReason == "") {
+                AppAlert("提示", "差异原因不能为空");
+                return;
+            }
+            if (damagedprod.damagedReason == "其它" && damagedprod.damagedReasonDesc == "") {
+                AppAlert("提示", "备注不能为空");
+                return;
+            }
+
+            var isChecked = 0;
+            for (var k = 0; k < damagedprodList.length; k++) {
+                if (damagedprodList[k].sku == damagedprod.sku && damagedprodList[k].diningCarNo == damagedprod.diningCarNo) {
+                    isChecked = 1;
+                    damagedprodList[k].handoverCount = damagedprod.handoverCount,//交接数量
+                    damagedprodList[k].damagedCount = damagedprod.damagedCount;
+                    damagedprodList[k].damagedReason = damagedprod.damagedReason;
+                    damagedprodList[k].damagedReasonDesc = damagedprod.damagedReasonDesc;
+                    break;
+                }
+            }
+            if (isChecked === 0) {
+                damagedprodList.push(damagedprod);
+            }
+            //AppAlert("", JSON.stringify(damagedprodList));
+            for (var j = 0; j < prodList.list.length; j++) {
+                if (prodList.list[j].Sku == damagedprod.sku && prodList.list[j].DiningCarNo == damagedprod.diningCarNo) {
+                    prodList.list[j].UndertakeCounts = damagedprod.handoverCount;
+                    prodList.list[j].HandoverDamagedCounts = damagedprod.damagedCount;
+                    prodList.list[j].DamagedReson = damagedprod.damagedReason,
+                    prodList.list[j].Remark = damagedprod.damagedReasonDesc,
+                    prodList.list[j].IsCheck = 1;
+                }
+            }
+            //AppAlert("", JSON.stringify(damagedprodList));
+
+            $('.fliter-item.on').click();
+            $(".prd-manage-modal").hide();
+        }
+
+        function addChecked(sku, carno) {
+            for (var i = 0; i < prodList.list.length; i++) {
+                if (prodList.list[i].Sku == sku && prodList.list[i].DiningCarNo == carno) {
+                    var damagedprod = {
+                        sku: prodList.list[i].Sku,//sku编号
+                        diningCarNo: prodList.list[i].DiningCarNo, //餐车号
+                        handoverCount: prodList.list[i].HandoverCounts * 1 - prodList.list[i].HandoverDamagedCounts * 1,//交接数量
+                        damagedCount: prodList.list[i].HandoverDamagedCounts, //破损数量
+                        damagedReason: prodList.list[i].DamagedReson,//破损原因
+                        damagedReasonDesc: prodList.list[i].Remark,//破损原因描述
+                        imageBase64: [] //破损图片base64格式
+                    }
+                    damagedprodList.push(damagedprod);
+                    //AppAlert("", JSON.stringify(damagedprodList));
+                    break;
+                }
+            }
+
+        }
+
+        function removeChecked(sku, carno) {
+            for (var i = 0; i < damagedprodList.length; i++) {
+                if (damagedprodList[i].sku == sku && carno == damagedprodList[i].diningCarNo) {
+                    damagedprodList.splice(i, 1);
+                    break;
+                }
+            }
+        }
+    </script>
+</body>
+</html>

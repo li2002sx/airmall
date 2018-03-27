@@ -17,7 +17,7 @@
     
     NSString* sqlLower = [sql lowercaseString];
     if([sqlLower hasPrefix:@"select"]){
-        NSLog(@"sql:%@",sql);
+//        NSLog(@"sql:%@",sql);
         
         NSArray* arr = bg_executeSql(sql, nil, nil);
         if([arr count] > 0){
@@ -43,7 +43,7 @@
     if([sqlLower hasPrefix:@"select"]){
         NSRange range = [sql rangeOfString:@"from"];
         NSString* totalSql = [NSString stringWithFormat:@"select count(*) as count %@",[sql substringFromIndex:range.location]];
-        NSLog(@"sql:%@",totalSql);
+//        NSLog(@"sql:%@",totalSql);
         NSArray* arr = bg_executeSql(totalSql, nil, nil);
         if([arr count] > 0){
             NSInteger totalCount = [[[arr objectAtIndex:0] valueForKey:@"count"] integerValue];

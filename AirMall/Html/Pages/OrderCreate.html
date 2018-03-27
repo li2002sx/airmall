@@ -1,0 +1,457 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>创建补货单</title>
+    <link href="../Component/Bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="../Content/Style.css?v=1020" rel="stylesheet" />
+    <script src="../Scripts/jquery-1.10.2.min.js"></script>
+    <script src="../Scripts/dispatch.js"></script>
+    <script src="../Component/Bootstrap/js/bootstrap.min.js"></script>
+    <script src="../Component/art-template/arttemplate.js"></script>
+    <script src="../Scripts/common.js?v=103"></script>
+    <style>
+        .content-header {
+            height: 50px;
+        }
+
+        .content-body {
+            height: calc(100% - 133px);
+            padding: 10px 0;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .content-footer {
+            text-align: center;
+        }
+
+        .list-group-item {
+            height: 100px;
+        }
+
+        .f-w {
+            font-size: 18px;
+        }
+
+        .left {
+            float: left;
+        }
+
+        .icon-guanbi1 {
+            float: right;
+        }
+
+        .appmodal-content {
+            background-color: #f5f5f5;
+            overflow: hidden;
+        }
+
+        .appmodal-header {
+            background-color: #fff;
+        }
+
+        .img-wrapper2 {
+            width: 100px;
+            height: 100px;
+            margin: 0px 20px;
+        }
+
+        .right {
+            float: right;
+        }
+
+        .color-r {
+            color: #fd8688;
+        }
+
+        .icon-duigou {
+            margin-top: 30px;
+        }
+
+        .appmodal-body .icon-duigou {
+            margin-top: 26px;
+            position: absolute;
+            left: 13px;
+            padding: 16px;
+        }
+
+        .appmodal-body {
+            margin-top: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #e6e6e6;
+        }
+
+        .appmodal-body, .operate-item {
+            margin-top: 20px;
+        }
+
+        .queren2 {
+            margin-top: 30px;
+        }
+
+        .uncheck1 {
+            margin-top: 35px;
+        }
+
+        .all {
+            display: inline-block;
+            margin-right: 10px;
+        }
+
+        .appmodal-bodyall {
+            overflow: overlay;
+            height: 450px;
+        }
+
+        .appmodal-body {
+            margin-bottom: 0px;
+            position: relative;
+            padding-left: 36px;
+        }
+
+        .meg > span {
+            display: inline-block;
+            margin-right: 30px;
+            color: #999;
+            margin-top: 10px;
+        }
+
+            .meg > span i {
+                color: #000;
+                font-style: normal;
+            }
+
+        .serach-group {
+            margin-left: 15px
+        }
+
+        .addmore {
+            width: 100%;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+            .addmore img {
+                width: 60px;
+                cursor: pointer;
+            }
+
+        .appmodal-list-footer {
+            display: flex;
+            height: 80px;
+            background: #fff;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .radio-wrapper {
+            flex: 100px 0 0;
+            margin-left: 20px;
+        }
+
+            .radio-wrapper .uncheck {
+                position: relative;
+                top: 3px;
+                margin: 0 10px 0 0;
+            }
+
+            .radio-wrapper .icon-duigou {
+                border: 0;
+            }
+
+                .radio-wrapper .icon-duigou:before {
+                    position: relative;
+                    top: -3px;
+                }
+
+        .operate-wrapper {
+            flex: 1;
+            margin-right: 20px;
+        }
+
+            .operate-wrapper .btn {
+                height: 40px;
+            }
+    </style>
+</head>
+<body>
+    <div class="content">
+        <div class="content-header">
+            <div class="content-title">
+                <span></span><h3>创建补货单</h3>
+            </div>
+            <!--<div class="serach-group">
+                <input class="search-control" placeholder="请输入关键字"/>
+                <div class="search-icon">
+                    <span class="iconfont icon-search"></span>
+                </div>
+            </div>-->
+            <div class="pull-right meg">
+                <span>机型：<i class="tail-no"></i></span>
+                <span>航班号：<i class="flight-no"></i></span>
+            </div>
+        </div>
+        <div class="content-body">
+            <ul class="list-group" id="creat_replenishment"></ul>
+            <div class="addmore">
+                <img id="addmore" src="../Images/addmore.png" />
+            </div>
+
+        </div>
+        <div class="content-footer">
+            <button class="btn queren">确认</button>
+            <button class="btn btn-major goback">返回</button>
+        </div>
+    </div>
+    <div class="appmodal" id="modal-msg">
+        <div class="mask"></div>
+        <div class="appmodal-content">
+            <div class="appmodal-header ">
+                <span></span>
+            </div>
+            <div class="appmodal-body text-center" style="height:240px;overflow-y:auto;">
+                <span></span>
+            </div>
+            <div class="appmodal-footer">
+                <button class="btn btn-cancel" type="button">取消</button>
+                <button class="btn btn-major btn-confirm" type="button">确认</button>
+            </div>
+        </div>
+    </div>
+    <div class="appmodal appmodal-prdList">
+        <div class="mask"></div>
+        <div class="appmodal-content">
+            <div class="appmodal-header header-close">
+                <span>添加更多</span>
+                <span class="iconfont icon-guanbi"></span>
+            </div>
+            <div class="appmodal-bodyall" id="prod-list"></div>
+            <div class="appmodal-list-footer clearfix">
+                <div class="radio-wrapper"><span class="uncheck"></span>全选</div>
+                <div class="operate-wrapper">
+                    <button class="btn btn-major btn-render right" type="button">添加</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="toast">
+        <div class="mask"></div>
+        <div class="toast-msg"><span></span></div>
+    </div>
+
+    <script id="s_creat_replenishment" type="text/html">
+        <li class="list-group-item">
+            <div class="del-icon-wrapper">
+                <span class="iconfont icon-qingkong"></span>
+            </div>
+            <div class="msg-info">
+                <p class="name">意大利原装Ray-ban 雷朋太阳镜</p>
+                <p class="size">
+                    <span class="iconfont icon-tiaoxingma"></span>69874562
+                </p>
+            </div>
+            <div class="calc-wrapper">
+                <div class="operate-calc btn-group">
+                    <button type="button" class="btn btn-point point-l" data-point="-1">-</button>
+                    <input type="number" class="calc-input" readonly>
+                    <button type="button" class="btn btn-point point-r" data-point="1">+</button>
+                </div>
+
+            </div>
+        </li>
+    </script>
+
+    <script id="s_prod-list" type="text/html">
+        {{each list orderItem index}}
+        <div class="appmodal-body clearfix" data-price="{{orderItem.Price}}" data-sku="{{orderItem.Sku}}">
+            <span class="iconfont icon-duigou left icon-list-item"></span>
+            <div class="order-list-item  left order-list-item clearfix">
+                <div class="img-wrapper img-wrapper2 left">
+                    {{each orderItem.Pictures img index}}
+                    {{if img.PictureType == 1}}
+                    <img src="{{img.PictureUrl}}" width="100" height="100" />
+                    {{/if}}
+                    {{/each}}
+                </div>
+                <div class="order-detail order-detail2 left">
+                    <p class="order-num"><span class="weight prd-name">{{orderItem.ProductName}}</span></p>
+                    <p><span>当前库存：</span><span class="prd-qty">{{orderItem.Qty}}</span></p>
+                    <p><span>预警库存：</span><span class="prd-qty-r">0</span></p>
+                </div>
+            </div>
+            <div class="operate-calc btn-group operate-item right" min="0">
+                <button type="button" class="btn btn-point point-l" data-point="-1">-</button>
+                <input type="number" class="calc-input" value="0" readonly>
+                <button type="button" class="btn btn-point point-r" data-point="1">+</button>
+            </div>
+        </div>
+        {{/each}}
+    </script>
+    <script>
+        $(function () {
+            var listItemArr = [];
+            initNumbox();
+            getLoginInfo(function () {
+                $(".flight-no").text(flightInfo.Carrier + flightInfo.FlightNo);
+                $(".tail-no").text(flightInfo.TailNo);
+                //getreplenish();
+            });
+            //    确认
+            $('.queren').click(function () {
+                var replenishList = [];
+                var isLinkStatus = true;
+                if ($("#creat_replenishment .list-group-item").length) {
+                    $("#creat_replenishment .list-group-item").each(function (index, val) {
+                        var sku = $(val).data("sku");
+                        var needCount = $(val).find(".calc-input").val();
+
+                        replenishList.push({
+                            sku: sku,
+                            needCount: needCount,
+                            diningCarNo: "001"
+                        });
+                        if (needCount == 0) {
+                            isLinkStatus = false;
+                        }
+                    })
+                } else {
+                    AppAlert("提示", "请先添加商品");
+                    return;
+                }
+
+
+                var param = {
+                    replenishList: replenishList
+                }
+                if (isLinkStatus) {
+                    appJsBridge.callHandler('replenish', param, function (res) {
+                        //AppAlert("",JSON.stringify(param)+"<br>"+res.message)
+                        if (res.status) {
+                            AppAlert("提示", res.message, function () {
+                                window.location.href = "./Query.html?type=4";
+                            })
+                        }
+                    })
+                } else {
+                    AppAlert("提示", "存在数量为0的补货单");
+                }
+
+            });
+
+            //查看更多
+
+            $("#addmore").click(function () {
+                getOrderList();
+                $('.appmodal-prdList').show();
+            })
+            //返回
+            $('.goback').click(function () {
+                window.location.href = "Query.html";
+            });
+
+            // 全选
+            $(".radio-wrapper").click(function () {
+                var $ckdom = $(this).find(".uncheck");
+                $ckdom.toggleClass("iconfont icon-duigou left color-r");
+
+                if ($ckdom.hasClass("color-r")) {
+                    $(".appmodal-body").find(".icon-duigou").addClass("color-r");
+                    $(".appmodal-body").addClass("checked");
+                } else {
+                    $(".appmodal-body").find(".icon-duigou").removeClass("color-r");
+                    $(".appmodal-body").removeClass("checked");
+                }
+
+            });
+            // 选择单个
+            $("#prod-list").on("click", ".icon-list-item", function () {
+                var $this = $(this);
+                $this.toggleClass("color-r");
+                if ($this.hasClass("color-r")) {
+                    $this.parents(".appmodal-body").addClass("checked");
+                } else {
+                    $this.parents(".appmodal-body").removeClass("checked");
+                }
+            });
+
+            //添加所选商品
+
+            $(".btn-render").click(function () {
+                var listHTML = "";
+                $("#prod-list .checked").each(function (index, val) {
+                    var prdName = $(val).find(".prd-name").text();
+                    var value = $(val).find(".calc-input").val();
+                    var price = $(val).data("price");
+                    var sku = $(val).data("sku");
+                    var max = $(val).find(".operate-calc").attr("max");
+                    console.log(prdName, value, price);
+                    listHTML += '<li class="list-group-item" data-sku="' + sku + '">'
+                        + '<div class="del-icon-wrapper">'
+                        + '<span class="iconfont icon-qingkong"></span>'
+                        + '</div>'
+                        + '<div class="msg-info">'
+                        + '<p class="name">' + prdName + '</p>'
+                        + '<p class="size">'
+                        + '<span class="iconfont icon-tiaoxingma"></span>' + price
+                        + '</p>'
+                        + '</div>'
+                        + '<div class="calc-wrapper">'
+                        + '<div class="operate-calc btn-group" max="' + max + '">'
+                        + '<button type="button" class="btn btn-point point-l" data-point="-1">-</button>'
+                        + '<input type="number" class="calc-input" value="' + value + '">'
+                        + '<button type="button" class="btn btn-point point-r" data-point="1">+</button>'
+                        + '</div>'
+                        + '</div>'
+                        + '</li>'
+                });
+                $("#creat_replenishment").append(listHTML);
+                $(".appmodal").hide();
+            });
+
+            //删除单独产品
+            $("#creat_replenishment").on("click", ".del-icon-wrapper", function () {
+                $(this).parents(".list-group-item").remove();
+            });
+        });
+
+        function getreplenish() {
+            var param = {
+                sql: "",
+                type: "replenishmentList"
+            }
+            initScroll("creat_replenishment", param, 10);
+        }
+
+
+        //商品列表
+        function getOrderList() {
+            var param = {
+                sql: "select A.ProductName,B.Qty,D.Price,D.Sku from ProductList A " +
+                    "inner join ProductItem D on A.ProductID=D.ProductID "+
+                    "left join Inventory B on D.ProductItemID=B.ProductItemID ",
+                    //"left join ProductPicture C on A.ProductID=C.ProductID " +
+                    
+                type: "orderListAdd"
+            }
+            //AppAlert("",param.sql)
+            //initScroll("prod-list", param, 10);
+
+            appJsBridge.callHandler("selectList", param, function(res) {
+                checkSuccess(res, function() {
+                    for (var i = 0; i < res.list.length; i++) {
+                        if (res.list[i].Qty == "") {
+                            res.list[i].Qty = 0;
+                        }
+                    }
+                    var html = template('s_prod-list', res);
+                    $("#prod-list").html(html);
+                });
+            });
+
+        }
+    </script>
+</body>
+</html>

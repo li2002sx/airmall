@@ -22,6 +22,9 @@
     dispatch_source_t _timer;
     
     NSMutableArray* _imageArr;
+    
+    BOOL _dataDwonOver;
+    BOOL _picDownOver;
 }
 
 @property WebViewJavascriptBridge *bridge;
@@ -52,6 +55,9 @@
     
     _synCount = 0;
     
+    _dataDwonOver = false;
+    _picDownOver = false;
+    
     _userDict = [NSKeyedUnarchiver unarchiveObjectWithData:[_userInfo objectForKey:_UserKey]];
     _thisFlightNoLabel.text = [NSString stringWithFormat:@"%@%@",[_userDict objectForKey:@"Carrier"],[_userDict objectForKey:@"FlightNo"]];
     id preFilghtNo = [_userDict objectForKey:@"PreFlightNo"];
@@ -59,17 +65,37 @@
         _preFlightNoLabel.text = [NSString stringWithFormat:@"%@%@",[_userDict objectForKey:@"Carrier"],[_userDict objectForKey:@"PreFlightNo"]];
     }
     _lineCHNLabel.text = [_userDict objectForKey:@"LineCHN"];
-    NSDate* deptTime = [CommonUtil convertDateTimeFromString:[_userDict objectForKey:@"DeptTime"]];
-    NSDate* arrTime = [CommonUtil convertDateTimeFromString:[_userDict objectForKey:@"ArrTime"]];
+    NSDate* deptTime = [CommonUtil convertDateTimeFromString:[NSString stringWithFormat:@"%@ %@:00",[_userDict objectForKey:@"FlightDate"],[_userDict objectForKey:@"DeptTime"]]];
+    NSDate* arrTime = [CommonUtil convertDateTimeFromString:[NSString stringWithFormat:@"%@ %@:00",[_userDict objectForKey:@"FlightDate"],[_userDict objectForKey:@"ArrTime"]]];
     _flightTimeLabel.text = [NSString stringWithFormat:@"%@  -  %@",[CommonUtil convertDateToString:deptTime formatter:@"hh:mm"],[CommonUtil convertDateToString:arrTime formatter:@"hh:mm"]];
     NSArray* timeDiffArr = [CommonUtil timeDiff:deptTime end:arrTime];
     _flightDurationLabel.text = [NSString stringWithFormat:@"%@小时%@分",[timeDiffArr valueForKey:@"hour"],[timeDiffArr valueForKey:@"minute"]];
-    _empNameLabel.text = [_userDict objectForKey:@"EmpNo"];
+    id empName = [_userDict objectForKey:@"EmpName"];
+    if([empName isEqual:[NSNull null]]){
+        _empNameLabel.text = [_userDict objectForKey:@"EmpNo"];
+    }else{
+        _empNameLabel.text = empName;
+    }
     _empNoLabel.text = [_userDict objectForKey:@"EmpNo"];
     _empJobLabel.text = [_userDict objectForKey:@"EmpType"];
     _lastLoginTimeLabel.text = [_userDict objectForKey:@"LastLoginTime"];
     
-    _tableViewArr = [NSMutableArray arrayWithObjects:[NSMutableArray arrayWithObjects:@"icon-menu",@"LOGO",@"", nil],[NSMutableArray arrayWithObjects:@"icon-hangban-select",@"航班信息",@"Index.html", nil],[NSMutableArray arrayWithObjects:@"icon-huanban",@"换班交接",@"AssociateManage.html", nil],[NSMutableArray arrayWithObjects:@"icon-goods",@"商品列表",@"ProductList.html", nil],[NSMutableArray arrayWithObjects:@"icon-cart",@"订单列表",@"OrderList.html", nil],[NSMutableArray arrayWithObjects:@"icon-store",@"库存管理",@"query.html", nil],[NSMutableArray arrayWithObjects:@"icon-log",@"日志查询",@"Log.html", nil],[NSMutableArray arrayWithObjects:@"icon-logout",@"账号退出",@"", nil], nil];
+    id avatarBase64 = [_userDict objectForKey:@"Avatar"];
+    if(![avatarBase64 isEqual:[NSNull null]]){
+        UIImage* avatarImage = [CommonUtil dataURL2Image:avatarBase64];
+        [_empPhotoImageView setImage:avatarImage];
+        //  把头像设置成圆形
+        _empPhotoImageView.layer.cornerRadius=_empPhotoImageView.frame.size.width/2;//裁成圆角
+        _empPhotoImageView.layer.masksToBounds=YES;//隐藏裁剪掉的部分
+        //  给头像加一个圆形边框
+        //        _empPhotoImageView.layer.borderWidth = 1.5f;//宽度
+        //        _empPhotoImageView.layer.borderColor = [UIColor whiteColor].CGColor;//颜色
+    }
+//    if(avatarBase64 != [NSNull null] && [avatarBase64 length] > 0){
+//
+//    }
+    
+    _tableViewArr = [NSMutableArray arrayWithObjects:[NSMutableArray arrayWithObjects:@"icon-menu",@"LOGO",@"", nil],[NSMutableArray arrayWithObjects:@"icon-hangban-select",@"航班信息",@"Index", nil],[NSMutableArray arrayWithObjects:@"icon-huanban",@"换班交接",@"AssociateManage", nil],[NSMutableArray arrayWithObjects:@"icon-goods",@"商品列表",@"ProductList", nil],[NSMutableArray arrayWithObjects:@"icon-cart",@"订单列表",@"OrderList", nil],[NSMutableArray arrayWithObjects:@"icon-store",@"库存管理",@"Query", nil],[NSMutableArray arrayWithObjects:@"icon-log",@"日志查询",@"Log", nil],[NSMutableArray arrayWithObjects:@"icon-logout",@"账号退出",@"", nil], nil];
 //      ,[NSMutableArray arrayWithObjects:@"icon-log",@"DEMO",@"", nil]
     
     _hasNotTrans = [self hasNotTransfer];
@@ -94,9 +120,10 @@
     _shrinkView.layer.shadowOpacity = 0.1;//阴影透明度，默认0
     _shrinkView.layer.shadowRadius = 2;//阴影半径，默认3
     
-//    _webView.scrollView.bounces = false;
+    _webView.scrollView.bounces = false;
     
-    [self loadHtmlUrl:@"index.html"];
+//    [self loadHtmlUrl:@"index.html"];
+    [self loadHtmlPage:@"Index"];
     
     [self initLayer];
     [self brigeInit];
@@ -365,8 +392,8 @@
                  [CommonUtil showOnlyText:self.view tips:@"还有未完成的交接单"];
             }else{
                 NSArray *arr = [_tableViewArr objectAtIndex:row];
-                [self loadHtmlUrl:[arr objectAtIndex:2]];
-    //             [self loadHtmlPage:@"Pages/Index"];
+//                [self loadHtmlUrl:[arr objectAtIndex:2]];
+                 [self loadHtmlPage:[arr objectAtIndex:2]];
                 [self updateTableViewIcon: row];
             }
         }else if(row == 7){
@@ -379,8 +406,8 @@
 
         }else if(row < 7){
             NSArray *arr = [_tableViewArr objectAtIndex:row];
-            [self loadHtmlUrl:[arr objectAtIndex:2]];
-            //             [self loadHtmlPage:@"Pages/Index"];
+//            [self loadHtmlUrl:[arr objectAtIndex:2]];
+              [self loadHtmlPage:[arr objectAtIndex:2]];
             [self updateTableViewIcon: row];
         }else if(row == 7){
             [self logout];
@@ -471,14 +498,19 @@
 
 - (void)loadHtmlPage:(NSString*)path {
     
-    NSString* htmlPath = [[NSBundle mainBundle] pathForResource:[NSString stringWithFormat:@"Html/%@",path] ofType:@"html"];
+//    NSString * htmlPath = [[NSBundle mainBundle] pathForResource:@"Resources" ofType:@"bundle"];
+//    htmlPath = [[NSBundle bundleWithPath:htmlPath] pathForResource:@"index" ofType:@"html" inDirectory:@"Pages"];
+//    htmlPath = [htmlPath stringByAppendingPathComponent:@"Pages"];
+//    htmlPath = [htmlPath stringByAppendingPathComponent:path];
+    
+    NSString* htmlPath = [[NSBundle mainBundle] pathForResource:[NSString stringWithFormat:@"Html/Pages/%@",path] ofType:@"html"];
     NSString* appHtml = [NSString stringWithContentsOfFile:htmlPath encoding:NSUTF8StringEncoding error:nil];
     NSURL *baseURL = [NSURL fileURLWithPath:htmlPath];
     [_webView loadHTMLString:appHtml baseURL:baseURL];
     
-//    NSURL *filePath = [[NSBundle mainBundle] URLForResource:@"Html/index.html" withExtension:nil];
-//    NSURLRequest *request = [NSURLRequest requestWithURL:filePath];
-//    [webView loadRequest:request];
+//    NSURL *pathUrl = [[NSURL alloc] initWithString:htmlPath];
+//    NSURLRequest *request = [NSURLRequest requestWithURL:pathUrl];
+//    [_webView loadRequest:request];
 }
 
 - (void)loadHtmlUrl:(NSString*)page {
@@ -755,6 +787,7 @@
 //            }
         }
         [manager removeItemAtPath:unzipPath error:nil];
+        _dataDwonOver = true;
         
     }else if([fileType isEqualToString:@"picture"]){
         
@@ -767,9 +800,13 @@
             [ProductPicture bg_update:@"ProductPicture" where:update];
         }
         [manager removeItemAtPath:unzipPath error:nil];
+        _picDownOver = true;
     }
     [manager removeItemAtPath:zipPath error:nil];
-    [self synSucc:@"数据同步成功"];
+     if(_dataDwonOver){
+        [_synButtom setEnabled:YES];
+        [self synSucc:@"数据同步成功"];
+    }
 }
 
 - (void)downData:(NSString*)fileType{

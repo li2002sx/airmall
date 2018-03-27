@@ -180,6 +180,15 @@
     return newImage;
 }
 
++ (UIImage *) dataURL2Image: (NSString *) imageBase64{
+    
+    NSURL *url = [NSURL URLWithString: imageBase64];
+    NSData *data = [NSData dataWithContentsOfURL: url];
+    UIImage *image = [UIImage imageWithData: data];
+    
+    return image; 
+}
+
 + (BOOL) imageHasAlpha: (UIImage *) image{
     CGImageAlphaInfo alpha = CGImageGetAlphaInfo(image.CGImage);
     return (alpha == kCGImageAlphaFirst ||

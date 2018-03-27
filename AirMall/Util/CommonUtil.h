@@ -18,9 +18,9 @@
 #define _AppService "com.project.airmall"
 #define _UUIDAcount "uuid"
 
-#define _BaseUrl "http://180.169.45.158:5678/pages/"
+#define _BaseUrl "http://180.169.45.158:56780/pages/"
 
-#define _ApiUrl "http://111.13.20.215/"
+#define _ApiUrl "http://111.13.20.215:8090/"
 #define _CustomerNo "CUS0001"
 #define _CustomerKey "d939820a079f684b"
 
@@ -43,6 +43,8 @@
 + (NSArray*) timeDiff:(NSDate *)date1 end:(NSDate *)date2;
 
 + (UIImage *) imageCompressForSize:(UIImage *)sourceImage targetSize:(CGSize)size;
+
++ (UIImage *) dataURL2Image: (NSString *) imageBase64;
 
 + (BOOL) imageHasAlpha: (UIImage *) image;
 

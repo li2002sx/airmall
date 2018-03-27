@@ -1,0 +1,772 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>商品列表-购物车</title>
+    <link href="../Component/Bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="../Content/Style.css?v=1020" rel="stylesheet" />
+    <script src="../Scripts/jquery-1.10.2.min.js"></script>
+    <script src="../Scripts/dispatch.js"></script>
+    <script src="../Component/Bootstrap/js/bootstrap.min.js"></script>
+    <script src="../Component/art-template/arttemplate.js"></script>
+    <script src="../Scripts/common.js?v=103"></script>
+    <style>
+        body {
+            padding: 20px;
+        }
+
+        .weight {
+            font-weight: 700;
+        }
+
+        .ck-wrapper {
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            -webkit-box-align: center;
+            -ms-flex-align: center;
+            align-items: center;
+        }
+
+            .ck-wrapper input {
+                margin: 0 12px;
+                width: 16px;
+            }
+
+            .ck-wrapper .icon-xianjin-01 {
+                color: #ff5255;
+                margin-left: 12px;
+                font-size: 22px;
+                position: relative;
+                top: 2px;
+            }
+
+        .title-wrapper {
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            -webkit-box-pack: justify;
+            -ms-flex-pack: justify;
+            justify-content: space-between;
+            -webkit-box-align: center;
+            -ms-flex-align: center;
+            align-items: center;
+            height: 62px;
+            padding: 0 20px 0 14px;
+            background: #fff;
+            border-radius: 20px 20px 0 0;
+            -webkit-box-flex: 62px;
+            -ms-flex: 62px 0 0px;
+            flex: 62px 0 0;
+        }
+
+            .title-wrapper .t-left .line {
+                display: inline-block;
+                width: 2px;
+                height: 16px;
+                background: #ff5d60;
+            }
+
+            .title-wrapper .t-left .title {
+                font-size: 24px;
+                margin-left: 4px;
+            }
+
+            .title-wrapper .t-right {
+                color: #999;
+            }
+
+                .title-wrapper .t-right .icon-qingkong {
+                    font-size: 18px;
+                }
+
+                .title-wrapper .t-right .icon-saomiao {
+                    font-size: 20px;
+                }
+
+        .left-wrapper {
+            height: 100%;
+            background: #f5f5f5;
+            border-radius: 20px;
+            width: 37.6%;
+            float: left;
+        }
+
+            .left-wrapper .left-content {
+                width: 100%;
+                padding: 30px 24px 0 30px;
+            }
+
+            .left-wrapper .form-wrapper {
+                width: 100%;
+            }
+
+                .left-wrapper .form-wrapper .form-item {
+                    display: -webkit-box;
+                    display: -ms-flexbox;
+                    display: flex;
+                    -webkit-box-align: center;
+                    -ms-flex-align: center;
+                    align-items: center;
+                    margin-bottom: 20px;
+                }
+
+                    .left-wrapper .form-wrapper .form-item.beizhu {
+                        -webkit-box-align: start;
+                        -ms-flex-align: start;
+                        align-items: flex-start;
+                        margin-top: 24px;
+                    }
+
+                    .left-wrapper .form-wrapper .form-item .key {
+                        -webkit-box-flex: 75px;
+                        -ms-flex: 75px 0 0px;
+                        flex: 75px 0 0;
+                        font-size: 14px;
+                    }
+
+                    .left-wrapper .form-wrapper .form-item input[type="text"] {
+                        width: 100%;
+                    }
+
+                    .left-wrapper .form-wrapper .form-item input {
+                        -webkit-box-flex: 1;
+                        -ms-flex: 1;
+                        flex: 1;
+                        outline: none;
+                        height: 43px;
+                        margin-top: 0;
+                        border: 1px solid #e6e6e6;
+                        padding-left: 26px;
+                        border-radius: 4px;
+                    }
+
+                        .left-wrapper .form-wrapper .form-item input::-webkit-input-placeholder {
+                            /* WebKit, Blink, Edge */
+                            color: #ddd;
+                            font-size: 14px;
+                        }
+
+                        .left-wrapper .form-wrapper .form-item input:-moz-placeholder {
+                            /* Mozilla Firefox 4 to 18 */
+                            color: #ddd;
+                            font-size: 14px;
+                        }
+
+                        .left-wrapper .form-wrapper .form-item input::-moz-placeholder {
+                            /* Mozilla Firefox 19+ */
+                            color: #ddd;
+                            font-size: 14px;
+                        }
+
+                        .left-wrapper .form-wrapper .form-item input:-ms-input-placeholder {
+                            /* Internet Explorer 10-11 */
+                            color: #ddd;
+                            font-size: 14px;
+                        }
+
+                    .left-wrapper .form-wrapper .form-item textarea {
+                        -webkit-box-flex: 1;
+                        -ms-flex: 1;
+                        flex: 1;
+                        resize: none;
+                        border-radius: 4px;
+                        border: 1px solid #e6e6e6;
+                        outline: none;
+                        padding: 5px;
+                    }
+
+            .left-wrapper .qa-wrapper {
+                margin-top: 60px;
+            }
+
+                .left-wrapper .qa-wrapper .qa-title {
+                    display: inline-block;
+                    margin-bottom: 16px;
+                }
+
+                .left-wrapper .qa-wrapper .qa-item {
+                    font-size: 14px;
+                    color: #999;
+                    margin-bottom: 5px;
+                }
+
+        .right-wrapper {
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            -webkit-box-orient: vertical;
+            -webkit-box-direction: normal;
+            -ms-flex-direction: column;
+            flex-direction: column;
+            height: 100%;
+            background: #fff;
+            border-radius: 20px;
+            width: 61%;
+            float: right;
+        }
+
+            .right-wrapper .cart-content {
+                background: #f5f5f5;
+                padding: 12px 19px 0 10px;
+                -webkit-box-flex: 1;
+                -ms-flex: 1;
+                flex: 1;
+                overflow-y: auto;
+            }
+
+                .right-wrapper .cart-content .cart-content-item {
+                    display: -webkit-box;
+                    display: -ms-flexbox;
+                    display: flex;
+                    -webkit-box-pack: justify;
+                    -ms-flex-pack: justify;
+                    justify-content: space-between;
+                    -webkit-box-align: center;
+                    -ms-flex-align: center;
+                    align-items: center;
+                    height: 100px;
+                    width: 100%;
+                    border-radius: 4px;
+                    background: #fff;
+                    margin-bottom: 12px;
+                }
+
+                    .right-wrapper .cart-content .cart-content-item .del-icon-wrapper {
+                        -webkit-box-flex: 74px;
+                        -ms-flex: 74px 0 0px;
+                        flex: 74px 0 0;
+                        text-align: center;
+                        color: #999;
+                    }
+
+                        .right-wrapper .cart-content .cart-content-item .del-icon-wrapper .iconfont {
+                            font-size: 18px;
+                            padding: 10px;
+                        }
+
+                    .right-wrapper .cart-content .cart-content-item .msg-info {
+                        font-size: 16px;
+                        -webkit-box-flex: 1;
+                        -ms-flex: 1;
+                        flex: 1;
+                        padding-left: 10px;
+                    }
+
+                        .right-wrapper .cart-content .cart-content-item .msg-info .name {
+                            margin-bottom: 6px;
+                        }
+
+                        .right-wrapper .cart-content .cart-content-item .msg-info .size {
+                            margin: 0;
+                            color: #999;
+                        }
+
+                    .right-wrapper .cart-content .cart-content-item .calc-wrapper {
+                        -webkit-box-flex: 120px;
+                        -ms-flex: 120px 0 0px;
+                        flex: 120px 0 0;
+                        padding-right: 10px;
+                    }
+
+                        .right-wrapper .cart-content .cart-content-item .calc-wrapper .operate-calc {
+                            width: 100%;
+                        }
+
+            .right-wrapper .cart-bot {
+                display: -webkit-box;
+                display: -ms-flexbox;
+                display: flex;
+                -webkit-box-pack: justify;
+                -ms-flex-pack: justify;
+                justify-content: space-between;
+                -webkit-box-align: center;
+                -ms-flex-align: center;
+                align-items: center;
+                -webkit-box-flex: 78px;
+                -ms-flex: 78px 0 0px;
+                flex: 78px 0 0;
+                background: #fff;
+                width: 100%;
+                border-radius: 0 0 20px 20px;
+                padding: 0 30px 0 25px;
+            }
+
+                .right-wrapper .cart-bot .bot-name {
+                    color: #999;
+                    -webkit-box-flex: 210px;
+                    -ms-flex: 210px 0 0px;
+                    flex: 210px 0 0;
+                }
+
+                    .right-wrapper .cart-bot .bot-name .icon-gouwuche {
+                        font-size: 20px;
+                    }
+
+                .right-wrapper .cart-bot .price {
+                    display: -webkit-box;
+                    display: -ms-flexbox;
+                    display: flex;
+                    -webkit-box-align: center;
+                    -ms-flex-align: center;
+                    align-items: center;
+                    color: #999;
+                    font-size: 14px;
+                    -webkit-box-flex: 1;
+                    -ms-flex: 1;
+                    flex: 1;
+                }
+
+                    .right-wrapper .cart-bot .price .price-num {
+                        font-size: 24px;
+                        color: #ff5255;
+                    }
+
+                .right-wrapper .cart-bot .btn-confirm button {
+                    width: 118px;
+                    font-size: 18px;
+                    letter-spacing: 1px;
+                }
+
+        .line-90 {
+            line-height: 90px;
+        }
+
+        .appmodal-body {
+            padding: 0;
+            height: 90px;
+        }
+
+        .prd-manage-modal .appmodal-footer {
+            height: 120px;
+            line-height: 120px;
+        }
+
+            .prd-manage-modal .appmodal-footer .btn {
+                width: 146px;
+                height: 48px;
+            }
+
+
+        .appmodal-content {
+            top: 50%;
+            width: 400px;
+            left: calc((100% - 400px)/2);
+        }
+
+        .photo-item1 {
+            margin-left: -50px;
+        }
+
+        .ygh {
+            width: 100px;
+            /*padding-left: 5px;*/
+            height: 35px;
+            line-height: 35px;
+            border-radius: 4px;
+            outline: none;
+            border: 1px solid #ccc;
+            vertical-align: top;
+            text-align: center;
+        }
+
+        .select-price {
+            display: inline-block;
+            width: 100px !important;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="left-wrapper">
+        <div class="title-wrapper">
+            <div class="t-left">
+                <span class="line"></span>
+                <span class="weight title">购买人信息</span>
+            </div>
+            <div class="t-right clean-form">
+                <span class="iconfont icon-qingkong"></span>
+                <span class="opearte">清空</span>
+            </div>
+        </div>
+        <div class="left-content">
+            <div class="form-wrapper">
+                <div class="form-item">
+                    <span class="key">姓</span>
+                    <div class="form-input-row">
+                        <input type="text" id="first-name" placeholder="姓" maxlength="10" />
+                        <p class="tip required">姓不能为空</p>
+                    </div>
+                </div>
+                <div class="form-item">
+                    <span class="key">名</span>
+                    <div class="form-input-row">
+                        <input type="text" id="last-name" placeholder="名" maxlength="15" />
+                        <p class="tip required">名不能为空</p>
+                    </div>
+                </div>
+                <div class="form-item">
+                    <span class="key">手机号</span>
+                    <div class="form-input-row">
+                        <input type="text" id="mobile" placeholder="请输入手机号" />
+                        <p class="tip required">手机号不能为空</p>
+                        <p class="errortip mobile">手机号格式不正确</p>
+                    </div>
+
+                </div>
+                <div class="form-item">
+                    <span class="key">购买方式</span>
+                    <div class="ck-wrapper">
+                        <input checked="checked" type="radio" />
+                        <span class="weight">现金支付</span>
+                        <span class="iconfont icon-xianjin-01"></span>
+                    </div>
+                </div>
+                <div class="form-item beizhu">
+                    <span class="key">备注</span>
+                    <textarea rows="4" id="remark"></textarea>
+                </div>
+            </div>
+            <div class="qa-wrapper">
+                <span class="qa-title">Q/A</span>
+                <p class="qa-item">
+                    <span>问题1：</span>
+                    <span>怎么购买自己喜欢的商品？</span>
+                </p>
+                <p class="qa-item">
+                    <span>问题2：</span>
+                    <span>怎么把商品加入购物车？</span>
+                </p>
+                <p class="qa-item">
+                    <span>问题3：</span>
+                    <span>只能现金支付商品么？</span>
+                </p>
+            </div>
+        </div>
+
+    </div>
+    <div class="right-wrapper">
+        <div class="title-wrapper">
+            <div class="t-left">
+                <span class="line"></span>
+                <span class="weight title">购物车</span>
+            </div>
+            <!--<div class="t-right">
+                <span class="iconfont icon-saomiao"></span>
+                <span class="opearte">添加商品</span>
+            </div>-->
+        </div>
+        <div class="cart-content" id="shoppint-cart-item">
+            <!--<div class="cart-content-item">
+                <div class="del-icon-wrapper">
+                    <span class="iconfont icon-qingkong"></span>
+                </div>
+                <div class="msg-info">
+                    <p class="name">150030 意大利原装Ray-ban 雷朋太阳镜</p>
+                    <p class="size">25*69</p>
+                </div>
+                <div class="calc-wrapper">
+                    <div class="operate-calc btn-group">
+                        <button type="button" class="btn point-l">-</button>
+                        <input type="number" class="calc-input">
+                        <button type="button" class="btn point-r">+</button>
+                    </div>
+
+                </div>
+            </div>-->
+
+        </div>
+        <div class="cart-bot">
+            <div class="bot-name">
+                <label id="clean-shopping-cart">
+                    <span class="iconfont icon-gouwuche"></span>
+                    <span>清空购物车</span>
+                </label>
+
+            </div>
+            <div class="price">
+                <span>消费总金额：</span>
+                <span class="price-num weight">0</span>
+            </div>
+            <div class="btn-confirm queren">
+                <button class="btn ">确认下单</button>
+            </div>
+        </div>
+    </div>
+    <div class="appmodal" id="modal-msg">
+        <div class="mask"></div>
+        <div class="appmodal-content">
+            <div class="appmodal-header ">
+                <span></span>
+            </div>
+            <div class="appmodal-body text-center">
+                <span></span>
+            </div>
+            <div class="appmodal-footer">
+                <button class="btn btn-cancel" type="button">取消</button>
+                <button class="btn btn-major btn-confirm" type="button">确认</button>
+            </div>
+        </div>
+    </div>
+    <div class="appmodal" id="completelist">
+        <div class="mask"></div>
+        <div class="appmodal-content">
+            <div class="appmodal-header">
+                <span>支付确认</span>
+            </div>
+            <div class="appmodal-body text-center">
+                <div class="content-row"><label>应付金额：</label><span class="select-price"></span></div>
+                <div class="content-row"><label>乘务工号：</label><input class="ygh" type="text" placeholder="" readonly="readonly" /></div>
+            </div>
+            <div class="appmodal-footer">
+                <button class="btn quxiao" type="button">取消</button>
+                <button class="btn btn-major queren1" type="button">完成订单</button>
+            </div>
+        </div>
+    </div>
+    <div class="appmodal" id="modal-msg-item">
+        <div class="mask"></div>
+        <div class="appmodal-content">
+            <div class="appmodal-header ">
+                <span>提示</span>
+            </div>
+            <div class="appmodal-body text-center line-90">
+                <span>确认删除？</span>
+            </div>
+            <div class="appmodal-footer">
+                <button class="btn btn-cancel" type="button">取消</button>
+                <button class="btn btn-major btn-confirm-item" type="button">确认</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="appmodal" id="modal-msg-all">
+        <div class="mask"></div>
+        <div class="appmodal-content">
+            <div class="appmodal-header ">
+                <span>提示</span>
+            </div>
+            <div class="appmodal-body text-center line-90">
+                <span>确认清空购物列表？</span>
+            </div>
+            <div class="appmodal-footer">
+                <button class="btn btn-cancel" type="button">取消</button>
+                <button class="btn btn-major btn-confirm-all" type="button">确认</button>
+            </div>
+        </div>
+    </div>
+    <div class="appmodal" id="modal-pay-success">
+        <div class="mask"></div>
+        <div class="appmodal-content">
+            <div class="appmodal-header ">
+                <span>提示</span>
+            </div>
+            <div class="appmodal-body text-center line-90">
+                <span>支付成功！</span>
+            </div>
+            <div class="appmodal-footer">
+                <button class="btn btn-cancel" type="button">
+                    取消
+                </button>
+                <button class="btn btn-major btn-confirm-success" type="button">确认</button>
+            </div>
+        </div>
+    </div>
+    <div class="toast">
+        <div class="mask"></div>
+        <div class="toast-msg"><span></span></div>
+    </div>
+    <script id="s_shoppint-cart-item" type="text/html">
+        {{each list cartItem index}}
+        <div class="cart-content-item" data-sku="{{cartItem.Sku}}" data-carno="{{cartItem.DiningCarNo}}">
+            <div class="del-icon-wrapper">
+                <span class="iconfont icon-qingkong"></span>
+            </div>
+            <div class="msg-info">
+                <p class="name">{{cartItem.ProductName}}</p>
+                <p class="size">单价: <span class="cnm">{{cartItem.Price}}</span>￥</p>
+            </div>
+            <div class="calc-wrapper">
+                <div class="operate-calc btn-group" min="1" max="{{cartItem.Qty}}">
+                    <button type="button" class="btn btn-point point-l" data-point="-1">-</button>
+                    <input type="number" class="calc-input" value="{{cartItem.Quantity}}" readonly>
+                    <button type="button" class="btn btn-point point-r" data-point="1">+</button>
+                </div>
+
+            </div>
+        </div>
+        {{/each}}
+    </script>
+    <script>
+         $(function () {
+
+		   $(".search-sql").click(function() {
+                var sql = $(".textarea").val();
+                var param = {
+                    sql: sql
+                }
+                appJsBridge.callHandler("selectList", param, function(res) {
+                    $(".result-res").text(JSON.stringify(res))
+                    //$(".result-res").text(res.list.length)
+                });
+            });
+
+             var item = {
+                 sku: "",
+                 diningCarNo:""
+             }
+
+             getLoginInfo(function () {
+                $(".ygh").val(flightInfo.EmpNo);
+                initCartList();
+            });
+
+            initNumbox(function ($this, point) {
+                //修改购物车商品数量
+                var sku = $this.parents(".cart-content-item").data("sku");
+				var diningCarNo = $this.parents(".cart-content-item").data("carno");
+                var param = {
+                    sku: sku,
+					diningCarNo:diningCarNo,
+                    updateType: point
+                }
+				//AppAlert("",JSON.stringify(param))
+                appJsBridge.callHandler('updateNum', param, function (res) {
+                    var PriceAll = Number($(".price-num").text().replace(",","")) || 0;;
+                    if (res.status) {
+                        PriceAll += Number($this.parents(".cart-content-item").find(".cnm").text()) * Number(point);
+
+                        $(".price-num").text(formatNumber(PriceAll, 2));
+                    } else {
+                        return;
+                    }
+                });
+            });
+
+            //清空表单
+             $(".clean-form").click(function() {
+                 $(".left-content").find("input,textarea").val("");
+             });
+
+            //    确认
+            $('.queren').click(function () {
+                $(".form-input-row p").hide();
+				if($("#mobile").val().trim() !== ""){
+					if (!validator.isMobile("#mobile")) {
+						return;
+					} else {
+						$('#completelist').show();
+						$(".select-price").text($(".price-num").text());
+					}
+
+				} else {
+                    $('#completelist').show();
+                    $(".select-price").text($(".price-num").text());
+                }
+            });
+            //   关闭弹窗
+            $('.quxiao').click(function () {
+                $('#completelist').hide();
+            });
+
+            //    完成订单
+            $('.queren1').click(function () {
+                var firstName = $("#first-name").val();
+                var lastName = $("#last-name").val();
+                var mobile = $("#mobile").val();
+                var remark = $("#remark").val();
+                var param = {
+                    firstName: firstName,
+                    lastName: lastName,
+                    mobile: mobile,
+                    remark: remark
+                }
+                appJsBridge.callHandler('createOrder', param, function (res) {
+                    console.log(res);
+                    if (res.status) {
+                        $('#completelist').hide();
+                        $("#modal-pay-success").show();
+
+                    } else {
+                        toast(res.message);
+                    }
+
+                });
+            });
+             $(".btn-confirm-success").click(function() {
+                 $("#modal-pay-success").hide();
+                 window.location.href = "./OrderList.html";
+             });
+
+            //清空购物车
+            $("#clean-shopping-cart").click(function () {
+                $("#modal-msg-all").show();
+            });
+             $(".btn-confirm-all").click(function() {
+                 appJsBridge.callHandler('clearCart', null, function(res) {
+                     if (res.status) {
+                         console.log("deleteAll success");
+                         $("#modal-msg-all").hide();
+                         $("#shoppint-cart-item").html("");
+                         initCartList();
+                     }
+                 });
+             });
+
+             // 删除商品
+            $(".cart-content").on("click", ".icon-qingkong", function () {
+                $("#modal-msg-item").show();
+                item.sku = $(this).parents(".cart-content-item").data("sku");
+                item.diningCarNo = $(this).parents(".cart-content-item").data("carno");
+            });
+
+             $(".btn-confirm-item").click(function() {
+
+                 appJsBridge.callHandler('deleteCartSku', item, function(res) {
+                     if (res.status) {
+                        $("#modal-msg-item").hide();
+                         $("#shoppint-cart-item").html("");
+                         initCartList();
+                     }
+                 });
+             });
+             $(".btn-cancel").click(function() {
+                 $(".appmodal").hide();
+             });
+         });
+
+        function initCartList() {
+            var param = {
+                sql: "select A.*,B.Qty from cart A left join Inventory B on A.ProductItemID=B.ProductItemID and A.DiningCarNo=B.DiningCarNo",
+                type: "shoppingCart"
+            }
+            appJsBridge.callHandler("selectList", param, function (res) {
+                checkSuccess(res, function (res) {
+                    var priceAll = 0;
+                    var html = template('s_shoppint-cart-item', res);
+                    res.list.forEach(function (val, index) {
+                        priceAll += val.Price * val.Quantity;
+                    });
+                    $("#shoppint-cart-item").html(html);
+                    $(".price-num").text(formatNumber(priceAll, 2));
+                });
+            });
+
+            //initScroll("shoppint-cart-item", param, 10, function (res) {
+            //    var priceAll = 0;
+            //    res.list.forEach(function (val, index) {
+            //        priceAll += val.Price * val.Quantity;
+            //    });
+            //    $(".price-num").text(formatNumber(priceAll, 2))
+            //});
+        }
+
+
+    </script>
+
+</body>
+</html>

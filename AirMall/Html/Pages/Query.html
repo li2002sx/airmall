@@ -1,0 +1,744 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>查询</title>
+    <link href="../Component/Bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="../Content/Style.css?v=1020" rel="stylesheet" />
+    <script src="../Scripts/dispatch.js"></script>
+    <script src="../Scripts/jquery-1.10.2.min.js"></script>
+    <script src="../Component/art-template/arttemplate.js"></script>
+    <script src="../Component/Bootstrap/js/bootstrap.min.js"></script>
+    <script src="../Scripts/common.js?v=103"></script>
+    <style>
+        .content {
+            overflow: hidden;
+        }
+
+        .content-body {
+            height: calc(100% - 148px);
+        }
+
+        .seach-block.on {
+            height: 120px;
+        }
+
+        .store {
+            height: 100%;
+            display: none;
+        }
+
+        .lb-60 {
+            width: 75px;
+        }
+
+        .meg {
+            padding-left: 15px;
+            padding-bottom: 12px;
+            color: #999;
+        }
+
+            .meg > span i {
+                display: inline-block;
+                margin-right: 20px;
+                color: #FF5255;
+                font-style: normal;
+            }
+
+        .xiugai {
+            cursor: pointer;
+        }
+
+        .appmodal-body {
+            padding: 0;
+        }
+
+        .appmodal-body2 {
+            margin-bottom: 0px !important;
+        }
+
+        .appmodal-content {
+            overflow: hidden;
+        }
+
+        .order-block2 {
+            margin-top: -5px !important;
+        }
+
+        .left {
+            display: flex;
+        }
+
+        .box dl dd > span:first-child {
+            color: #999;
+        }
+
+        .info-list {
+            padding-top: 22px;
+        }
+
+        .appmodal-body {
+            min-height: 600px;
+        }
+
+        .info-list .remark {
+            display: flex;
+        }
+
+            .info-list .remark > span {
+                overflow-y: auto;
+            }
+    </style>
+</head>
+<body>
+    <div class="content">
+        <ul class="tab">
+            <li class="tab-item selected">
+                库存查询
+                <div class="bot-line"></div>
+            </li>
+            <li class="tab-item">
+                交接单查询
+                <div class="bot-line"></div>
+            </li>
+            <li class="tab-item">
+                收货查询
+                <div class="bot-line"></div>
+            </li>
+            <li class="tab-item">
+                补货查询
+                <div class="bot-line"></div>
+            </li>
+        </ul>
+        <div class="content-body">
+            <!--库存查询-->
+            <div class="store">
+                <div class="seach-block on">
+                    <div class="meg">
+                        <span>当前库存：<i id="current_stock">0</i></span>
+                        <span>已售卖：<i id="sold">0</i></span>
+                        <span>破损：<i id="damaged">0</i></span>
+                    </div>
+                    <!--<div class="btn-group">
+                        <button type="button" class="btn btn-dark btn-fliter">筛选</button>
+                        <button type="button" class="btn btn-dark dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <span class="caret"></span>
+                            <span class="sr-only">Toggle Dropdown</span>
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a href="#">Action</a></li>
+                            <li><a href="#">Another action</a></li>
+                            <li><a href="#">Something else here</a></li>
+                            <li role="separator" class="divider"></li>
+                            <li><a href="#">Separated link</a></li>
+                        </ul>
+                    </div>-->
+                    <div class="serach-group">
+                        <input class="search-control" placeholder="请输入商品名称或商品SKU" />
+                        <div class="search-icon">
+                            <span class="iconfont icon-search" id="search"></span>
+                        </div>
+                    </div>
+                    <div class="order-block" data-callback="initStockList" id="stockorder">
+                        <div class="order-item" data-colname="DiningCarNo">
+                            <span>餐车号排序</span><i class="iconfont icon-triangle-up"></i><i class="iconfont icon-triangle-down"></i>
+                        </div>
+                        <div class="order-item" data-colname="Inventory.Sku">
+                            <span>商品条码排序</span><i class="iconfont icon-triangle-up"></i><i class="iconfont icon-triangle-down"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="list-container clearfix" id="stock-search" style="height: calc(100% - 120px); overflow-y: auto;-webkit-overflow-scrolling : touch">
+                </div>
+            </div>
+            <!--交接查询-->
+            <div class="store">
+                <div class="seach-block" style="height: 45px;">
+                    <div class="order-block" data-callback="initHandoverList" id="handover">
+                        <div class="order-item" data-colname="B.FlightNo">
+                            <span>航班号排序</span><i class="iconfont icon-triangle-up"></i><i class="iconfont icon-triangle-down"></i>
+                        </div>
+                        <div class="order-item" data-colname="B.FlightDate">
+                            <span>航班日期排序</span><i class="iconfont icon-triangle-up"></i><i class="iconfont icon-triangle-down"></i>
+                        </div>
+                    </div>
+                </div>
+                <ul class="list-group" id="handover-search" style="height: calc(100% - 65px); overflow-y: auto; width: 100%;-webkit-overflow-scrolling : touch"></ul>
+            </div>
+            <!--收货查询-->
+            <div class="store">
+                <div class="seach-block" style="height: 45px;">
+                    <div class="order-block" data-callback="initInquiryList" id="inquiry">
+                        <div class="order-item" data-colname="A.DeliveryNo">
+                            <span>收货单号排序</span><i class="iconfont icon-triangle-up"></i><i class="iconfont icon-triangle-down"></i>
+                        </div>
+                        <div class="order-item" data-colname="B.FlightNo">
+                            <span>航班号排序</span><i class="iconfont icon-triangle-up"></i><i class="iconfont icon-triangle-down"></i>
+                        </div>
+                        <div class="order-item" data-colname="B.FlightDate">
+                            <span>航班日期排序</span><i class="iconfont icon-triangle-up"></i><i class="iconfont icon-triangle-down"></i>
+                        </div>
+                    </div>
+                </div>
+                <ul class="list-group" id="inquiry-search" style="height: calc(100% - 65px); overflow-y: auto; width: 100%;-webkit-overflow-scrolling : touch"></ul>
+            </div>
+            <!--补货查询-->
+            <div class="store">
+                <div class="seach-block" style="height: 45px;">
+                    <div class="order-block" data-callback="initReplenishmentList" id="replenishment">
+                        <div class="order-item" data-colname="DeliveryNo">
+                            <span>补货单号排序</span><i class="iconfont icon-triangle-up"></i><i class="iconfont icon-triangle-down"></i>
+                        </div>
+                    </div>
+                </div>
+                <ul class="list-group" id="replenishment-search" style="height: calc(100% - 65px); overflow-y: auto; width: 100%;-webkit-overflow-scrolling : touch"></ul>
+            </div>
+
+        </div>
+        <div class="content-footer" style="text-align: center">
+            <button class="btn applyfor_restocking"><span class="iconfont icon-archive"></span>申请补货</button>
+            <button class="btn btn-major hbchange"><span class="iconfont icon-exchange"></span>换班盘点</button>
+        </div>
+    </div>
+    <div class="appmodal" id="modal-msg">
+        <div class="mask"></div>
+        <div class="appmodal-content">
+            <div class="appmodal-header ">
+                <span></span>
+            </div>
+            <div class="appmodal-body text-center">
+                <span></span>
+            </div>
+            <div class="appmodal-footer">
+                <button class="btn btn-cancel" type="button">取消</button>
+                <button class="btn btn-major btn-confirm" type="button">确认</button>
+            </div>
+        </div>
+    </div>
+    <div class="appmodal appmodal2">
+        <div class="mask"></div>
+        <div class="appmodal-content">
+            <div class="appmodal-header header-close">
+                <span>交接单明细</span>
+                <span class="iconfont icon-guanbi"></span>
+            </div>
+            <div class="appmodal-body appmodal-body2 clearfix" style="background: #F5F5F5">
+                <div class="seach-block" style="height: 50px;">
+                    <div class="order-block order-block2" data-callback="initHandoverDetail" id="handdetail">
+                        <div class="order-item" data-colname="B.DiningCarNo">
+                            <span>餐车号排序</span><i class="iconfont icon-triangle-up"></i><i class="iconfont icon-triangle-down"></i>
+                        </div>
+                        <div class="order-item" data-colname="B.Sku">
+                            <span>商品条码排序</span><i class="iconfont icon-triangle-up"></i><i class="iconfont icon-triangle-down"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="list-container clearfix" id="handover_detail"></div>
+            </div>
+        </div>
+    </div>
+    <div class="appmodal appmodal3">
+        <div class="mask"></div>
+        <div class="appmodal-content">
+            <div class="appmodal-header header-close">
+                <span>收货单明细</span>
+                <span class="iconfont icon-guanbi"></span>
+            </div>
+            <div class="appmodal-body appmodal-body2 clearfix" style="background: #F5F5F5">
+                <div class="seach-block" style="height: 50px;">
+                    <div class="order-block order-block2" data-callback="initInquiryDetail" id="inquirDetail">
+                        <div class="order-item" data-colname="Sku">
+                            <span>商品条码排序</span><i class="iconfont icon-triangle-up"></i><i class="iconfont icon-triangle-down"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="list-container clearfix" id="inquiry-detail"></div>
+            </div>
+        </div>
+    </div>
+    <div class="appmodal appmodal4">
+        <div class="mask"></div>
+        <div class="appmodal-content">
+            <div class="appmodal-header header-close">
+                <span>补货单明细</span>
+                <span class="iconfont icon-guanbi"></span>
+            </div>
+            <div class="appmodal-body appmodal-body2 clearfix" style="background: #F5F5F5">
+                <div class="seach-block" style="height: 50px;">
+                    <div class="order-block order-block2" data-callback="initReplenishmentDetail" id="replenishmentDetail">
+                        <div class="order-item" data-colname="Sku">
+                            <span>商品条码排序</span><i class="iconfont icon-triangle-up"></i><i class="iconfont icon-triangle-down"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="list-container clearfix" id="replenishment-detail"></div>
+            </div>
+        </div>
+    </div>
+    <div class="toast">
+        <div class="mask"></div>
+        <div class="toast-msg"><span></span></div>
+    </div>
+
+    <!--库存查询列表-->
+    <script id="s_stock-search" type="text/html">
+        {{each list stc index}}
+        <div class="box" data-orderid="{{stc.Sku}}">
+            <dl>
+              
+                <dd><span>餐车号</span><span>{{stc.DiningCarNo}}</span></dd>
+                <dd><img class="icon-barcode" src="../Images/barcode.png" />{{stc.Sku}}</dd>
+                <dd>{{stc.ProductName}}</dd>
+                <dd><span>库存</span><span>{{stc.Qty+stc.DamageQty}}</span></dd>
+                <!--<dd><span>已售</span><span>{{stc.SalesQty}}</span></dd>-->
+                <dd><span>差异</span><span>{{stc.DamageQty}}</span></dd>
+            </dl>
+        </div>
+        {{/each}}
+    </script>
+    <!--交接查询列表-->
+    <script id="s_handover-search" type="text/html">
+        {{each list  hds index}}
+        <li class="list-group-item list-group-item-h clearfix" data-callback="initHandoverList" data-orderid="{{hds.HandoverNo}}">
+
+            <ul class="info-list">
+                <li class="col-33"><label class="lb-60">航班号</label><span>{{hds.Carrier}}{{hds.FlightNo}}</span></li>
+                <li class="col-33"><label class="lb-60">交接单号</label><span>{{hds.HandoverNo}}</span></li>
+                <li class="col-33"><label class="lb-80">交接总数</label><span>{{hds.HandoverCounts}}</span></li>
+                <li class="col-33"><label class="lb-60">航班日期</label><span>{{hds.FlightDate }}</span></li>
+                <li class="col-33"><label class="lb-60">交接人</label><span>{{hds.HandoverEmpName}}</span></li>
+                <li class="col-33"><label class="lb-80">承接总数</label><span>{{hds.UndertakeCounts}}</span></li>
+                <li class="col-33"><label class="lb-60">路线</label><span>{{hds.LineCHN }}</span></li>
+                <li class="col-33"><label class="lb-60">承接人</label><span>{{hds.UndertakeEmpName}}</span></li>
+                <li class="col-33"><label class="lb-80">承接时间</label><span>{{hds.UndertakeTime}}</span></li>
+                <li class="col-100"><label class="lb-60">备注</label><span>{{hds.Remark}}</span></li>
+            </ul>
+        </li>
+        {{/each}}
+    </script>
+    <!--收货查询列表-->
+    <script id="s_inquiry-search" type="text/html">
+        {{each list  iq index}}
+        <li class="list-group-item list-group-item-i clearfix" data-orderid="{{iq.DeliveryNo}}">
+            <ul class="info-list">
+                <li class="col-33"><label class="lb-80">航班号</label><span>{{iq.Carrier}}{{iq.FlightNo}}</span></li>
+                <li class="col-66"><label class="lb-60">收货单号</label><span>{{iq.DeliveryNo}}</span></li>
+                <li class="col-33"><label class="lb-80">应收总数</label><span>{{iq.NeedCounts}}</span></li>
+                <li class="col-33"><label class="lb-60">航班日期</label><span>{{iq.FlightDate}}</span></li>
+                {{if iq.DeliveryType==1}}
+                <li class="col-33"><label class="lb-60">单据类型</label><span>配送</span></li>
+                {{else}}
+                <li class="col-33"><label class="lb-60">单据类型</label><span>补货</span></li>
+                {{/if}}
+                <li class="col-33"><label class="lb-80">实收总数</label><span>{{iq.ConfirmCounts}}</span></li>
+                <li class="col-33"><label class="lb-60">路线</label><span>{{iq.LineCHN}}</span></li>
+                <li class="col-33"><label class="lb-60">创建人</label><span></span>{{iq.ApplicantEmpName}}</li>
+                <li class="col-33"><label class="lb-80">收货确认日期</label>{{iq.DeliveryConfirmTime}}<span></span></li>
+                <li class="col-33"><label class="lb-60">收货人</label><span>{{iq.DeliveryEmpName}}</span></li>
+                <li class="col-100 remark"><label class="lb-60">备注</label><span>{{iq.Remark}}</span></li>
+            </ul>
+        </li>
+        {{/each}}
+    </script>
+    <!--补货查询列表-->
+    <script id="s_replenishment-search" type="text/html">
+        {{each list  rps index}}
+        <li class="list-group-item list-group-item-r clearfix" data-orderid="{{rps.DeliveryNo}}">
+            {{if rps.DeliveryStatus==0}}
+            <div class="tag fail">待收货</div>
+            {{else if rps.DeliveryStatus==1}}
+            <div class="tag success ">已收货</div>
+            {{else if rps.DeliveryStatus==2}}
+            <div class="tag default">待上传</div>
+            {{else}}
+            <div class="tag bg-primary">已上传</div>
+
+            {{/if}}
+            <ul class="info-list">
+                <li class="col-33"><label class="lb-60">航班号</label><span>{{rps.Carrier}}{{rps.FlightNo}}</span></li>
+                <li class="col-33"><label class="lb-60">补货单号</label><span>{{rps.DeliveryNo}}</span></li>
+                <li class="col-33"><label class="lb-80">申请时间</label><span>{{rps.ApplicantTime}}</span></li>
+                <li class="col-33"><label class="lb-60">航班日期</label><span>{{rps.FlightDate }}</span></li>
+                <li class="col-33"><label class="lb-60">补货申请人</label><span>{{rps.ApplicantEmpName}}</span></li>
+                <li class="col-33"><label class="lb-80">收货日期</label><span>{{rps.DeliveryConfirmTime}}</span></li>
+                <li class="col-33"><label class="lb-60">路线</label><span>{{rps.LineCHN }}</span></li>
+                <li class="col-33"><label class="lb-60">收货人</label><span>{{rps.DeliveryEmpName}}</span></li>
+                <li class="col-33"><label class="lb-80"> 备注</label><span>{{rps.Remark}}</span></li>
+                <li class="col-33"><label class="lb-60">申请总数</label><span>{{rps.NeedCounts}}</span></li>
+            </ul>
+        </li>
+        {{/each}}
+    </script>
+    <!--交接单明细列表-->
+    <script id="s_handover_detail" type="text/html">
+        {{each list  hd index}}
+        <div class="box">
+            <dl>
+                <dd>前序航班号：{{hd.PreFlightNo}}</dd>
+                <dd><img class="icon-barcode" src="../Images/barcode.png" />{{hd.Sku}}</dd>
+                <dd>{{hd.ProductName}}</dd>
+                <dd><span>交接数</span><span>{{hd.HandoverCounts}}</span></dd>
+                <dd><span>交接破损数</span><span>{{hd.HandoverDamagedCounts}}</span></dd>
+                <dd><span>承接数</span><span>{{hd.UndertakeCounts}}</span></dd>
+                <dd><span>承接破损数</span><span>{{hd.UndertakeDamagedCounts}}</span></dd>
+            </dl>
+        </div>
+        {{/each}}
+    </script>
+    <!--收货单明细列表-->
+    <script id="s_inquiry-detail" type="text/html">
+        {{each list  idl index}}
+        <div class="box">
+            <dl>
+                <dd><img class="icon-barcode" src="../Images/barcode.png" />{{idl.Sku}}</dd>
+                <dd>{{idl.ProductName}}</dd>
+                <dd><span>应收数</span><span>{{idl.NeedCounts}}</span></dd>
+                <dd><span>实收数</span><span>{{idl.ConfirmCounts}}</span></dd>
+                <dd><span>备注</span><span>{{idl.Remark}}</span></dd>
+            </dl>
+        </div>
+        {{/each}}
+    </script>
+    <!--补货单明细列表-->
+    <script id="s_replenishment-detail" type="text/html">
+        {{each list  rsd index}}
+        <div class="box">
+            <dl>
+                <dd><img class="icon-barcode" src="../Images/barcode.png" />{{rsd.Sku}}</dd>
+                <dd>{{rsd.ProductName}}</dd>
+                <dd><span>需补货数</span><span>{{rsd.NeedCounts}}</span></dd>
+                <dd><span>收货数</span><span>{{rsd.ConfirmCounts}}</span></dd>
+            </dl>
+        </div>
+        {{/each}}
+    </script>
+    <script>
+        // 切换
+        $('.tab li').click(function () {
+            var q = $(this).index();
+            $(this).addClass('selected').siblings('li').removeClass('selected');
+            $('.store').hide().eq(q).show();
+            var isLoaded = $(this).data("loaded");
+            if (isLoaded) {
+                return;
+            } else {
+                switch (q) {
+                    case 0:
+                        initStockList();
+                        break;
+                    case 1:
+                        initHandoverList();
+                        break;
+                    case 2:
+                        initInquiryList();
+                        break;
+                    case 3:
+                        initReplenishmentList();
+                        break;
+                    default:
+                }
+                $(this).data("loaded", "true");
+            }
+        });
+        var dorderid = "";
+        $(function () {
+            getLoginInfo(function () {
+                initNumbox();
+                //initStockList();
+                //initHandoverList();
+                //initInquiryList();
+                //initReplenishmentList();
+
+                showList();
+            });
+
+            $(document).on("click", ".iconradio", function () {
+                var radio = $(this).find("i");
+                var checked = radio.hasClass("iconfont");
+                if (checked) {
+                    radio.removeClass("iconfont").removeClass("icon-duigou").addClass("uncheck");
+                } else {
+                    radio.removeClass("uncheck").addClass("iconfont").addClass("icon-duigou");
+                }
+            });
+
+            $(".order-item").click(function () {
+                var that = this;
+                var itemindex = $(this).index();
+                var callback = $(this).parent().data("callback");
+                if ($(that).hasClass("up")) {
+                    $(that).removeClass("up");
+                    $(that).addClass("down");
+                }
+                else if ($(that).hasClass("down")) {
+                    $(that).removeClass("down");
+                    $(that).addClass("up");
+                } else {
+                    $(that).addClass("up");
+                }
+
+                var items = $(that).parent().find(".order-item");
+                for (var i = 0; i < items.length; i++) {
+                    if (i != itemindex) {
+                        $(items[i]).removeClass("up").removeClass("down");
+                    }
+                }
+
+                var fn = eval(callback);
+                fn.call(this);
+            });
+
+            //搜索
+            $("#search").click(function () {
+                initStockList();
+            });
+
+            //    取消
+            $('.quxiao').click(function () {
+                $('.appmodal').hide();
+            });
+            $('.queren1').click(function () {
+                $('.appmodal').hide();
+            });
+            //    换班盘点
+            $('.hbchange').click(function () {
+                window.location.href = 'AssociateCheck.html';
+            });
+            //    申请补货
+            $('.applyfor_restocking').click(function () {
+                window.location.href = 'OrderCreate.html';
+            });
+            //交接单明细弹出
+            $("#handover-search").on("click", ".list-group-item-h", function () {
+                dorderid = $(this).data("orderid");
+                initHandoverDetail();
+            });
+            //收货单明细弹出
+            $("#inquiry-search").on("click", ".list-group-item-i", function () {
+                dorderid = $(this).data("orderid");
+                initInquiryDetail();
+            });
+            //补货单明细弹出
+            $("#replenishment-search").on("click", ".list-group-item-r", function () {
+                dorderid = $(this).data("orderid");
+                initReplenishmentDetail();
+
+            });
+        });
+
+
+        //库存查询
+        function initStockList() {
+            var txt = $("#search").parent().prev().val();
+            var sqlwhere = "";
+            if (txt) {
+                sqlwhere = " and Inventory.ProductName like '%" + txt + "%'" + " or Inventory.Sku like '%" + txt + "%'";
+            }
+            //排序
+            var sqlorder = "";
+            var orderbycol = "";
+            if ($("#stockorder .order-item.up").length > 0) {
+                orderbycol = $("#stockorder .order-item.up").data("colname");
+                sqlorder = " order by " + orderbycol + " asc";
+            } else if ($("#stockorder .order-item.down").length > 0) {
+                orderbycol = $("#stockorder .order-item.down").data("colname");
+                sqlorder = " order by " + orderbycol + " desc";
+            }
+            //库存查询列表
+            var param1 = {
+                sql: "SELECT Inventory.*, damage.Qty as 'DamageQty' FROM Inventory LEFT JOIN" +
+                    "(SELECT sku, sum(Quantity) Qty FROM SalesOrder INNER JOIN SalesOrderItem " +
+                    "on SalesOrder.OrderNo = SalesOrderItem.OrderNo where FlightNo = '" + flightInfo.FlightNo + "' and FlightDate = '" + flightInfo.FlightDate + "' group by sku) sales " +
+                    "on Inventory.Sku = sales.Sku " +
+                    "LEFT JOIN (SELECT sku, sum(Quantity) Qty FROM DamageList INNER JOIN DamageItem on DamageList.DamagedNo = DamageItem.DamagedNo " +
+                    "where FlightNo = '" + flightInfo.FlightNo + "' and FlightDate = '" + flightInfo.FlightDate + "' group by sku) damage" +
+                    " on Inventory.Sku = damage.Sku " +
+                    "where FlightNo = '" + flightInfo.FlightNo + "' and FlightDate = '" + flightInfo.FlightDate + "'" + sqlwhere + sqlorder,
+                type: "stockseach"
+            }
+            initScroll("stock-search", param1, 10, function (res) {
+            });
+            //当前库存、已售、破损
+            var getstockparam = {
+                sql: "select sum(qty) as 'InvQty',(SELECT  sum(Quantity) Qty from SalesOrder INNER JOIN" + " SalesOrderItem on " +
+                    "SalesOrder.OrderNo = SalesOrderItem.OrderNo where  FlightNo =  '" + flightInfo.FlightNo + "' and FlightDate='" + flightInfo.FlightDate + "') as 'SalesQty'" +
+                    ",(SELECT sum(Quantity) Qty from DamageList INNER JOIN DamageItem on" +
+                    " DamageList.DamagedNo = DamageItem.DamagedNo where  FlightNo = '" + flightInfo.FlightNo + "' and " + "FlightDate = '" + flightInfo.FlightDate + "') as 'DamageQty'" +
+                    "from Inventory where  FlightNo = '" + flightInfo.FlightNo + "' and FlightDate='" + flightInfo.FlightDate + "'",
+                type: "getstock"
+            }
+            appJsBridge.callHandler("selectList", getstockparam, function (result) {
+                checkSuccess(result, function () {
+                    $("#current_stock").html(result.list[0].InvQty || 0);
+                    $("#sold").html(result.list[0].SalesQty || 0);
+                    $("#damaged").html(result.list[0].DamageQty || 0);
+                }, "没有查询到当前库存等信息！");
+            });
+        }
+        //交接查询
+        function initHandoverList() {
+            var sqlorder = "";
+            var orderbycol = "";
+            if ($("#handover .order-item.up").length > 0) {
+                orderbycol = $("#handover .order-item.up").data("colname");
+                sqlorder = " order by " + orderbycol + " asc";
+            } else if ($("#handover .order-item.down").length > 0) {
+                orderbycol = $("#handover .order-item.down").data("colname");
+                sqlorder = " order by " + orderbycol + " desc";
+            }
+            var param2 = {
+                sql: "select A.FlightNo, A.FlightDate, A.HandoverCounts, A.HandoverEmpName,A.UndertakeCounts,A.UndertakeEmpName,A.UndertakeTime,A.Remark,A.HandoverNo,B.LineCHN,B.Carrier  " +
+                    "from HandoverMaster A " +
+                    "left join FlightInfo B on A.FlightNo=B.FlightNo and A.FlightDate=B.FlightDate" + sqlorder,
+                type: "handoverSearch"
+            }
+            initScroll("handover-search", param2, 7, function () {
+
+            });
+        }
+        //收货查询
+        function initInquiryList() {
+            var sqlorder = "";
+            var orderbycol = "";
+            if ($("#inquiry .order-item.up").length > 0) {
+                orderbycol = $("#inquiry .order-item.up").data("colname");
+                sqlorder = " order by " + orderbycol + " asc";
+            } else if ($("#inquiry .order-item.down").length > 0) {
+                orderbycol = $("#inquiry .order-item.down").data("colname");
+                sqlorder = " order by " + orderbycol + " desc";
+            }
+            sqlFliteFlight = " and A.FlightNo='" + flightInfo.FlightNo + "' and A.FlightDate ='" + flightInfo.FlightDate + "'";
+            var param3 = {
+                sql: "select Distinct A.FlightNo, A.FlightDate ,A.DeliveryNo, A.DeliveryType, A.NeedCounts,A.ApplicantEmpName,A.ConfirmCounts,A.DeliveryEmpName,A.DeliveryConfirmTime,A.Remark,B.LineCHN,B.Carrier " +
+                    "from ReceiptList A " +
+                    "left join FlightInfo B on A.FlightNo = B.FlightNo where DeliveryType='1'" + sqlFliteFlight + sqlorder,
+                type: "inquirySearch"
+            }
+
+            initScroll("inquiry-search", param3, 10);
+        }
+        //补货查询
+        function initReplenishmentList() {
+            var sqlorder = "";
+            var orderbycol = "";
+            if ($("#replenishment .order-item.up").length > 0) {
+                orderbycol = $("#replenishment .order-item.up").data("colname");
+                sqlorder = " order by " + orderbycol + " asc";
+            } else if ($("#replenishment .order-item.down").length > 0) {
+                orderbycol = $("#replenishment .order-item.down").data("colname");
+                sqlorder = " order by " + orderbycol + " desc";
+            }
+            sqlFliteFlight = " and A.FlightNo='" + flightInfo.FlightNo + "' and A.FlightDate ='" + flightInfo.FlightDate + "'";
+            var param4 = {
+                sql: "select distinct A.*,B.LineCHN ,B.Carrier " +
+                    "from ReceiptList A " +
+                    "left join FlightInfo B on A.FlightNo = B.FlightNo  where  DeliveryType='2'" + sqlFliteFlight + sqlorder,
+                type: "replenishmentSearch"
+            }
+            initScroll("replenishment-search", param4, 10, function () {
+
+            });
+        }
+        //交接单明细
+        function initHandoverDetail() {
+            var sqlorder = "";
+            var orderbycol = "";
+            if ($("#handdetail .order-item.up").length > 0) {
+                orderbycol = $("#handdetail .order-item.up").data("colname");
+                sqlorder = " order by " + orderbycol + " asc";
+            } else if ($("#handdetail .order-item.down").length > 0) {
+                orderbycol = $("#handdetail .order-item.down").data("colname");
+                sqlorder = " order by " + orderbycol + " desc";
+            }
+            var param5 = {
+                sql: "select A.PreFlightNo,B.DiningCarNo,B.ProductID," +
+                    "B.ProductItemID,B.Sku,B.Barcode,B.ProductName,B.Unit,B.HandoverCounts," +
+                    "B.HandoverDamagedCounts,B.UndertakeCounts, B.UndertakeDamagedCounts," +
+                    "B. Remark from HandoverMaster as A Left Join HandoverItem as B on A.HandoverNo=B.HandoverNo " +
+                    "where A.HandoverNo='" + dorderid + "'" + sqlorder,
+                type: "handoverDetail"
+            }
+            //AppAlert("",param5.sql);
+            appJsBridge.callHandler("selectList", param5, function (result) {
+                checkSuccess(result, function () {
+                    $("#handover_detail").html(template("s_handover_detail", result));
+                    $(".appmodal2").show();
+                });
+            });
+
+        }
+        //收货单明细
+        function initInquiryDetail() {
+            var orderid = $(".list-group-item-i").data("orderid");
+            var sqlorder = "";
+            var orderbycol = "";
+            if ($("#inquirDetail .order-item.up").length > 0) {
+                orderbycol = $("#inquirDetail .order-item.up").data("colname");
+                sqlorder = " order by " + orderbycol + " asc";
+            } else if ($("#inquirDetail .order-item.down").length > 0) {
+                orderbycol = $("#inquirDetail .order-item.down").data("colname");
+                sqlorder = " order by " + orderbycol + " desc";
+            }
+            sqlFliteFlight = " and A.FlightNo='" + flightInfo.FlightNo + "' and A.FlightDate ='" + flightInfo.FlightDate + "'";
+            var param6 = {
+                sql: "select B.Sku,B.ProductName,B.NeedCounts,B.ConfirmCounts,A.Remark " +
+                    "from ReceiptList A " +
+                    "left join ReceiptItem B on A.DeliveryNo = B.DeliveryNo  where 1= 1" + sqlFliteFlight + " and A.DeliveryNo ='" + dorderid + "'" + sqlorder,
+                type: "inquiryDetail"
+            }
+            //AppAlert("",param6.sql);
+            appJsBridge.callHandler("selectList", param6, function (result) {
+                checkSuccess(result, function () {
+                    $("#inquiry-detail").html(template("s_inquiry-detail", result));
+                    $(".appmodal3").show();
+                });
+            });
+        }
+        //补货单明细
+        function initReplenishmentDetail() {
+
+            var sqlorder = "";
+            var orderbycol = "";
+            if ($("#replenishmentDetail .order-item.up").length > 0) {
+                orderbycol = $("#replenishmentDetail .order-item.up").data("colname");
+                sqlorder = " order by " + orderbycol + " asc";
+            } else if ($("#replenishmentDetail .order-item.down").length > 0) {
+                orderbycol = $("#replenishmentDetail .order-item.down").data("colname");
+                sqlorder = " order by " + orderbycol + " desc";
+            }
+            var param7 = {
+                sql: "select B.Sku,B.ProductName,B.NeedCounts,B.ConfirmCounts,A.DeliveryNo " +
+                    "from ReceiptList A " +
+                    "left join ReceiptItem B on A.DeliveryNo = B.DeliveryNo where 1= 1 and A.FlightNo = '" + flightInfo.FlightNo + "' and A.FlightDate = '" + flightInfo.FlightDate + "' and a.DeliveryNo ='" + dorderid + "'" + sqlorder,
+                type: "replenishmentDetail"
+            }
+            appJsBridge.callHandler("selectList", param7, function (result) {
+                checkSuccess(result, function () {
+                    $("#replenishment-detail").html(template("s_replenishment-detail", result));
+                    $(".appmodal4").show();
+                });
+            });
+        }
+        function showList() {
+            var type = getQueryStringByName("type");
+            switch (type) {
+                case "2":
+                    $(".tab li").eq(1).click();
+                    break;
+                case "3":
+                    $(".tab li").eq(2).click();
+                    break;
+                case "4":
+                    $(".tab li").eq(3).click();
+                    break;
+                case "1":
+                default:
+                    $(".tab li").eq(0).click();
+                    break;
+            }
+        }
+    </script>
+</body>
+</html>

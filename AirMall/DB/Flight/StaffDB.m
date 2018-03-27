@@ -10,27 +10,37 @@
 
 @implementation StaffDB
 
-+(id)staffLogin:(NSString*) flightNo flightDate:(NSString*) flightDate empNo:(NSString*) empNo password:(NSString*) password deviceNo:(NSString*)deviceNo{
++(LoginInfoResult*)staffLogin:(NSString*) flightNo flightDate:(NSString*) flightDate empNo:(NSString*) empNo password:(NSString*) password deviceNo:(NSString*)deviceNo{
 //    Staff* staff = nil;
-    id result = nil;
-    NSString* sql = [NSString stringWithFormat:@"select a.EmpNo,a.EmpName,a.EmpPhone,a.EmpType,a.IsActive,a.CreateTime,c.* from Staff as a join ScheduleInfo as b on b.EmpNo = a.EmpNo join FlightInfo as c on c.FlightNo = b.FlightNo and c.FlightDate = b.FlightDate where a.EmpNo = '%@' and EmpPassword = '%@' and c.Carrier || c.FlightNo = '%@' and date(c.FlightDate) = '%@' order by a.EmpNo desc limit 1", empNo, password,flightNo,flightDate];
+    LoginInfoResult* loginInfoResult = [LoginInfoResult new];
+    [loginInfoResult setStatus:0];
+    NSString* sql = [NSString stringWithFormat:@"select a.EmpNo,a.EmpName,a.EmpPassword,a.EmpPhone,a.Avatar,a.EmpType,a.IsActive,a.CreateTime,c.* from Staff as a join ScheduleInfo as b on b.EmpNo = a.EmpNo join FlightInfo as c on c.FlightNo = b.FlightNo and c.FlightDate = b.FlightDate where a.EmpNo = '%@' and c.Carrier || c.FlightNo = '%@' and date(c.FlightDate) = '%@' order by a.EmpNo desc limit 1", empNo,flightNo,flightDate];
    
     NSArray* arr = bg_executeSql(sql, nil, nil);
     if([arr count] > 0){
-        result = [arr objectAtIndex:0];
-//        NSString* json = [[arr objectAtIndex:0] yy_modelToJSONObject];
-//        staff = [Staff yy_modelWithJSON:json];
-        LogList* log = [LogList new];
-        log.EmpNo = [result valueForKey:@"EmpNo"];
-        log.FlightNo = [result valueForKey:@"FlightNo"];
-        log.FlightDate = [result valueForKey:@"FlightDate"];
-        log.Category = @"登录信息";
-        log.Type = @"登录";
-        log.DeviceNo = deviceNo;
-        log.Describe = [NSString stringWithFormat:@"账户：%@ 登录",[result valueForKey:@"EmpNo"]];
-        [LogDB createLog:log];
+        id result = [arr objectAtIndex:0];
+        NSString* empPassword = [result valueForKey:@"EmpPassword"];
+        if([empPassword isEqualToString:password]){
+    //        NSString* json = [[arr objectAtIndex:0] yy_modelToJSONObject];
+    //        staff = [Staff yy_modelWithJSON:json];
+            LogList* log = [LogList new];
+            log.EmpNo = [result valueForKey:@"EmpNo"];
+            log.FlightNo = [result valueForKey:@"FlightNo"];
+            log.FlightDate = [result valueForKey:@"FlightDate"];
+            log.Category = @"登录信息";
+            log.Type = @"登录";
+            log.DeviceNo = deviceNo;
+            log.Describe = [NSString stringWithFormat:@"账户：%@ 登录",[result valueForKey:@"EmpNo"]];
+            [LogDB createLog:log];
+            [loginInfoResult setStatus:1];
+            [loginInfoResult setUserInfo:result];
+        }else{
+           [loginInfoResult setMessage:@"您的登录密码有误，请检查"];
+        }
+    }else{
+        [loginInfoResult setMessage:@"没有找到员工对应的航班信息"];
     }
-    return result;
+    return loginInfoResult;
 }
 
 +(void) updateLastLoginTime:(NSString*) empNo{
@@ -39,12 +49,12 @@
     NSLog(@"%@",result);
 }
 
-+(id) getPreFlightInfo:(NSString*) flightNo tailNo:(NSString*) tailNo acType:(NSString*)acType {
++(id) getPreFlightInfo:(NSString*) flightNo tailNo:(NSString*) tailNo acType:(NSString*)acType deptTime:(NSString*) deptTime{
     
 //    AND DeptTime < strftime('%%Y/%%m/%%d %%H:%%M:%%S', 'now', 'localtime')
     
     id result = nil;
-    NSString* sql = [NSString stringWithFormat:@"SELECT * FROM FlightInfo WHERE TailNo = '%@' AND ACType = '%@' AND FlightNo < '%@' ORDER BY FlightNo ASC limit 1", tailNo, acType, flightNo];
+    NSString* sql = [NSString stringWithFormat:@"SELECT * FROM FlightInfo WHERE TailNo = '%@' AND ACType = '%@' AND FlightDate || DeptTime < '%@' ORDER BY FlightDate || DeptTime DESC limit 1", tailNo, acType, deptTime];
     
     NSArray* arr = bg_executeSql(sql, nil, nil);
     if([arr count] > 0){
