@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14109" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="ipad9_7" orientation="landscape">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -19,8 +19,10 @@
                 <outlet property="filedFlightNo" destination="nFc-a6-MHw" id="IoL-66-b8q"/>
                 <outlet property="finishLabel" destination="0Ta-xz-I7U" id="BIq-cE-gmR"/>
                 <outlet property="loginButton" destination="wht-3a-dRW" id="ood-tz-w8b"/>
+                <outlet property="loginSwitch" destination="suM-Bs-Td6" id="2an-cn-Jvx"/>
                 <outlet property="synButtom" destination="OdH-2F-vfV" id="Gwo-41-H7e"/>
                 <outlet property="synDataView" destination="iAb-pd-8gY" id="iYH-Zc-Iaa"/>
+                <outlet property="synProgressView" destination="zfs-fF-yM5" id="c3S-Xw-RqP"/>
                 <outlet property="synTableView" destination="7Tg-G4-6tX" id="Oz7-AP-oAk"/>
                 <outlet property="versionLabel" destination="xDw-oc-ZOg" id="Css-ve-Ebg"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
@@ -124,7 +126,7 @@
                                     <color key="textColor" red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="calibratedRGB"/>
                                     <nil key="highlightedColor"/>
                                 </label>
-                                <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="zhanghao" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="cNV-Zc-N8z">
+                                <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="vinson" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="cNV-Zc-N8z">
                                     <rect key="frame" x="140" y="0.0" width="230" height="50"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     <nil key="textColor"/>
@@ -277,6 +279,20 @@
                                 <action selector="synButtomPressed:" destination="-1" eventType="touchUpInside" id="DGL-YX-dnC"/>
                             </connections>
                         </button>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="离线登录" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="AfU-EP-tXV">
+                            <rect key="frame" x="185" y="133" width="61" height="30"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <fontDescription key="fontDescription" type="boldSystem" pointSize="14"/>
+                            <color key="textColor" red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="calibratedRGB"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="suM-Bs-Td6">
+                            <rect key="frame" x="252" y="131" width="49" height="31"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <connections>
+                                <action selector="loginSwitchPressed:" destination="-1" eventType="valueChanged" id="tDQ-BW-D3g"/>
+                            </connections>
+                        </switch>
                     </subviews>
                     <constraints>
                         <constraint firstAttribute="width" secondItem="7Y6-dX-OIk" secondAttribute="height" multiplier="355:176" id="GU4-mf-XLG"/>
@@ -315,9 +331,20 @@
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         </tableView>
+                        <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="zfs-fF-yM5">
+                            <rect key="frame" x="0.0" y="225" width="355" height="2"/>
+                            <color key="tintColor" red="0.0" green="0.97680455450000003" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            <constraints>
+                                <constraint firstAttribute="width" constant="355" id="8WV-9R-0X2"/>
+                                <constraint firstAttribute="height" constant="2" id="l8V-xY-3hL"/>
+                            </constraints>
+                        </progressView>
                     </subviews>
                     <constraints>
+                        <constraint firstAttribute="trailing" secondItem="zfs-fF-yM5" secondAttribute="trailing" id="1gM-ke-9xX"/>
+                        <constraint firstAttribute="bottom" secondItem="zfs-fF-yM5" secondAttribute="bottom" id="5SQ-5e-2aA"/>
                         <constraint firstAttribute="width" secondItem="iAb-pd-8gY" secondAttribute="height" multiplier="355:227" id="GA9-Wy-7oz"/>
+                        <constraint firstItem="zfs-fF-yM5" firstAttribute="leading" secondItem="iAb-pd-8gY" secondAttribute="leading" id="ROZ-iF-ehz"/>
                         <constraint firstAttribute="width" constant="355" id="r2U-wE-6sM"/>
                         <constraint firstAttribute="height" constant="227" id="wTG-86-Wwv"/>
                     </constraints>

@@ -122,11 +122,47 @@
     
     _webView.scrollView.bounces = false;
     
-//    [self loadHtmlUrl:@"index.html"];
-    [self loadHtmlPage:@"Index"];
+    [self loadHtmlUrl:@"index"];
+//    [self loadHtmlPage:@"Index"];
     
     [self initLayer];
     [self brigeInit];
+    
+    [self initNotFlights];
+}
+
+- (void)initNotFlights{
+    NSArray* arr = [StaffDB getNotFlightList:[_userDict objectForKey:@"EmpNo"] flightDate:[_userDict objectForKey:@"FlightDate"]];
+    if([arr count] > 0){
+        int i = 0;
+        for(id item in arr){
+            NSString* fligthNo = [item valueForKey:@"FlightNo"];
+            UIButton  *button=[UIButton buttonWithType:UIButtonTypeCustom];
+            button.frame=CGRectMake(i%2==0?20:82, (i/2)*30 + 52, 57, 25);
+            [button setTitle:fligthNo forState:UIControlStateNormal];
+            [button setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+            //设置button上的字体大小
+            button.titleLabel.font=[UIFont systemFontOfSize:12];
+            i++;
+            [button addTarget:self action:@selector(selectFlight:) forControlEvents:UIControlEventTouchUpInside];
+            [_changeFlightView addSubview:button];
+        }
+        
+        UIImage* image = _flightBGImageView.image;
+        
+        CGFloat top = 25; // 顶端盖高度
+        CGFloat bottom = 25 ; // 底端盖高度
+        CGFloat left = 10; // 左端盖宽度
+        CGFloat right = 10; // 右端盖宽度
+        UIEdgeInsets insets = UIEdgeInsetsMake(top, left, bottom, right);
+        // 指定为拉伸模式，伸缩后重新赋值
+        image = [image resizableImageWithCapInsets:insets resizingMode:UIImageResizingModeStretch];
+    }
+}
+
+- (void) selectFlight:(UIButton *)button{
+    UIImage *image=[UIImage imageNamed:@"flight-no-bg"];
+    [button setBackgroundImage:image forState:UIControlStateNormal];
 }
 
 - (void)brigeInit{
@@ -392,8 +428,8 @@
                  [CommonUtil showOnlyText:self.view tips:@"还有未完成的交接单"];
             }else{
                 NSArray *arr = [_tableViewArr objectAtIndex:row];
-//                [self loadHtmlUrl:[arr objectAtIndex:2]];
-                 [self loadHtmlPage:[arr objectAtIndex:2]];
+                [self loadHtmlUrl:[arr objectAtIndex:2]];
+//                 [self loadHtmlPage:[arr objectAtIndex:2]];
                 [self updateTableViewIcon: row];
             }
         }else if(row == 7){
@@ -406,8 +442,8 @@
 
         }else if(row < 7){
             NSArray *arr = [_tableViewArr objectAtIndex:row];
-//            [self loadHtmlUrl:[arr objectAtIndex:2]];
-              [self loadHtmlPage:[arr objectAtIndex:2]];
+            [self loadHtmlUrl:[arr objectAtIndex:2]];
+//              [self loadHtmlPage:[arr objectAtIndex:2]];
             [self updateTableViewIcon: row];
         }else if(row == 7){
             [self logout];
@@ -515,7 +551,7 @@
 
 - (void)loadHtmlUrl:(NSString*)page {
 
-    NSString* url = [NSString stringWithFormat:@"%s%@",_BaseUrl,page];
+    NSString* url = [NSString stringWithFormat:@"%s%@.html",_BaseUrl,page];
     [_webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:url]]];
 }
 
@@ -1043,4 +1079,13 @@
     }
 }
 
+- (IBAction)changeFlightPressed:(id)sender {
+    if([_changeFlightView isHidden]){
+        [_changeFlightView setHidden:NO];
+    }else{
+        [_changeFlightView setHidden:YES];
+    }
+}
+- (IBAction)changeFlightBtnPressed:(id)sender {
+}
 @end

@@ -26,6 +26,9 @@
 #import "HandoverItem.h"
 #import "LogList.h"
 #import "Cart.h"
+#import "FlightPerformance.h"
+#import "LastReturnOrder.h"
+#import "LastReturnOrderItem.h"
 #import "SynInfoTableViewCell.h"
 #import "SSZipArchive.h"
 #import "Reachability.h"
@@ -39,6 +42,11 @@
 @property (weak, nonatomic) IBOutlet UIButton *synButtom;
 
 - (IBAction)synButtomPressed:(id)sender;
+
+@property (weak, nonatomic) IBOutlet UISwitch *loginSwitch;
+- (IBAction)loginSwitchPressed:(id)sender;
+
+@property (weak, nonatomic) IBOutlet UIProgressView *synProgressView;
 
 @property (weak, nonatomic) IBOutlet UIView *synDataView;
 

@@ -63,4 +63,12 @@
     return result;
 }
 
++(NSArray*) getNotFlightList:(NSString*)empNo flightDate:(NSString*) flightDate{
+    
+    NSString* sql = [NSString stringWithFormat:@"select b.* from ScheduleInfo a join FlightInfo b on a.FlightDate = b.FlightDate and a.FlightNo = b.FlightNo where a.EmpNo = '%@' and a.FlightDate = '%@' order by DeptTime asc", empNo, flightDate];
+    
+    NSArray* arr = bg_executeSql(sql, nil, nil);
+                     return arr;
+}
+
 @end

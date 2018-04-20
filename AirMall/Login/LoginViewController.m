@@ -26,6 +26,9 @@
     
     BOOL _dataDwonOver;
     BOOL _picDownOver;
+    
+    float _synProgressValue;
+    BOOL _isDownFinished;
 }
 
 @end
@@ -49,6 +52,9 @@
     _synTableView.delegate = self;
     
     _synCount = 0;
+    
+    _synProgressValue = 0;
+    _isDownFinished = NO;
     
     _dataDwonOver = false;
     _picDownOver = false;
@@ -217,6 +223,9 @@
         [arr replaceObjectAtIndex:2 withObject:@"同步完成"];
         [arr replaceObjectAtIndex:3 withObject:[CommonUtil convertDateToString:[NSDate new] formatter:@"yyyy.MM.dd HH:mm:ss"]];
         _synCount++;
+        
+        _synProgressValue += 0.05;
+        [_synProgressView setProgress:_synProgressValue animated:YES];
 //        if(_synCount==[_processContentArr count]){
 //            [_synButtom setEnabled:YES];
 //            [_finishLabel setHidden:NO];
@@ -366,6 +375,8 @@
         }
         [manager removeItemAtPath:unzipPath error:nil];
         _dataDwonOver = true;
+        _synProgressValue = 1;
+        [_synProgressView setProgress:_synProgressValue animated:YES];
         
     }else if([fileType isEqualToString:@"picture"]){
         
@@ -380,7 +391,7 @@
         [manager removeItemAtPath:unzipPath error:nil];
         _picDownOver = true;
     }
-    [manager removeItemAtPath:zipPath error:nil];
+//    [manager removeItemAtPath:zipPath error:nil];
     if(_dataDwonOver){
         [_synButtom setEnabled:YES];
         [_finishLabel setHidden:NO];
@@ -409,7 +420,7 @@
             
             NSString* fileFullPath = [[data valueForKey:@"FileFullPath"] objectAtIndex:0];
             [param setObject:fileFullPath forKey:@"FileFullPath"];
-            
+             
             [NetworkUtil post:@"api/ipad/download" params:param success:^(NSURLSessionDataTask *task, id response) {
                 
                 NSString *tmpDir = NSTemporaryDirectory();
@@ -429,6 +440,7 @@
                          [self synFail:@"通知下载文件失败"];
                      }];
                     [self analysisData:fileType];
+                    _isDownFinished = YES;
                 }
                 NSLog(@"success");
             } fail:^(NSURLSessionDataTask *task, NSError *error) {
@@ -498,6 +510,10 @@
     
     _synCount = 0;
     
+    _synProgressValue = 0;
+    [_synProgressView setProgress:_synProgressValue animated:YES];
+    [self startGCDTimer];
+    
     _tableViewDict = [NSMutableDictionary new];
     [_synTableView reloadData];
     
@@ -538,20 +554,29 @@
         [_fieldPass setEnabled:YES];
         [_loginButton setEnabled:YES];
     }else{
-//        [_filedFlightNo setEnabled:NO];
-//        [_fieldDate setEnabled:NO];
-//        [_changeDateButton setEnabled:NO];
-//        [_fieldName setEnabled:NO];
-//        [_fieldPass setEnabled:NO];
-//        [_loginButton setEnabled:NO];
+        [_filedFlightNo setEnabled:NO];
+        [_fieldDate setEnabled:NO];
+        [_changeDateButton setEnabled:NO];
+        [_fieldName setEnabled:NO];
+        [_fieldPass setEnabled:NO];
+        [_loginButton setEnabled:NO];
         
-        [_filedFlightNo setText:@""];
-        [_fieldDate setText:@""];
-        [_fieldName setText:@""];
-        [_fieldPass setText:@""];
+//        [_filedFlightNo setText:@"KN"];
+//        [_fieldDate setText:@""];
+//        [_fieldName setText:@""];
+//        [_fieldPass setText:@""];
         
         _tableViewDict = [NSMutableDictionary new];
         [_synTableView reloadData];
+    }
+}
+
+- (IBAction)loginSwitchPressed:(id)sender {
+    BOOL loginSwitch = [_loginSwitch isOn];
+    if(loginSwitch){
+        [self setButtonStatus:YES];
+    }else{
+        [self setButtonStatus:NO];
     }
 }
 
@@ -640,23 +665,27 @@
 }
 
 -(void) startGCDTimer{
-    NSTimeInterval period = 2.0; //设置时间间隔
+    NSTimeInterval period = 0.1; //设置时间间隔
     dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
     _timer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, queue);
     dispatch_source_set_timer(_timer, dispatch_walltime(NULL, 0), period * NSEC_PER_SEC, 0); //每秒执行
     __weak typeof(self) weakSelf = self;
     dispatch_source_set_event_handler(_timer, ^{
         //在这里执行事件
-        if([weakSelf isExistNetWork]){
+//        if([weakSelf isExistNetWork]){
+        if(_isDownFinished){
             dispatch_async(dispatch_get_main_queue(), ^{
-                [weakSelf.synButtom setEnabled:YES];
+//                [weakSelf.synButtom setEnabled:YES];
+                [weakSelf stopTimer];
             });
         }else{
+            _synProgressValue += 0.05;
             dispatch_async(dispatch_get_main_queue(), ^{
-                [weakSelf.synButtom setEnabled:NO];
+//                [weakSelf.synButtom setEnabled:NO];
+                [_synProgressView setProgress:_synProgressValue animated:YES];
             });
         }
-        NSLog(@"每2秒执行test");
+        NSLog(@"_synProgressValue:%f",_synProgressValue);
     });
 
     dispatch_resume(_timer);
@@ -721,6 +750,15 @@
 
     Cart* cart = [Cart new];
     [cart bg_createTable];
+    
+    FlightPerformance* flightPerformance = [FlightPerformance new];
+    [flightPerformance bg_createTable];
+    
+    LastReturnOrder* lastReturnOrder = [LastReturnOrder new];
+    [lastReturnOrder bg_createTable];
+    
+    LastReturnOrderItem* lastReturnOrderItem = [LastReturnOrderItem new];
+    [lastReturnOrderItem bg_createTable];
 }
 
 - (void) viewWillDisappear:(BOOL)animated{

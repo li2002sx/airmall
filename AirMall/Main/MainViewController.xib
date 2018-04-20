@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14109" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="ipad9_7" orientation="landscape">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -12,10 +12,12 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="MainViewController">
             <connections>
                 <outlet property="btnBack" destination="bMe-CP-fSL" id="Y5P-m8-HPy"/>
+                <outlet property="changeFlightView" destination="Vmd-nm-mkM" id="rcL-y9-dT8"/>
                 <outlet property="empJobLabel" destination="Xdd-Y1-7Mh" id="zXR-py-td3"/>
                 <outlet property="empNameLabel" destination="Eeb-no-8BH" id="PYD-Mh-a2H"/>
                 <outlet property="empNoLabel" destination="Szs-ea-AyW" id="bHj-cd-jhL"/>
                 <outlet property="empPhotoImageView" destination="WFB-KB-kNs" id="jZS-qr-dP1"/>
+                <outlet property="flightBGImageView" destination="th9-Aw-t1i" id="fmS-eu-9F0"/>
                 <outlet property="flightDurationLabel" destination="8jE-qA-WZC" id="aTz-CO-JCE"/>
                 <outlet property="flightTimeLabel" destination="2Kd-cn-tNJ" id="HKE-b9-WCC"/>
                 <outlet property="frashButtom" destination="Tzh-wg-f9x" id="ay1-ek-96V"/>
@@ -58,21 +60,14 @@
                             <nil key="highlightedColor"/>
                         </label>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="上海虹桥  -  首都北京" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DKb-o4-8rS">
-                            <rect key="frame" x="194" y="5" width="163" height="21"/>
+                            <rect key="frame" x="176" y="5" width="163" height="21"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <fontDescription key="fontDescription" type="system" pointSize="12"/>
                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <nil key="highlightedColor"/>
                         </label>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="前序航班：" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eDQ-hQ-H5C">
-                            <rect key="frame" x="365" y="5" width="62" height="21"/>
-                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                            <fontDescription key="fontDescription" type="system" pointSize="12"/>
-                            <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                            <nil key="highlightedColor"/>
-                        </label>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="LoD-RV-YU2">
-                            <rect key="frame" x="424" y="5" width="59" height="21"/>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="前序航班" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eDQ-hQ-H5C">
+                            <rect key="frame" x="347" y="5" width="62" height="21"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <fontDescription key="fontDescription" type="system" pointSize="12"/>
                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -86,58 +81,58 @@
                             <nil key="highlightedColor"/>
                         </label>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="13:30  -  15:30" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2Kd-cn-tNJ">
-                            <rect key="frame" x="221" y="22" width="108" height="21"/>
+                            <rect key="frame" x="203" y="22" width="108" height="21"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <fontDescription key="fontDescription" type="system" pointSize="12"/>
                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <nil key="highlightedColor"/>
                         </label>
                         <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Pau-0d-36G">
-                            <rect key="frame" x="494" y="12" width="0.5" height="20"/>
+                            <rect key="frame" x="414" y="12" width="0.5" height="20"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <color key="backgroundColor" red="0.84313725490196079" green="0.078431372549019607" blue="0.062745098039215685" alpha="1" colorSpace="calibratedRGB"/>
                         </view>
                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="icon-userpic.png" translatesAutoresizingMaskIntoConstraints="NO" id="WFB-KB-kNs">
-                            <rect key="frame" x="515" y="5" width="35" height="35"/>
+                            <rect key="frame" x="435" y="5" width="35" height="35"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         </imageView>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="姓名：" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="It4-kx-lrr">
-                            <rect key="frame" x="569" y="5" width="38" height="21"/>
+                            <rect key="frame" x="489" y="5" width="38" height="21"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <fontDescription key="fontDescription" type="system" pointSize="12"/>
                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <nil key="highlightedColor"/>
                         </label>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="小马哥" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Eeb-no-8BH">
-                            <rect key="frame" x="608" y="5" width="59" height="21"/>
+                            <rect key="frame" x="528" y="5" width="59" height="21"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <fontDescription key="fontDescription" type="system" pointSize="12"/>
                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <nil key="highlightedColor"/>
                         </label>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="工号：" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Wys-OT-p74">
-                            <rect key="frame" x="663" y="5" width="38" height="21"/>
+                            <rect key="frame" x="583" y="5" width="38" height="21"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <fontDescription key="fontDescription" type="system" pointSize="12"/>
                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <nil key="highlightedColor"/>
                         </label>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="80481" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Szs-ea-AyW">
-                            <rect key="frame" x="702" y="5" width="59" height="21"/>
+                            <rect key="frame" x="622" y="5" width="59" height="21"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <fontDescription key="fontDescription" type="system" pointSize="12"/>
                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <nil key="highlightedColor"/>
                         </label>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="职位：" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2qE-UC-cUw">
-                            <rect key="frame" x="762" y="5" width="39" height="21"/>
+                            <rect key="frame" x="682" y="5" width="39" height="21"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <fontDescription key="fontDescription" type="system" pointSize="12"/>
                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <nil key="highlightedColor"/>
                         </label>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="乘务长" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Xdd-Y1-7Mh">
-                            <rect key="frame" x="800" y="5" width="59" height="21"/>
+                            <rect key="frame" x="720" y="5" width="59" height="21"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <fontDescription key="fontDescription" type="system" pointSize="12"/>
                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -182,14 +177,14 @@
                             </connections>
                         </button>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="登录时间：" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="J4j-kv-0YJ">
-                            <rect key="frame" x="569" y="22" width="62" height="21"/>
+                            <rect key="frame" x="489" y="22" width="62" height="21"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <fontDescription key="fontDescription" type="system" pointSize="12"/>
                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <nil key="highlightedColor"/>
                         </label>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="2018年2月23日 18:30:34" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XcQ-tC-OKm">
-                            <rect key="frame" x="639" y="22" width="162" height="21"/>
+                            <rect key="frame" x="559" y="22" width="162" height="21"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <fontDescription key="fontDescription" type="system" pointSize="12"/>
                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -214,6 +209,26 @@
                                 <action selector="synButtomPressed:" destination="-1" eventType="touchUpInside" id="x7r-gY-cB7"/>
                             </connections>
                         </button>
+                        <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="lWf-gE-mBE">
+                            <rect key="frame" x="800" y="13" width="0.5" height="20"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <color key="backgroundColor" red="0.84313725490000002" green="0.078431372550000003" blue="0.062745098040000002" alpha="1" colorSpace="calibratedRGB"/>
+                        </view>
+                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2Hk-l2-y1a">
+                            <rect key="frame" x="817" y="12" width="22" height="22"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <state key="normal" image="icon-change.png"/>
+                            <connections>
+                                <action selector="changeFlightPressed:" destination="-1" eventType="touchUpInside" id="eh8-tw-CqB"/>
+                            </connections>
+                        </button>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="LoD-RV-YU2">
+                            <rect key="frame" x="348" y="23" width="59" height="21"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                            <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <nil key="highlightedColor"/>
+                        </label>
                     </subviews>
                     <color key="backgroundColor" red="1" green="0.32549019607843138" blue="0.33725490196078434" alpha="1" colorSpace="calibratedRGB"/>
                     <constraints>
@@ -233,8 +248,9 @@
                         <constraint firstItem="SIZ-aP-qAp" firstAttribute="leading" secondItem="mdV-7B-hVQ" secondAttribute="trailing" constant="15" id="xlb-qW-pKA"/>
                     </constraints>
                 </view>
-                <wkWebView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="cnT-zD-TkH">
+                <wkWebView contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="cnT-zD-TkH">
                     <rect key="frame" x="50" y="70" width="974" height="698"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <color key="backgroundColor" red="0.36078431370000003" green="0.38823529410000002" blue="0.4039215686" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     <wkWebViewConfiguration key="configuration">
                         <audiovisualMediaTypes key="mediaTypesRequiringUserActionForPlayback" none="YES"/>
@@ -281,23 +297,66 @@
                         <constraint firstAttribute="width" constant="170" id="SPj-bW-dWP"/>
                     </constraints>
                 </view>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Vmd-nm-mkM">
+                    <rect key="frame" x="747" y="70" width="162" height="135"/>
+                    <subviews>
+                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="flight-bg.png" translatesAutoresizingMaskIntoConstraints="NO" id="th9-Aw-t1i">
+                            <rect key="frame" x="0.0" y="0.0" width="162" height="135"/>
+                        </imageView>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="选择航班" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="D9Q-Hf-P6g">
+                            <rect key="frame" x="52" y="20" width="59" height="14.5"/>
+                            <constraints>
+                                <constraint firstAttribute="width" constant="59" id="CYl-Ri-gRR"/>
+                                <constraint firstAttribute="height" constant="14.5" id="RgT-tB-Z4U"/>
+                            </constraints>
+                            <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                            <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="OE6-xH-fdM">
+                            <rect key="frame" x="36" y="86" width="90" height="24"/>
+                            <constraints>
+                                <constraint firstAttribute="width" constant="90" id="lVc-uH-1Qd"/>
+                                <constraint firstAttribute="height" constant="24" id="q4Q-gZ-2Jk"/>
+                            </constraints>
+                            <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                            <state key="normal" title="确认切换" backgroundImage="flight-button-bg.png">
+                                <color key="titleColor" red="0.8784313725490196" green="0.21176470588235294" blue="0.22352941176470587" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            </state>
+                            <connections>
+                                <action selector="changeFlightBtnPressed:" destination="-1" eventType="touchUpInside" id="7hE-Wi-Whm"/>
+                            </connections>
+                        </button>
+                    </subviews>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <constraints>
+                        <constraint firstAttribute="bottom" secondItem="OE6-xH-fdM" secondAttribute="bottom" constant="25" id="3df-w3-kkC"/>
+                        <constraint firstItem="D9Q-Hf-P6g" firstAttribute="centerX" secondItem="th9-Aw-t1i" secondAttribute="centerX" id="9lK-61-CsE"/>
+                        <constraint firstAttribute="width" constant="162" id="F74-al-ZbI"/>
+                        <constraint firstItem="th9-Aw-t1i" firstAttribute="leading" secondItem="Vmd-nm-mkM" secondAttribute="leading" id="GDx-Sg-3w9"/>
+                        <constraint firstAttribute="trailing" secondItem="th9-Aw-t1i" secondAttribute="trailing" id="Rxi-4a-uUu"/>
+                        <constraint firstItem="th9-Aw-t1i" firstAttribute="top" secondItem="Vmd-nm-mkM" secondAttribute="top" id="aJD-7h-Unu"/>
+                        <constraint firstAttribute="bottom" secondItem="th9-Aw-t1i" secondAttribute="bottom" id="aeu-zI-rvN"/>
+                        <constraint firstItem="OE6-xH-fdM" firstAttribute="centerX" secondItem="th9-Aw-t1i" secondAttribute="centerX" id="iSe-xW-pFf"/>
+                        <constraint firstAttribute="height" constant="135" id="ioc-k7-E1O"/>
+                        <constraint firstItem="D9Q-Hf-P6g" firstAttribute="top" secondItem="Vmd-nm-mkM" secondAttribute="top" constant="20" id="t72-dC-MlP"/>
+                    </constraints>
+                </view>
             </subviews>
             <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
             <constraints>
+                <constraint firstItem="Vmd-nm-mkM" firstAttribute="top" secondItem="VWl-Xu-qbU" secondAttribute="bottom" id="2cy-yR-hDj"/>
+                <constraint firstItem="Q5M-cg-NOt" firstAttribute="trailing" secondItem="Vmd-nm-mkM" secondAttribute="trailing" constant="115" id="4P9-FM-0eO"/>
                 <constraint firstItem="77j-hp-WRx" firstAttribute="top" secondItem="Q5M-cg-NOt" secondAttribute="top" id="6MC-iR-yv8"/>
                 <constraint firstItem="77j-hp-WRx" firstAttribute="leading" secondItem="Q5M-cg-NOt" secondAttribute="leading" id="AN8-SD-reb"/>
                 <constraint firstItem="VWl-Xu-qbU" firstAttribute="trailing" secondItem="Q5M-cg-NOt" secondAttribute="trailing" id="IVU-iE-XQD"/>
                 <constraint firstAttribute="bottom" secondItem="03U-WL-y5H" secondAttribute="bottom" id="O7w-HX-ebf"/>
                 <constraint firstItem="84D-2H-7Aa" firstAttribute="bottom" secondItem="Q5M-cg-NOt" secondAttribute="bottom" id="Taz-F0-lMv"/>
-                <constraint firstItem="cnT-zD-TkH" firstAttribute="top" secondItem="VWl-Xu-qbU" secondAttribute="bottom" id="bqV-bt-BIa"/>
                 <constraint firstItem="77j-hp-WRx" firstAttribute="bottom" secondItem="Q5M-cg-NOt" secondAttribute="bottom" id="cLO-eX-ZRS"/>
                 <constraint firstItem="84D-2H-7Aa" firstAttribute="leading" secondItem="Q5M-cg-NOt" secondAttribute="leading" id="eyc-36-X5V"/>
                 <constraint firstItem="84D-2H-7Aa" firstAttribute="trailing" secondItem="Q5M-cg-NOt" secondAttribute="trailing" id="jQS-UR-KmC"/>
-                <constraint firstItem="cnT-zD-TkH" firstAttribute="bottom" secondItem="Q5M-cg-NOt" secondAttribute="bottom" id="lJx-O8-MfU"/>
                 <constraint firstItem="VWl-Xu-qbU" firstAttribute="leading" secondItem="Q5M-cg-NOt" secondAttribute="leading" id="lPt-tD-URg"/>
                 <constraint firstItem="03U-WL-y5H" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="20" id="nb4-Qm-W0S"/>
-                <constraint firstItem="cnT-zD-TkH" firstAttribute="trailing" secondItem="Q5M-cg-NOt" secondAttribute="trailing" id="nli-0D-RtE"/>
-                <constraint firstItem="cnT-zD-TkH" firstAttribute="leading" secondItem="77j-hp-WRx" secondAttribute="trailing" id="qNw-fD-rie"/>
                 <constraint firstItem="84D-2H-7Aa" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="qWN-Vw-Ojw"/>
                 <constraint firstItem="VWl-Xu-qbU" firstAttribute="top" secondItem="Q5M-cg-NOt" secondAttribute="top" id="vSf-c4-oeQ"/>
                 <constraint firstItem="03U-WL-y5H" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="-170" id="zvK-Na-VKN"/>
@@ -307,7 +366,10 @@
         </view>
     </objects>
     <resources>
+        <image name="flight-bg.png" width="162" height="135"/>
+        <image name="flight-button-bg.png" width="90" height="24"/>
         <image name="icon-back_gray.png" width="22" height="18"/>
+        <image name="icon-change.png" width="22" height="19"/>
         <image name="icon-frash.png" width="24" height="22"/>
         <image name="icon-menu-more.png" width="6" height="4"/>
         <image name="icon-syn.png" width="21" height="21"/>

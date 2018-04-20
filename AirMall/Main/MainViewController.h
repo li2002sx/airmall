@@ -14,6 +14,7 @@
 #import "ShrinkMenuTableViewCell.h"
 #import "OpenMenuTableViewCell.h"
 #import "CommonDB.h"
+#import "StaffDB.h"
 #import "ReceiptDB.h"
 #import "OrderDB.h"
 #import "HMScannerController.h"
@@ -48,7 +49,13 @@
 
 @property (weak, nonatomic) IBOutlet UIView *openView;
 
+@property (weak, nonatomic) IBOutlet UIView *changeFlightView;
+
 @property (weak, nonatomic) IBOutlet UITableView *openTableView;
+
+- (IBAction)changeFlightPressed:(id)sender;
+
+@property (weak, nonatomic) IBOutlet UIImageView *flightBGImageView;
 
 @property (weak, nonatomic) IBOutlet UIButton *synButtom;
 
@@ -67,5 +74,8 @@
 @property (copy, nonatomic) NSString *lastChosenMediaType;
 
 @property (strong, nonatomic) UIImage *chosenImage;
+
+- (IBAction)changeFlightBtnPressed:(id)sender;
+
 
 @end
