@@ -43,14 +43,14 @@ typedef void (^Progress)(NSProgress *progress);
 +(void)post:(NSString *)url params:(NSMutableDictionary *)params success:(Success)success fail:(Fail)fail;
 
 /**
- *  上传文件
+* 上传文件
  */
 +(void)upload:(NSString *)url params:(NSMutableDictionary *)params fileData:(NSData *)filedata
          name:(NSString *)name fileName:(NSString *)filename mimeType:(NSString *) mimeType
      progress:(Progress)progress success:(Success)success fail:(Fail)fail;
 
 /**
- *  下载文件
+* 下载文件
  */
 +(NSURLSessionDownloadTask *)down:(NSString *)url saveUrl:(NSURL *)fileUrl
                          progress:(Progress )progress success:(void (^)(NSURLResponse *, NSURL *))success

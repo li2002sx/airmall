@@ -74,17 +74,17 @@
                         NSString* logStr = [NSString stringWithFormat:@"SKU:%@ 确认收货:%ld 破损:%ld",sku,confirmCount,damagedCount];
                         [logStrArray addObject:logStr];
                         
-                        where = [NSString stringWithFormat:@"where FlightNo ='%@' and FlightDate='%@' and Sku='%@' and DiningCarNo = '%@'",flightNo,flightDate,sku,diningCarNo];
+                        where = [NSString stringWithFormat:@"where FlightNo ='%@' and FlightDate='%@' and Sku='%@'",flightNo,flightDate,sku];
                         NSArray* arr = [Inventory bg_find:@"Inventory" where:where];
                         if([arr count] > 0){
-                            where = [NSString stringWithFormat:@"set Qty=Qty+%ld where FlightNo ='%@' and FlightDate='%@' and Sku='%@' and DiningCarNo = '%@'",confirmCount ,flightNo,flightDate,sku,diningCarNo];
+                            where = [NSString stringWithFormat:@"set Qty=Qty+%ld where FlightNo ='%@' and FlightDate='%@' and Sku='%@'",confirmCount ,flightNo,flightDate,sku];
                             [Inventory bg_update:@"Inventory" where:where];
                         }else{
-                            sql=[NSString stringWithFormat:@"INSERT INTO Inventory(FlightNo,FlightDate,ProductID,ProductItemID,Sku,DiningCarNo,Barcode,ProductName,Unit,Qty) values('%@','%@',%ld,%ld,'%@','%@','%@','%@','%@',%ld)",flightNo,flightDate,product.ProductID,productItem.ProductItemID,sku,diningCarNo,productItem.Barcode,product.ProductName,product.Unit,confirmCount];
+                            sql=[NSString stringWithFormat:@"INSERT INTO Inventory(FlightNo,FlightDate,ProductID,ProductItemID,Sku,Barcode,ProductName,Unit,Qty) values('%@','%@',%ld,%ld,'%@','%@','%@','%@',%ld)",flightNo,flightDate,product.ProductID,productItem.ProductItemID,sku,productItem.Barcode,product.ProductName,product.Unit,confirmCount];
                             bg_executeSql(sql, nil, nil);
                         }
                         if(damagedCount>0){
-                            sql= [NSString stringWithFormat:@"INSERT INTO DamageItem(DamagedNo,ProductID,ProductItemID,Sku,Barcode,ProductName,Unit,Quantity,DamagedReason,Remark) values('%@',%ld,%ld,'%@','%@','%@','%@',%ld,'%@','%@')",damagedNo,product.ProductID,productItem.ProductItemID,sku,productItem.Barcode,product.ProductName,product.Unit,damagedCount,receiptSku.damagedReason,receiptSku.damagedReasonDesc];
+                            sql= [NSString stringWithFormat:@"INSERT INTO DamageItem(DamagedNo,ProductID,ProductItemID,Sku,DiningCarNo,Barcode,ProductName,Unit,Quantity,DamagedReason,Remark) values('%@',%ld,%ld,'%@','%@','%@','%@','%@',%ld,'%@','%@')",damagedNo,product.ProductID,productItem.ProductItemID,sku,diningCarNo,productItem.Barcode,product.ProductName,product.Unit,damagedCount,receiptSku.damagedReason,receiptSku.damagedReasonDesc];
                             bg_executeSql(sql, nil, nil);
                             
                             if([receiptSku.imageBase64s count] > 0){
@@ -225,7 +225,7 @@
         
         NSMutableArray* skuArr = [NSMutableArray new];
         for(id item in inventoryParam.inventoryList){
-            [skuArr addObject:[NSString stringWithFormat:@"'%@'",[item objectForKey:@"sku"]]];
+            [skuArr addObject:[NSString stringWithFormat:@"'%@'",[item valueForKey:@"sku"]]];
         }
         
         NSMutableDictionary* skuDicts = [ProductDB getProductItemListBySkus:skuArr];
@@ -250,7 +250,7 @@
                 ProductItem* productItem = [skuDicts valueForKey:sku];
                 ProductList* product = [productDicts objectForKey:@(productItem.ProductID)];
                 
-                sql = [NSString stringWithFormat:@"INSERT INTO HandoverItem (HandoverNo,DiningCarNo,ProductID,ProductItemID,Sku,Barcode, ProductName,Unit,HandoverCounts,HandoverDamagedCounts,UndertakeCounts,UndertakeDamagedCounts,Remark) VALUES ('%@','%@',%ld,%ld,'%@','%@','%@','%@',%ld,%ld,0,0,'')",handoverNo,diningCarNo,product.ProductID,productItem.ProductItemID,sku,productItem.Barcode,product.ProductName,product.Unit,handoverCount,damagedCount];
+                sql = [NSString stringWithFormat:@"INSERT INTO HandoverItem (HandoverNo,ProductID,ProductItemID,Sku,Barcode, ProductName,Unit,HandoverCounts,HandoverDamagedCounts,UndertakeCounts,UndertakeDamagedCounts,Remark) VALUES ('%@',%ld,%ld,'%@','%@','%@','%@',%ld,%ld,0,0,'')",handoverNo,product.ProductID,productItem.ProductItemID,sku,productItem.Barcode,product.ProductName,product.Unit,handoverCount,damagedCount];
                 bg_executeSql(sql, nil, nil);
                 totalHandoverCount += handoverCount;
                 totalDamagedCount+= damagedCount;
@@ -334,7 +334,7 @@
                          ProductItem* productItem = [skuDicts valueForKey:sku];
                          ProductList* product = [productDicts objectForKey:@(productItem.ProductID)];
                          
-                         NSString* where = [NSString stringWithFormat:@"set UndertakeCounts=%ld,UndertakeDamagedCounts=%ld,Remark='%@' where HandoverNo = '%@' and sku = '%@' and DiningCarNo = '%@'",handoverCount,damagedCount,transferSku.damagedReasonDesc,handoverNo,sku,diningCarNo];
+                         NSString* where = [NSString stringWithFormat:@"set UndertakeCounts=%ld,UndertakeDamagedCounts=%ld,Remark='%@' where HandoverNo = '%@' and sku = '%@'",handoverCount,damagedCount,transferSku.damagedReasonDesc,handoverNo,sku];
                          [HandoverItem bg_update:@"HandoverItem" where:where];
                          
                          totalTransferCount += handoverCount;
@@ -343,13 +343,13 @@
                          NSString* logStr = [NSString stringWithFormat:@"SKU:%@ 确认承接:%ld 破损:%ld",sku,handoverCount,damagedCount];
                          [logStrArray addObject:logStr];
                          
-                         where = [NSString stringWithFormat:@"where FlightNo ='%@' and FlightDate='%@' and Sku='%@' and DiningCarNo = '%@'",flightNo,flightDate,sku,diningCarNo];
+                         where = [NSString stringWithFormat:@"where FlightNo ='%@' and FlightDate='%@' and Sku='%@'",flightNo,flightDate,sku];
                          NSArray* arr = [Inventory bg_find:@"Inventory" where:where];
                          if([arr count] > 0){
-                             where = [NSString stringWithFormat:@"set Qty=Qty+%ld where FlightNo ='%@' and FlightDate='%@' and Sku='%@' and DiningCarNo = '%@'",handoverCount ,flightNo,flightDate,sku,diningCarNo];
+                             where = [NSString stringWithFormat:@"set Qty=Qty+%ld where FlightNo ='%@' and FlightDate='%@' and Sku='%@'",handoverCount ,flightNo,flightDate,sku];
                              [Inventory bg_update:@"Inventory" where:where];
                          }else{
-                             sql=[NSString stringWithFormat:@"INSERT INTO Inventory(FlightNo,FlightDate,ProductID,ProductItemID,Sku,DiningCarNo,Barcode,ProductName,Unit,Qty) values('%@','%@',%ld,%ld,'%@','%@','%@','%@','%@',%ld)",flightNo,flightDate,product.ProductID,productItem.ProductItemID,sku,diningCarNo,productItem.Barcode,product.ProductName,product.Unit,handoverCount];
+                             sql=[NSString stringWithFormat:@"INSERT INTO Inventory(FlightNo,FlightDate,ProductID,ProductItemID,Sku,Barcode,ProductName,Unit,Qty) values('%@','%@',%ld,%ld,'%@','%@','%@','%@',%ld)",flightNo,flightDate,product.ProductID,productItem.ProductItemID,sku,productItem.Barcode,product.ProductName,product.Unit,handoverCount];
                              bg_executeSql(sql, nil, nil);
                          }
                          if(damagedCount>0){
@@ -403,9 +403,163 @@
     return json;
 }
 
++ (void) inventoryChange:(NSString*) newFlightNo oldFlightNo:(NSString*)oldFlightNo flightDate:(NSString*)flightDate{
+    
+    NSString* where = [NSString stringWithFormat:@"where FlightNo ='%@' and FlightDate='%@'",oldFlightNo,flightDate];
+    NSArray* arr = [Inventory bg_find:@"Inventory" where:where];
+    if([arr count] == 0){
+        NSString* sql =[NSString stringWithFormat:@"INSERT INTO Inventory (FlightNo,FlightDate,ProductID,ProductItemID,Sku,DiningCarNo,Barcode,ProductName,Unit,Qty) SELECT '%@','FlightDate','ProductID','ProductItemID','Sku','DiningCarNo','Barcode','ProductName','Unit','Qty' FROM Inventory WHERE FlightNo = '%@' AND FlightDate ='%@'",newFlightNo,oldFlightNo,flightDate];
+         bg_executeSql(sql, nil, nil);
+    }
+}
+
++ (NSString*) autoInventory:(NSDictionary*) userDict{
+    CommonResult* result = [CommonResult new];
+    [result setStatus:1];
+    
+    NSString* where = [NSString stringWithFormat:@"where FlightNo ='%@' and FlightDate='%@'",[userDict valueForKey:@"FlightNo"],[userDict valueForKey:@"FlightDate"]];
+    NSArray* arr = [Inventory bg_find:@"Inventory" where:where];
+    if([arr count] > 0){
+        NSMutableArray* skus = [NSMutableArray new];
+        for(id item in arr){
+            NSString * sku = [item valueForKey:@"Sku"];
+            InventorySku* inventorySku = [InventorySku new];
+            inventorySku.sku = sku;
+            inventorySku.handoverCount = [[item valueForKey:@"Qty"] integerValue];
+            inventorySku.damagedCount = 0;
+            [inventorySku setSku:sku];
+            [skus addObject:inventorySku];
+        }
+        InventoryParam* param = [InventoryParam new];
+        param.inventoryList = skus;
+        [self inventory:param userDict:userDict];
+    }
+    NSString* json = [result yy_modelToJSONObject];
+    return json;
+}
+
++(NSString*) lastReturn:(LastReturnParam*) lastReturnParam userDict:(NSDictionary*) userDict{
+    
+    CommonResult* result = [CommonResult new];
+    [result setStatus:0];
+    
+    if([lastReturnParam.lastReturnList count]>0){
+        
+        NSString* empNo = [userDict valueForKey:@"EmpNo"];
+        NSString* empName = [userDict valueForKey:@"EmpName"];
+        NSString* flightNo = [userDict valueForKey:@"FlightNo"];
+        NSString* flightDate = [userDict valueForKey:@"FlightDate"];
+        NSString* tailNo = [userDict valueForKey:@"TailNo"];
+        NSString* acType = [userDict valueForKey:@"ACType"];
+        NSString* deviceNo = [userDict valueForKey:@"DeviceNo"];
+        
+        NSString* lastReturnNo = [self createNo:@"RE" flightNo:flightNo flightDate:flightDate];
+        
+        NSString* damagedNo = [self createNo:@"B" flightNo:flightNo flightDate:flightDate];
+        
+        NSMutableArray* skuArr = [NSMutableArray new];
+        for(id item in lastReturnParam.lastReturnList){
+            [skuArr addObject:[NSString stringWithFormat:@"'%@'",[item objectForKey:@"sku"]]];
+        }
+        
+        NSMutableDictionary* skuDicts = [ProductDB getProductItemListBySkus:skuArr];
+        NSMutableDictionary* productDicts = [ProductDB getProductListBySkus:skuArr];
+        
+        if([skuDicts count] > 0 && [productDicts count] > 0){
+            
+            NSMutableArray* logStrArray = [NSMutableArray new];
+            NSString* sql = nil;
+            
+            NSInteger totalReturnCount = 0;
+            NSInteger totalDamagedCount = 0;
+            for(id item in lastReturnParam.lastReturnList){
+                NSString* json = [item yy_modelToJSONString];
+                LastReturnSku* lastReturnSku = [LastReturnSku yy_modelWithJSON:json];
+                
+                NSString* sku = lastReturnSku.sku;
+                NSInteger returnCount = lastReturnSku.returnCount;
+                NSInteger damagedCount = lastReturnSku.damagedCount;
+                NSString* diningCarNo = lastReturnSku.diningCarNo;
+                
+                ProductItem* productItem = [skuDicts valueForKey:sku];
+                ProductList* product = [productDicts objectForKey:@(productItem.ProductID)];
+                
+                sql = [NSString stringWithFormat:@"INSERT INTO LastReturnOrderItem (ReturnOrderNo,ProductID,ProductItemID,Sku,DiningCarNo,Barcode, ProductName,Unit,Remark) VALUES ('%@',%ld,%ld,'%@','%@','%@','%@','%@','')",lastReturnNo,product.ProductID,productItem.ProductItemID,sku,diningCarNo,productItem.Barcode,product.ProductName,product.Unit];
+                bg_executeSql(sql, nil, nil);
+                totalReturnCount += returnCount;
+                totalDamagedCount+= damagedCount;
+                
+                NSString* logStr = [NSString stringWithFormat:@"SKU:%@ 末班退回:%ld 破损:%ld",sku,totalReturnCount,damagedCount];
+                [logStrArray addObject:logStr];
+                
+                if(damagedCount>0){
+                    sql= [NSString stringWithFormat:@"INSERT INTO DamageItem(DamagedNo,ProductID,ProductItemID,Sku,DiningCarNo,Barcode,ProductName,Unit,Quantity,DamagedReason,Remark) values('%@',%ld,%ld,'%@','%@','%@','%@','%@',%ld,'%@','%@')",damagedNo,product.ProductID,productItem.ProductItemID,sku,diningCarNo,productItem.Barcode,product.ProductName,product.Unit,damagedCount,lastReturnSku.damagedReason,lastReturnSku.damagedReasonDesc];
+                    bg_executeSql(sql, nil, nil);
+                    
+                    if([lastReturnSku.imageBase64s count] > 0){
+                        for(NSString* image in lastReturnSku.imageBase64s){
+                            sql= [NSString stringWithFormat:@"INSERT INTO DamagedProductPicture(DamagedNo,ProductID,ProductItemID,Sku,PictureUrl) values('%@',%ld,%ld,'%@','%@')",damagedNo,product.ProductID,productItem.ProductItemID,sku,image];
+                            bg_executeSql(sql, nil, nil);
+                        }
+                    }
+                }
+            }
+            
+            if(totalDamagedCount > 0){
+                sql = [NSString stringWithFormat:@"INSERT INTO DamageList(DamagedNo,FlightNo,FlightDate,EmpNo,DeviceNo,DamagedCounts,CreateTime,Remark) VALUES ('%@','%@','%@','%@','%@',%ld,datetime('now','localtime'),'%@')",damagedNo,flightNo,flightDate,empNo,deviceNo,totalDamagedCount,@""];
+                bg_executeSql(sql, nil, nil);
+            }
+            
+            sql = [NSString stringWithFormat:@"INSERT INTO LastReturnOrder (ReturnOrderNo,FlightNo,FlightDate,EmpNo,DeviceNo,CreateTime)VALUES ('%@','%@','%@','%@','%@',datetime('now','localtime'))",lastReturnNo,flightNo,flightDate,empNo,deviceNo];
+            bg_executeSql(sql, nil, nil);
+            
+            LogList* log = [LogList new];
+            log.EmpNo = empNo;
+            log.FlightNo = flightNo;
+            log.FlightDate = [userDict valueForKey:@"FlightDate"];
+            log.Category = @"操作信息";
+            log.DeviceNo = deviceNo;
+            log.Type = @"末班退回";
+            log.Describe = [logStrArray componentsJoinedByString:@", "];
+            [LogDB createLog:log];
+            
+            [result setStatus:1];
+            [result setMessage:@"提交末班退回单成功"];
+            
+        }else{
+            [result setMessage:@"没有找到对应的商品信息"];
+        }
+    }else{
+        [result setMessage:@"退回的商品不能为空"];
+    }
+    
+    NSString* json = [result yy_modelToJSONObject];
+    return json;
+}
+
 +(BOOL) hasNotTrans:(NSString*) flightNo flightDate:(NSString*) flightDate tailNo:(NSString*) tailNo acType:(NSString*)acType{
     
     NSString* sql = [NSString stringWithFormat:@"SELECT * FROM HandoverMaster WHERE PreFlightNo = '%@' AND FlightDate = '%@' AND TailNo = '%@' AND ACType ='%@' AND Status = 0",flightNo,flightDate, tailNo, acType];
+    
+    NSArray* arr = bg_executeSql(sql, nil, nil);
+    if([arr count]>0){
+        return YES;
+    }
+    
+    return NO;
+}
+
++(void) createReportLog:(NSString*) flightNo flightDate:(NSString*) flightDate empNo:(NSString*) empNo{
+    ReportLog* reportLog = [ReportLog new];
+    [reportLog setFlightNo:flightNo];
+    [reportLog setFlightDate:flightDate];
+    [reportLog setEmpNo:empNo];
+    [reportLog bg_save];
+}
+
++(BOOL) hasReportOrder:(NSString*) flightNo flightDate:(NSString*) flightDate empNo:(NSString*) empNo{
+    
+    NSString* sql = [NSString stringWithFormat:@"SELECT * FROM ReportLog WHERE FlightNo = '%@' AND FlightDate = '%@' AND EmpNo = '%@'",flightNo,flightDate, empNo];
     
     NSArray* arr = bg_executeSql(sql, nil, nil);
     if([arr count]>0){
@@ -497,7 +651,7 @@
     
     filePath = [NSString stringWithFormat:@"%@/ReceiptList.json",uploadPath];
     [fileManager removeItemAtPath:filePath error:nil];
-    where = [NSString stringWithFormat:@"where syn is null or syn = 0"];
+    where = [NSString stringWithFormat:@"where (DeliveryType = 2 or (DeliveryType = 1 and DeliveryStatus = 1)) and (syn is null or syn = 0)"];
     NSArray* receiptArr = [ReceiptList bg_find:@"ReceiptList" where:where];
     if([receiptArr count] > 0){
         
@@ -509,8 +663,26 @@
         
         [fileManager createFileAtPath:filePath contents:[[receiptArr yy_modelToJSONString] dataUsingEncoding:NSUTF8StringEncoding] attributes:nil];
         
-        where = [NSString stringWithFormat:@"set syn = 1 where syn is null or syn = 0"];
+        where = [NSString stringWithFormat:@"set syn = 1 where (DeliveryType = 2 or (DeliveryType = 1 and DeliveryStatus = 1)) and (syn is null or syn = 0)"];
         [ReceiptList bg_update:@"ReceiptList" where:where];
+    }
+    
+    filePath = [NSString stringWithFormat:@"%@/LastReturnOrder.json",uploadPath];
+    [fileManager removeItemAtPath:filePath error:nil];
+    where = [NSString stringWithFormat:@"where syn is null"];
+    NSArray* lastReturnOrderArr = [LastReturnOrder bg_find:@"LastReturnOrder" where:where];
+    if([lastReturnOrderArr count] > 0){
+        
+        for(LastReturnOrder* returnOrder in lastReturnOrderArr){
+            where = [NSString stringWithFormat:@"where ReturnOrderNo = '%@'",returnOrder.ReturnOrderNo];
+            NSArray* returnItemArr = [LastReturnOrderItem bg_find:@"LastReturnOrderItem" where:where];
+            [returnOrder setItems:returnItemArr];
+        }
+        
+        [fileManager createFileAtPath:filePath contents:[[lastReturnOrderArr yy_modelToJSONString] dataUsingEncoding:NSUTF8StringEncoding] attributes:nil];
+        
+        where = [NSString stringWithFormat:@"set syn = 1 where syn is null"];
+        [LastReturnOrder bg_update:@"LastReturnOrder" where:where];
     }
     
     filePath = [NSString stringWithFormat:@"%@/SalesOrder.json",uploadPath];

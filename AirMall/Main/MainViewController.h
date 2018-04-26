@@ -75,7 +75,10 @@
 
 @property (strong, nonatomic) UIImage *chosenImage;
 
+@property (weak, nonatomic) IBOutlet UIButton *changeFlightBtn;
+
 - (IBAction)changeFlightBtnPressed:(id)sender;
 
+@property (weak, nonatomic) IBOutlet UIView *bgView;
 
 @end

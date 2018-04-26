@@ -26,4 +26,6 @@
 
 @property NSArray<LastReturnOrderItem*>* Items;
 
+@property(nonatomic)NSInteger Syn;
+
 @end

@@ -29,6 +29,7 @@
 #import "FlightPerformance.h"
 #import "LastReturnOrder.h"
 #import "LastReturnOrderItem.h"
+#import "ReportLog.h"
 #import "SynInfoTableViewCell.h"
 #import "SSZipArchive.h"
 #import "Reachability.h"

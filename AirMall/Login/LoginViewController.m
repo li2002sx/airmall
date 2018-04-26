@@ -53,8 +53,8 @@
     
     _synCount = 0;
     
-    _synProgressValue = 0;
-    _isDownFinished = NO;
+    _synProgressView.trackTintColor = [UIColor whiteColor];
+    _synProgressView.transform = CGAffineTransformMakeScale(1.0f,2.5f);
     
     _dataDwonOver = false;
     _picDownOver = false;
@@ -141,13 +141,13 @@
     
     NSString *flightNo = [_filedFlightNo.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
     if ([flightNo length] <= 3) {
-        [CommonUtil showOnlyText:self.view tips:@"航班号不能为空"];
+        [CommonUtil showOnlyText:self.view tips:@"航班号不能为空"];
         return;
     }
     
     NSString *flightDate = [_fieldDate.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
     if ([flightDate length] <= 3) {
-        [CommonUtil showOnlyText:self.view tips:@"航班日期不能为空"];
+        [CommonUtil showOnlyText:self.view tips:@"航班日期不能为空"];
         return;
     }
     
@@ -360,6 +360,18 @@
                     }
                 }
 //                [self process:arr type:1];
+            }else if([fileName isEqualToString:@"FlightPerformance.json"]){
+                
+                //                NSMutableArray* arr = [_tableViewDict objectForKey:@"receipt"];
+                //                [self process:arr type:0];
+                
+                [FlightPerformance bg_clear:@"FlightPerformance"];
+                
+                NSArray* performanceArr =  [NSArray yy_modelArrayWithClass:[FlightPerformance class] json:json];
+                for(FlightPerformance* performance in performanceArr){
+                        [performance bg_save];
+                }
+                //                [self process:arr type:1];
             }else if([fileName isEqualToString:@"ScheduleInfo.json"]){
                 
                 NSMutableArray* arr = [_tableViewDict objectForKey:@"schedule"];
@@ -391,7 +403,7 @@
         [manager removeItemAtPath:unzipPath error:nil];
         _picDownOver = true;
     }
-//    [manager removeItemAtPath:zipPath error:nil];
+    [manager removeItemAtPath:zipPath error:nil];
     if(_dataDwonOver){
         [_synButtom setEnabled:YES];
         [_finishLabel setHidden:NO];
@@ -554,6 +566,12 @@
         [_fieldPass setEnabled:YES];
         [_loginButton setEnabled:YES];
     }else{
+        _synProgressValue = 0;
+        _isDownFinished = NO;
+        [_synProgressView setProgress:_synProgressValue];
+        [_finishLabel setHidden:YES];
+        [_loginSwitch setOn:NO];
+        
         [_filedFlightNo setEnabled:NO];
         [_fieldDate setEnabled:NO];
         [_changeDateButton setEnabled:NO];
@@ -561,10 +579,10 @@
         [_fieldPass setEnabled:NO];
         [_loginButton setEnabled:NO];
         
-//        [_filedFlightNo setText:@"KN"];
-//        [_fieldDate setText:@""];
-//        [_fieldName setText:@""];
-//        [_fieldPass setText:@""];
+        [_filedFlightNo setText:@"KN"];
+        [_fieldDate setText:@""];
+        [_fieldName setText:@""];
+        [_fieldPass setText:@""];
         
         _tableViewDict = [NSMutableDictionary new];
         [_synTableView reloadData];
@@ -583,7 +601,7 @@
 -(void) noSignal{
     _wifiImageView.image = [UIImage imageNamed:@"icon-wifi-0"];
     _wifiLabel.text = @"请切换到4G";
-    [CommonUtil showOnlyText:self.view tips:@"当前无网络连接"];
+//    [CommonUtil showOnlyText:self.view tips:@"当前无网络连接"];
     [_synButtom setEnabled:NO];
 }
 
@@ -665,7 +683,7 @@
 }
 
 -(void) startGCDTimer{
-    NSTimeInterval period = 0.1; //设置时间间隔
+    NSTimeInterval period = 0.5; //设置时间间隔
     dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
     _timer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, queue);
     dispatch_source_set_timer(_timer, dispatch_walltime(NULL, 0), period * NSEC_PER_SEC, 0); //每秒执行
@@ -759,6 +777,9 @@
     
     LastReturnOrderItem* lastReturnOrderItem = [LastReturnOrderItem new];
     [lastReturnOrderItem bg_createTable];
+    
+    ReportLog* reportLog = [ReportLog new];
+    [reportLog bg_createTable];
 }
 
 - (void) viewWillDisappear:(BOOL)animated{

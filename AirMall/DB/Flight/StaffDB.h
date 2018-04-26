@@ -25,4 +25,6 @@
 
 +(NSArray*) getNotFlightList:(NSString*)empNo flightDate:(NSString*) flightDate;
 
++(LoginInfoResult*) changeFlight:(NSString*) flightNo flightDate:(NSString*) flightDate empNo:(NSString*) empNo deviceNo:(NSString*)deviceNo;
+
 @end

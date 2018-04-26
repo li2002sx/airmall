@@ -191,7 +191,7 @@
 /// 准备扫描框
 - (void)prepareScanerBorder {
     
-    CGFloat width = self.view.bounds.size.width - 600;
+    CGFloat width = self.view.bounds.size.width - 450;
     scannerBorder = [[HMScannerBorder alloc] initWithFrame:CGRectMake(0, 0, width, width)];
     
     scannerBorder.center = self.view.center;

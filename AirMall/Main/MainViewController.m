@@ -25,6 +25,10 @@
     
     BOOL _dataDwonOver;
     BOOL _picDownOver;
+    
+    NSArray* _notFlights;
+    
+    NSString* _selectedFlightNo;
 }
 
 @property WebViewJavascriptBridge *bridge;
@@ -55,9 +59,58 @@
     
     _synCount = 0;
     
+    _selectedFlightNo = @"";
+    
     _dataDwonOver = false;
     _picDownOver = false;
     
+    [self initUserInfo];
+    
+    _tableViewArr = [NSMutableArray arrayWithObjects:[NSMutableArray arrayWithObjects:@"icon-menu",@"LOGO",@"", nil],[NSMutableArray arrayWithObjects:@"icon-hangban-select",@"航班信息",@"Index", nil],[NSMutableArray arrayWithObjects:@"icon-huanban",@"换班交接",@"AssociateManage", nil],[NSMutableArray arrayWithObjects:@"icon-goods",@"商品列表",@"ProductList", nil],[NSMutableArray arrayWithObjects:@"icon-cart",@"订单列表",@"OrderList", nil],[NSMutableArray arrayWithObjects:@"icon-store",@"库存管理",@"Query", nil],[NSMutableArray arrayWithObjects:@"icon-log",@"日志查询",@"Log", nil],[NSMutableArray arrayWithObjects:@"icon-logout",@"账号退出",@"", nil], nil];
+    //,[NSMutableArray arrayWithObjects:@"icon-log",@"DEMO",@"", nil]
+    
+    _hasNotTrans = [self hasNotTransfer];
+    
+    _shrinkTableView.dataSource = self;
+    _shrinkTableView.delegate = self;
+    _shrinkTableView.scrollEnabled = NO;
+    
+    _openTableView.dataSource = self;
+    _openTableView.delegate = self;
+    _shrinkTableView.scrollEnabled = NO;
+    
+    
+    // Show in popup
+    _layout = KLCPopupLayoutMake(KLCPopupHorizontalLayoutLeft,KLCPopupVerticalLayoutTop);
+    
+    _popup = [KLCPopup popupWithContentView:_openView showType:KLCPopupShowTypeSlideInFromLeft dismissType:KLCPopupDismissTypeSlideOutToLeft maskType:KLCPopupMaskTypeDimmed dismissOnBackgroundTouch:YES dismissOnContentTouch:NO];
+    // Do any additional setup after loading the view from its nib.
+    
+    _shrinkView.layer.shadowColor = [UIColor colorWithHexString:@"22304d"].CGColor;;//shadowColor阴影颜色
+    _shrinkView.layer.shadowOffset = CGSizeMake(3,3);//shadowOffset阴影偏移,x向右偏移4，y向下偏移4，默认(0, -3),这个跟shadowRadius配合使用
+    _shrinkView.layer.shadowOpacity = 0.1;//阴影透明度，默认0
+    _shrinkView.layer.shadowRadius = 2;//阴影半径，默认3
+    
+    _webView.scrollView.bounces = false;
+    
+    [self loadHtmlUrl:@"index"];
+    //    [self loadHtmlPage:@"Index"];
+    
+    [self initLayer];
+    [self brigeInit];
+    
+    [self initNotFlights];
+    
+    UITapGestureRecognizer *tapGesturRecognizer=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(bgTapAction:)];
+    [_bgView addGestureRecognizer:tapGesturRecognizer];
+}
+
+-(void)bgTapAction:(id)tap{
+    [_bgView setHidden:YES];
+    [_changeFlightView setHidden:YES];
+}
+
+- (void)initUserInfo{
     _userDict = [NSKeyedUnarchiver unarchiveObjectWithData:[_userInfo objectForKey:_UserKey]];
     _thisFlightNoLabel.text = [NSString stringWithFormat:@"%@%@",[_userDict objectForKey:@"Carrier"],[_userDict objectForKey:@"FlightNo"]];
     id preFilghtNo = [_userDict objectForKey:@"PreFlightNo"];
@@ -91,76 +144,69 @@
         //        _empPhotoImageView.layer.borderWidth = 1.5f;//宽度
         //        _empPhotoImageView.layer.borderColor = [UIColor whiteColor].CGColor;//颜色
     }
-//    if(avatarBase64 != [NSNull null] && [avatarBase64 length] > 0){
-//
-//    }
-    
-    _tableViewArr = [NSMutableArray arrayWithObjects:[NSMutableArray arrayWithObjects:@"icon-menu",@"LOGO",@"", nil],[NSMutableArray arrayWithObjects:@"icon-hangban-select",@"航班信息",@"Index", nil],[NSMutableArray arrayWithObjects:@"icon-huanban",@"换班交接",@"AssociateManage", nil],[NSMutableArray arrayWithObjects:@"icon-goods",@"商品列表",@"ProductList", nil],[NSMutableArray arrayWithObjects:@"icon-cart",@"订单列表",@"OrderList", nil],[NSMutableArray arrayWithObjects:@"icon-store",@"库存管理",@"Query", nil],[NSMutableArray arrayWithObjects:@"icon-log",@"日志查询",@"Log", nil],[NSMutableArray arrayWithObjects:@"icon-logout",@"账号退出",@"", nil], nil];
-//      ,[NSMutableArray arrayWithObjects:@"icon-log",@"DEMO",@"", nil]
-    
-    _hasNotTrans = [self hasNotTransfer];
-    
-    _shrinkTableView.dataSource = self;
-    _shrinkTableView.delegate = self;
-    _shrinkTableView.scrollEnabled = NO;
-    
-    _openTableView.dataSource = self;
-    _openTableView.delegate = self;
-    _shrinkTableView.scrollEnabled = NO;
-    
-    
-    // Show in popup
-    _layout = KLCPopupLayoutMake(KLCPopupHorizontalLayoutLeft,KLCPopupVerticalLayoutTop);
-    
-    _popup = [KLCPopup popupWithContentView:_openView showType:KLCPopupShowTypeSlideInFromLeft dismissType:KLCPopupDismissTypeSlideOutToLeft maskType:KLCPopupMaskTypeDimmed dismissOnBackgroundTouch:YES dismissOnContentTouch:NO];
-    // Do any additional setup after loading the view from its nib.
-    
-    _shrinkView.layer.shadowColor = [UIColor colorWithHexString:@"22304d"].CGColor;;//shadowColor阴影颜色
-    _shrinkView.layer.shadowOffset = CGSizeMake(3,3);//shadowOffset阴影偏移,x向右偏移4，y向下偏移4，默认(0, -3),这个跟shadowRadius配合使用
-    _shrinkView.layer.shadowOpacity = 0.1;//阴影透明度，默认0
-    _shrinkView.layer.shadowRadius = 2;//阴影半径，默认3
-    
-    _webView.scrollView.bounces = false;
-    
-    [self loadHtmlUrl:@"index"];
-//    [self loadHtmlPage:@"Index"];
-    
-    [self initLayer];
-    [self brigeInit];
-    
-    [self initNotFlights];
+    //    if(avatarBase64 != [NSNull null] && [avatarBase64 length] > 0){
+    //
+    //    }
 }
 
 - (void)initNotFlights{
-    NSArray* arr = [StaffDB getNotFlightList:[_userDict objectForKey:@"EmpNo"] flightDate:[_userDict objectForKey:@"FlightDate"]];
-    if([arr count] > 0){
+    _notFlights = [StaffDB getNotFlightList:[_userDict objectForKey:@"EmpNo"] flightDate:[_userDict objectForKey:@"FlightDate"]];
+    if([_notFlights count] > 0){
         int i = 0;
-        for(id item in arr){
-            NSString* fligthNo = [item valueForKey:@"FlightNo"];
+        for(id item in _notFlights){
+            NSString* flightNum = [item valueForKey:@"FlightNo"];
+            NSString* fligthNo = [NSString stringWithFormat:@"%@%@",[item valueForKey:@"Carrier"],flightNum];
             UIButton  *button=[UIButton buttonWithType:UIButtonTypeCustom];
-            button.frame=CGRectMake(i%2==0?20:82, (i/2)*30 + 52, 57, 25);
+            button.frame=CGRectMake(i%2==0?20:85, (i/2)*30 + 45, 60, 22);
             [button setTitle:fligthNo forState:UIControlStateNormal];
             [button setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
             //设置button上的字体大小
             button.titleLabel.font=[UIFont systemFontOfSize:12];
             i++;
+            button.tag = i * 100;
             [button addTarget:self action:@selector(selectFlight:) forControlEvents:UIControlEventTouchUpInside];
             [_changeFlightView addSubview:button];
         }
         
         UIImage* image = _flightBGImageView.image;
+        CGSize imageSize = image.size;
+        CGFloat width = imageSize.width;
+        CGFloat height = imageSize.height;
         
-        CGFloat top = 25; // 顶端盖高度
-        CGFloat bottom = 25 ; // 底端盖高度
-        CGFloat left = 10; // 左端盖宽度
-        CGFloat right = 10; // 右端盖宽度
-        UIEdgeInsets insets = UIEdgeInsetsMake(top, left, bottom, right);
+        UIEdgeInsets insets = UIEdgeInsetsMake(height*0.5,width*0.5,height*0.5,width*0.5);
         // 指定为拉伸模式，伸缩后重新赋值
         image = [image resizableImageWithCapInsets:insets resizingMode:UIImageResizingModeStretch];
+        
+        double count = (double)[_notFlights count];
+        
+        NSInteger num = ceil(count / 2);
+        
+        CGFloat viewHeight = 135 + (num - 1) * 22;
+        
+        _flightBGImageView.frame = CGRectMake(0,0,162,viewHeight);
+        [_flightBGImageView setImage:image];
+        
+//        CGPoint flightViewOrigin = _changeFlightView.frame.origin;
+//        _changeFlightView.frame = CGRectMake(flightViewOrigin.x, flightViewOrigin.y, 162, viewHeight);
+        
+        _changeFlightBtn.frame = CGRectMake(36, viewHeight - 45, 90, 24);
     }
 }
 
 - (void) selectFlight:(UIButton *)button{
+    
+    int i = 0;
+    for(id item in _notFlights){
+        i++;
+        NSInteger tag = i * 100;
+        UIButton *btn = (UIButton *)[_changeFlightView viewWithTag:tag];
+        [btn setBackgroundImage:nil forState:UIControlStateNormal];
+        NSString* flightNum = [item valueForKey:@"FlightNo"];
+        //        NSString* fligthNo = [NSString stringWithFormat:@"%@%@",[item valueForKey:@"Carrier"],flightNum];
+        if(tag == button.tag){
+            _selectedFlightNo = flightNum;
+        }
+    }
     UIImage *image=[UIImage imageNamed:@"flight-no-bg"];
     [button setBackgroundImage:image forState:UIControlStateNormal];
 }
@@ -190,7 +236,7 @@
         [scanner setTitleColor:[UIColor whiteColor] tintColor:[UIColor greenColor]];
         
         _appDelegate.openCamera = YES;
-//        [self presentViewController:scanner animated:YES completion:nil];
+        //        [self presentViewController:scanner animated:YES completion:nil];
         [self showDetailViewController:scanner sender:nil];
         //        responseCallback(json);
     }];
@@ -284,12 +330,13 @@
         [self createLog:@"transfer" data:data result:json];
     }];
     
+    
     //加入购物车
     [_bridge registerHandler:@"addCart" handler:^(id data, WVJBResponseCallback responseCallback) {
         NSString* sku = [data valueForKey:@"sku"];
         NSInteger quantity = [[data valueForKey:@"quantity"] integerValue];
         NSString* diningCarNo = [data valueForKey:@"diningCarNo"];
-        NSString* json = [OrderDB addCart:sku diningCarNo:diningCarNo num:quantity];
+        NSString* json = [OrderDB addCart:sku num:quantity userDict:_userDict];
         responseCallback(json);
         [self createLog:@"addCart" data:data result:json];
     }];
@@ -299,7 +346,7 @@
         NSString* sku = [data valueForKey:@"sku"];
         NSString* diningCarNo = [data valueForKey:@"diningCarNo"];
         NSInteger updateType = [[data valueForKey:@"updateType"] integerValue];
-        NSString* json = [OrderDB updateNum:sku diningCarNo:diningCarNo updateType:updateType];
+        NSString* json = [OrderDB updateNum:sku updateType:updateType];
         responseCallback(json);
         [self createLog:@"updateNum" data:data result:json];
     }];
@@ -308,7 +355,7 @@
     [_bridge registerHandler:@"deleteCartSku" handler:^(id data, WVJBResponseCallback responseCallback) {
         NSString* sku = [data valueForKey:@"sku"];
         NSString* diningCarNo = [data valueForKey:@"diningCarNo"];
-        NSString* json = [OrderDB deleteCartSku:sku diningCarNo:diningCarNo];
+        NSString* json = [OrderDB deleteCartSku:sku];
         responseCallback(json);
         [self createLog:@"deleteCartSku" data:data result:json];
     }];
@@ -326,6 +373,26 @@
         NSString* json = [OrderDB createOrder:createOrderParam userDict:_userDict];
         responseCallback(json);
         [self createLog:@"createOrder" data:data result:json];
+    }];
+    
+    //业绩上报
+    [_bridge registerHandler:@"reportOrder" handler:^(id data, WVJBResponseCallback responseCallback) {
+        NSString* json = [ReceiptDB autoInventory:_userDict];
+        
+        [ReceiptDB createReportLog:[_userDict objectForKey:@"FlightNo"] flightDate:[_userDict objectForKey:@"FlightDate"] empNo:[_userDict objectForKey:@"EmpNo"]];
+        [ReceiptDB createReportFile];
+        [self uploadData];
+        _hasNotTrans = [self hasNotTransfer];
+        responseCallback(json);
+        [self createLog:@"reportOrder" data:data result:json];
+    }];
+    
+    //末班退回
+    [_bridge registerHandler:@"lastReturn" handler:^(id data, WVJBResponseCallback responseCallback) {
+        LastReturnParam* lastReturnParam = [LastReturnParam yy_modelWithJSON:data];
+        NSString* json = [ReceiptDB lastReturn:lastReturnParam userDict:_userDict];
+        responseCallback(json);
+        [self createLog:@"lastReturn" data:data result:json];
     }];
     
     //    [_bridge registerHandler:@"testObjcCallback" handler:^(id data, WVJBResponseCallback responseCallback) {
@@ -356,7 +423,7 @@
 - (void)viewWillAppear:(BOOL)animated {
     
     [super viewWillAppear:animated];
-//    [IQKeyboardManager sharedManager].enable = NO;
+    //    [IQKeyboardManager sharedManager].enable = NO;
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
@@ -414,48 +481,48 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     NSInteger row = [indexPath row];
-//    if(row == 7){
-//        [_userInfo setValue:@"" forKey:_UserKey];
-//        LoginViewController *loginView= [[LoginViewController alloc] initWithNibName:@"LoginViewController" bundle:nil];
-//        [self.navigationController popViewControllerAnimated:YES];
-//    }
+    //    if(row == 7){
+    //        [_userInfo setValue:@"" forKey:_UserKey];
+    //        LoginViewController *loginView= [[LoginViewController alloc] initWithNibName:@"LoginViewController" bundle:nil];
+    //        [self.navigationController popViewControllerAnimated:YES];
+    //    }
     if(tableView == _shrinkTableView){
         if(row == 0){
             [_popup showWithLayout:_layout];
-//            [_shrinkView setHidden:YES];
+            //            [_shrinkView setHidden:YES];
         }else if(row < 7){
-            if(row > 2 && _hasNotTrans){
-                 [CommonUtil showOnlyText:self.view tips:@"还有未完成的交接单"];
+            if(row >     2 && _hasNotTrans){
+                [CommonUtil showOnlyText:self.view tips:@"还有未完成的交接单"];
             }else{
                 NSArray *arr = [_tableViewArr objectAtIndex:row];
                 [self loadHtmlUrl:[arr objectAtIndex:2]];
-//                 [self loadHtmlPage:[arr objectAtIndex:2]];
+                //                 [self loadHtmlPage:[arr objectAtIndex:2]];
                 [self updateTableViewIcon: row];
             }
         }else if(row == 7){
-             [self logout];
+            [self logout];
         }else{
-            [self loadHtmlPage:@"Index"];
+            [self loadHtmlPage:@"Demo"];
         }
     }else if(tableView == _openTableView){
         if(row == 0){
-
+            
         }else if(row < 7){
             NSArray *arr = [_tableViewArr objectAtIndex:row];
             [self loadHtmlUrl:[arr objectAtIndex:2]];
-//              [self loadHtmlPage:[arr objectAtIndex:2]];
+            //              [self loadHtmlPage:[arr objectAtIndex:2]];
             [self updateTableViewIcon: row];
         }else if(row == 7){
             [self logout];
         }else{
-            [self loadHtmlPage:@"Index"];
+            [self loadHtmlPage:@"Demo"];
         }
-//        dispatch_time_t delayTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.20 * NSEC_PER_SEC));
-//
-//        __weak typeof(self) weakSelf = self;
-//        dispatch_after(delayTime, dispatch_get_main_queue(), ^{
-//            [weakSelf.shrinkView setHidden:NO];
-//        });
+        //        dispatch_time_t delayTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.20 * NSEC_PER_SEC));
+        //
+        //        __weak typeof(self) weakSelf = self;
+        //        dispatch_after(delayTime, dispatch_get_main_queue(), ^{
+        //            [weakSelf.shrinkView setHidden:NO];
+        //        });
         [_popup dismiss:YES];
     }
 }
@@ -466,8 +533,8 @@
 }
 
 -(void) logout{
-
-     SCLAlertView *alert = [[SCLAlertView alloc] init];
+    
+    SCLAlertView *alert = [[SCLAlertView alloc] init];
     
     //Using Block
     [alert addButton:@"确定" actionBlock:^(void) {
@@ -477,20 +544,20 @@
     alert.showAnimationType= SCLAlertViewShowAnimationSlideInToCenter;
     [alert showNotice:self title:@"提示" subTitle:@"确定要退出登录吗？" closeButtonTitle:@"取消" duration:0.0f];
     
-//    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"确定要退出吗？" message:@"" preferredStyle:UIAlertControllerStyleAlert];
-//
-//    UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-//        [self.navigationController popViewControllerAnimated:YES];
-////        NSLog(@"OK Action");
-//    }];
-//    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
-////        NSLog(@"Cancel Action");
-//    }];
-//
-//    [alertController addAction:okAction];           // A
-//    [alertController addAction:cancelAction];
-//
-//    [self presentViewController:alertController animated:YES completion:nil];
+    //    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"确定要退出吗？" message:@"" preferredStyle:UIAlertControllerStyleAlert];
+    //
+    //    UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+    //        [self.navigationController popViewControllerAnimated:YES];
+    ////        NSLog(@"OK Action");
+    //    }];
+    //    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+    ////        NSLog(@"Cancel Action");
+    //    }];
+    //
+    //    [alertController addAction:okAction];           // A
+    //    [alertController addAction:cancelAction];
+    //
+    //    [self presentViewController:alertController animated:YES completion:nil];
 }
 
 - (void)updateTableViewIcon:(NSInteger) row{
@@ -534,23 +601,23 @@
 
 - (void)loadHtmlPage:(NSString*)path {
     
-//    NSString * htmlPath = [[NSBundle mainBundle] pathForResource:@"Resources" ofType:@"bundle"];
-//    htmlPath = [[NSBundle bundleWithPath:htmlPath] pathForResource:@"index" ofType:@"html" inDirectory:@"Pages"];
-//    htmlPath = [htmlPath stringByAppendingPathComponent:@"Pages"];
-//    htmlPath = [htmlPath stringByAppendingPathComponent:path];
+    //    NSString * htmlPath = [[NSBundle mainBundle] pathForResource:@"Resources" ofType:@"bundle"];
+    //    htmlPath = [[NSBundle bundleWithPath:htmlPath] pathForResource:@"index" ofType:@"html" inDirectory:@"Pages"];
+    //    htmlPath = [htmlPath stringByAppendingPathComponent:@"Pages"];
+    //    htmlPath = [htmlPath stringByAppendingPathComponent:path];
     
     NSString* htmlPath = [[NSBundle mainBundle] pathForResource:[NSString stringWithFormat:@"Html/Pages/%@",path] ofType:@"html"];
     NSString* appHtml = [NSString stringWithContentsOfFile:htmlPath encoding:NSUTF8StringEncoding error:nil];
     NSURL *baseURL = [NSURL fileURLWithPath:htmlPath];
     [_webView loadHTMLString:appHtml baseURL:baseURL];
     
-//    NSURL *pathUrl = [[NSURL alloc] initWithString:htmlPath];
-//    NSURLRequest *request = [NSURLRequest requestWithURL:pathUrl];
-//    [_webView loadRequest:request];
+    //    NSURL *pathUrl = [[NSURL alloc] initWithString:htmlPath];
+    //    NSURLRequest *request = [NSURLRequest requestWithURL:pathUrl];
+    //    [_webView loadRequest:request];
 }
 
 - (void)loadHtmlUrl:(NSString*)page {
-
+    
     NSString* url = [NSString stringWithFormat:@"%s%@.html",_BaseUrl,page];
     [_webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:url]]];
 }
@@ -576,14 +643,14 @@
 }
 
 /*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
+ #pragma mark - Navigation
+ 
+ // In a storyboard-based application, you will often want to do a little preparation before navigation
+ - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+ // Get the new view controller using [segue destinationViewController].
+ // Pass the selected object to the new view controller.
+ }
+ */
 
 - (IBAction)btnBackPressed:(id)sender {
     if([_webView canGoBack]){
@@ -605,7 +672,7 @@
     UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"请选择图片来源" message:@"" preferredStyle:UIAlertControllerStyleAlert];
     
     UIAlertAction *photoAction = [UIAlertAction actionWithTitle:@"拍照" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
-         [self shootPiicturePrVideo];
+        [self shootPiicturePrVideo];
     }];
     [alertController addAction:photoAction];
     
@@ -679,11 +746,6 @@
         }]];
         [self presentViewController:alertController animated:YES completion:nil];
     }
-}
-
-- (BOOL)shouldAutorotate{
-    
-    return NO;
 }
 
 - (IBAction)synButtomPressed:(id)sender{
@@ -795,7 +857,7 @@
                         }
                     }
                 }
-
+                
             }else if([fileName isEqualToString:@"HandoverMaster.json"]){
                 NSArray* handoverArr =  [NSArray yy_modelArrayWithClass:[HandoverMaster class] json:json];
                 for(HandoverMaster* handover in handoverArr){
@@ -809,8 +871,16 @@
                         }
                     }
                 }
+            }else if([fileName isEqualToString:@"FlightPerformance.json"]){
+                
+                [FlightPerformance bg_clear:@"FlightPerformance"];
+                
+                NSArray* performanceArr =  [NSArray yy_modelArrayWithClass:[FlightPerformance class] json:json];
+                for(FlightPerformance* performance in performanceArr){
+                    [performance bg_save];
+                }
             }else if([fileName isEqualToString:@"ScheduleInfo.json"]){
-            
+                
                 [ScheduleInfo bg_clear:@"ScheduleInfo"];
                 NSArray* scheduleArr =  [NSArray yy_modelArrayWithClass:[ScheduleInfo class] json:json];
                 for(ScheduleInfo* schedule in scheduleArr){
@@ -818,9 +888,9 @@
                 }
             }
             _synCount++;
-//            if(_synCount == 6){
-//
-//            }
+            //            if(_synCount == 6){
+            //
+            //            }
         }
         [manager removeItemAtPath:unzipPath error:nil];
         _dataDwonOver = true;
@@ -839,7 +909,7 @@
         _picDownOver = true;
     }
     [manager removeItemAtPath:zipPath error:nil];
-     if(_dataDwonOver){
+    if(_dataDwonOver){
         [_synButtom setEnabled:YES];
         [self synSucc:@"数据同步成功"];
     }
@@ -963,27 +1033,27 @@
     _networkingStatus = status;
     switch (status) {
         case AFNetworkReachabilityStatusUnknown:
-            [self noSignal];
-            [self resumeTimer];
-            NSLog(@"无法获取网络状态");
-            break;
+        [self noSignal];
+        [self resumeTimer];
+        NSLog(@"无法获取网络状态");
+        break;
         case AFNetworkReachabilityStatusReachableViaWWAN:
-            [self pauseTimer];
-            [self setWWANSignal];
-            NSLog(@"移动蜂窝网络");
-            break;
+        [self pauseTimer];
+        [self setWWANSignal];
+        NSLog(@"移动蜂窝网络");
+        break;
         case AFNetworkReachabilityStatusReachableViaWiFi:
-            [self pauseTimer];
-            [self getSignalStrength];
-            NSLog(@"Wifi上网");
-            break;
+        [self pauseTimer];
+        [self getSignalStrength];
+        NSLog(@"Wifi上网");
+        break;
         case AFNetworkReachabilityStatusNotReachable:
-            [self noSignal];
-            [self resumeTimer];
-            NSLog(@"无网络连接");
-            break;
+        [self noSignal];
+        [self resumeTimer];
+        NSLog(@"无网络连接");
+        break;
         default:
-            break;
+        break;
     }
 }
 
@@ -1007,11 +1077,11 @@
     }
     _signal = signalStrength;
     [_synButtom setEnabled:YES];
-//    if(_signal < 2){
-//        [CommonUtil showOnlyText:self.view tips:@"当前WIFI信号差，请切换到4G网络"];
-//    }else{
-//        [_synButtom setEnabled:YES];
-//    }
+    //    if(_signal < 2){
+    //        [CommonUtil showOnlyText:self.view tips:@"当前WIFI信号差，请切换到4G网络"];
+    //    }else{
+    //        [_synButtom setEnabled:YES];
+    //    }
     NSLog(@"signal %d", signalStrength);
     if(_signal > 0){
         [self pauseTimer];
@@ -1019,18 +1089,18 @@
 }
 
 -(void) startGCDTimer{
-//    NSTimeInterval period = 2.0; //设置时间间隔
-//    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
-//    _timer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, queue);
-//    dispatch_source_set_timer(_timer, dispatch_walltime(NULL, 0), period * NSEC_PER_SEC, 0); //每秒执行
-//    __weak typeof(self) weakSelf = self;
-//    dispatch_source_set_event_handler(_timer, ^{
-//        //在这里执行事件
-//        [weakSelf getSignalStrength];
-//        NSLog(@"每2秒执行test");
-//    });
-//
-//    dispatch_resume(_timer);
+    //    NSTimeInterval period = 2.0; //设置时间间隔
+    //    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+    //    _timer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, queue);
+    //    dispatch_source_set_timer(_timer, dispatch_walltime(NULL, 0), period * NSEC_PER_SEC, 0); //每秒执行
+    //    __weak typeof(self) weakSelf = self;
+    //    dispatch_source_set_event_handler(_timer, ^{
+    //        //在这里执行事件
+    //        [weakSelf getSignalStrength];
+    //        NSLog(@"每2秒执行test");
+    //    });
+    //
+    //    dispatch_resume(_timer);
 }
 
 
@@ -1061,7 +1131,7 @@
     //    [IQKeyboardManager sharedManager].enable = YES;
     //注销监听者
     [[NSNotificationCenter defaultCenter] removeObserver:self name:AFNetworkingReachabilityDidChangeNotification object:nil];
-//    [self stopTimer];
+    //    [self stopTimer];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -1069,6 +1139,8 @@
     if([self.navigationController respondsToSelector:@selector(interactivePopGestureRecognizer)]) {
         self.navigationController.interactivePopGestureRecognizer.enabled = NO;
     }
+    _appDelegate.openCamera = NO;
+    [self orientationToPortrait:UIInterfaceOrientationMaskLandscape];
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
@@ -1081,11 +1153,90 @@
 
 - (IBAction)changeFlightPressed:(id)sender {
     if([_changeFlightView isHidden]){
+        [_bgView setHidden:NO];
         [_changeFlightView setHidden:NO];
     }else{
-        [_changeFlightView setHidden:YES];
+        if([_notFlights count] == 1){
+            [CommonUtil showOnlyText:self.view tips:@"没有可以切换的航班"];
+        }else{
+            [_bgView setHidden:YES];
+            [_changeFlightView setHidden:YES];
+        }
     }
 }
+
 - (IBAction)changeFlightBtnPressed:(id)sender {
+    NSString* oldFlightNo = [_userDict objectForKey:@"FlightNo"];
+    NSString* flightDate = [_userDict objectForKey:@"FlightDate"];
+    if([_selectedFlightNo isEqualToString:@""]){
+        [CommonUtil showOnlyText:self.view tips:@"请选择需要切换的航班"];
+    }else if([_selectedFlightNo isEqualToString:oldFlightNo]){
+        [CommonUtil showOnlyText:self.view tips:@"不能切换为当前航班"];
+    }else{
+        
+        NSInteger oldIndex = 0;
+        NSInteger newIndex = 0;
+        int i = 0;
+        for(id item in _notFlights){
+            NSString* no = [item valueForKey:@"FlightNo"];
+            if([no isEqualToString:oldFlightNo]){
+                oldIndex = i;
+            }else if([no isEqualToString:_selectedFlightNo]){
+                newIndex = i;
+            }
+            i++;
+        }
+        if(newIndex == oldIndex + 1){
+            BOOL hasReportOrder = [ReceiptDB hasReportOrder:oldFlightNo flightDate:flightDate empNo:[_userDict objectForKey:@"EmpNo"]];
+            if(hasReportOrder){
+                LoginInfoResult* loginInfoReuslt = [StaffDB changeFlight:[NSString stringWithFormat:@"%@%@",[_userDict objectForKey:@"Carrier"],_selectedFlightNo] flightDate:flightDate empNo:[_userDict objectForKey:@"EmpNo"] deviceNo:_identifierNumber];
+                if(loginInfoReuslt != nil && loginInfoReuslt.status == 1){
+                    id result = loginInfoReuslt.userInfo;
+                    NSString* flightNo = [result valueForKey:@"FlightNo"];
+                    NSString* tailNo = [result valueForKey:@"TailNo"];
+                    NSString* acType = [result valueForKey:@"ACType"];
+                    NSString* deptTime = [NSString stringWithFormat:@"%@%@",[result valueForKey:@"FlightDate"],[result valueForKey:@"DeptTime"]];
+                    id preReuslt = [StaffDB getPreFlightInfo:flightNo tailNo:tailNo acType:acType deptTime:deptTime];
+                    if(preReuslt != nil){
+                        [result setObject:[preReuslt objectForKey:@"FlightNo"] forKey:@"PreFlightNo"];
+                        [result setObject:[preReuslt objectForKey:@"FlightDate"] forKey:@"PreFlightDate"];
+                    }
+                    
+                    NSData *userData = [NSKeyedArchiver archivedDataWithRootObject:result];
+                    [_userInfo setValue:userData forKey:_UserKey];
+                    
+                    [self initUserInfo];
+                    [self loadHtmlUrl:@"index"];
+                    [CommonUtil showOnlyText:self.view tips:@"切换航班成功"];
+                    [_bgView setHidden:YES];
+                    [_changeFlightView setHidden:YES];
+                    [ReceiptDB inventoryChange:_selectedFlightNo oldFlightNo:oldFlightNo flightDate:flightDate];
+                }else{
+                    [CommonUtil showOnlyText:self.view tips:loginInfoReuslt.message];
+                }
+            }else{
+                [CommonUtil showOnlyText:self.view tips:@"请先上报绩效再切换航班"];
+            }
+        }else{
+            [CommonUtil showOnlyText:self.view tips:@"只能按照顺序往后切换航班"];
+        }
+    }
+}
+
+//- (UIInterfaceOrientationMask)supportedInterfaceOrientations {
+//    return UIInterfaceOrientationMaskLandscape;
+//}
+//
+//- (BOOL)shouldAutorotate {
+//
+//    return YES;
+//}
+
+//强制旋转屏幕
+- (void)orientationToPortrait:(UIInterfaceOrientationMask)orientation {
+    if ([[UIDevice currentDevice] respondsToSelector:@selector(setOrientation:)]) {
+        [[UIDevice currentDevice] performSelector:@selector(setOrientation:)
+                                       withObject:@3];
+    }
 }
 @end

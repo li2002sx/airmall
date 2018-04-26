@@ -19,13 +19,13 @@
 
 @interface OrderDB : NSObject
 
-+(Cart*) getCartBySku:(NSString*)sku diningCarNo:(NSString*)diningCarNo;
++(Cart*) getCartBySku:(NSString*)sku;
 
-+(NSString*) addCart:(NSString*)sku  diningCarNo:(NSString*)diningCarNo num:(NSInteger)num;
++(NSString*) addCart:(NSString*)sku num:(NSInteger)num userDict:(NSDictionary*) userDict;
 
-+(NSString*) deleteCartSku:(NSString*) sku  diningCarNo:(NSString*)diningCarNo;
++(NSString*) deleteCartSku:(NSString*) sku;
 
-+(NSString*) updateNum:(NSString*) sku diningCarNo:(NSString*)diningCarNo updateType:(NSInteger)updateType;
++(NSString*) updateNum:(NSString*) sku updateType:(NSInteger)updateType;
 
 +(NSString*) clearCart;
 

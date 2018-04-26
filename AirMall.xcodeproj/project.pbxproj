@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		AA08B0DA2090387C0057A08C /* ReportLog.m in Sources */ = {isa = PBXBuildFile; fileRef = AA08B0D92090387C0057A08C /* ReportLog.m */; };
 		AA240043206A756D0075D7BB /* Html in Resources */ = {isa = PBXBuildFile; fileRef = AA240042206A756D0075D7BB /* Html */; };
 		AA24FBFB2069EDD20075D7BB /* PAImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = AA24FBF92069EDD20075D7BB /* PAImageView.m */; };
 		AA2D90E52054C8E200741337 /* ProductPicture.m in Sources */ = {isa = PBXBuildFile; fileRef = AA2D90E42054C8E200741337 /* ProductPicture.m */; };
@@ -146,6 +147,8 @@
 
 /* Begin PBXFileReference section */
 		56BAD70CA3999EDC89B73F81 /* Pods-AirMall.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AirMall.debug.xcconfig"; path = "Pods/Target Support Files/Pods-AirMall/Pods-AirMall.debug.xcconfig"; sourceTree = "<group>"; };
+		AA08B0D82090387C0057A08C /* ReportLog.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ReportLog.h; sourceTree = "<group>"; };
+		AA08B0D92090387C0057A08C /* ReportLog.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ReportLog.m; sourceTree = "<group>"; };
 		AA240042206A756D0075D7BB /* Html */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Html; sourceTree = "<group>"; };
 		AA24FBF92069EDD20075D7BB /* PAImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PAImageView.m; sourceTree = "<group>"; };
 		AA24FBFA2069EDD20075D7BB /* PAImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PAImageView.h; sourceTree = "<group>"; };
@@ -589,6 +592,8 @@
 				AA6A074720899F11000E27C2 /* LastReturnOrder.m */,
 				AA6A074920899F23000E27C2 /* LastReturnOrderItem.h */,
 				AA6A074A20899F23000E27C2 /* LastReturnOrderItem.m */,
+				AA08B0D82090387C0057A08C /* ReportLog.h */,
+				AA08B0D92090387C0057A08C /* ReportLog.m */,
 			);
 			path = Store;
 			sourceTree = "<group>";
@@ -1067,6 +1072,7 @@
 				B02A22DD20518CF400C93BC1 /* LogDB.m in Sources */,
 				AA4313E4204D584F00E28C2B /* SalesOrderItem.m in Sources */,
 				AA2D90E820551E0F00741337 /* ProductAttribute.m in Sources */,
+				AA08B0DA2090387C0057A08C /* ReportLog.m in Sources */,
 				AA6A074B20899F23000E27C2 /* LastReturnOrderItem.m in Sources */,
 				AA431405204EA41400E28C2B /* ReceiptDB.m in Sources */,
 				AA4F0DA1204940D200081B94 /* StaffDB.m in Sources */,

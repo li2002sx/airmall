@@ -19,6 +19,8 @@
 
 @property(nonatomic)NSString* Sku;
 
+@property(nonatomic)NSString* DiningCarNo;
+
 @property(nonatomic)NSString* Barcode;
 
 @property(nonatomic)NSString* ProductName;
@@ -26,8 +28,6 @@
 @property(nonatomic)NSString* Unit;
 
 @property(nonatomic)NSString* Quantity;
-
-@property(nonatomic)NSString* DiningCarNo;
 
 @property(nonatomic)NSString* Remark;
 

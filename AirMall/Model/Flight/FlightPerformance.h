@@ -41,4 +41,8 @@
 
 @property(nonatomic)NSInteger T10;
 
+@property(nonatomic)NSInteger TargetPerformance;
+
+@property(nonatomic)NSString* SalesCommission;
+
 @end

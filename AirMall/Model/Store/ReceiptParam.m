@@ -24,13 +24,19 @@
 
 @end
 
-
-
 @implementation InventoryParam
 
 @end
 
 @implementation InventorySku
+
+@end
+
+@implementation LastReturnParam
+
+@end
+
+@implementation LastReturnSku
 
 @end
 

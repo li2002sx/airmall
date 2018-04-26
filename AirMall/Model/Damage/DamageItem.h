@@ -19,6 +19,8 @@
 
 @property(nonatomic)NSString* Sku;
 
+@property(nonatomic)NSString* DiningCarNo;
+
 @property(nonatomic)NSString* Barcode;
 
 @property(nonatomic)NSString* ProductName;

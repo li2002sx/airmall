@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "BGFMDB.h"
 
 @interface ReceiptParam : NSObject
 
@@ -67,6 +68,30 @@
 @property(nonatomic)NSInteger handoverCount;
 
 @property(nonatomic)NSInteger damagedCount;
+
+@end
+
+@interface LastReturnParam : NSObject
+
+@property(nonatomic)NSArray* lastReturnList;
+
+@end
+
+@interface LastReturnSku : NSObject
+
+@property(nonatomic)NSString* sku;
+
+@property(nonatomic)NSString* diningCarNo;
+
+@property(nonatomic)NSInteger returnCount;
+
+@property(nonatomic)NSInteger damagedCount;
+
+@property(nonatomic)NSString* damagedReason;
+
+@property(nonatomic)NSString* damagedReasonDesc;
+
+@property(nonatomic)NSArray* imageBase64s;
 
 @end
 
