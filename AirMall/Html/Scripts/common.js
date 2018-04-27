@@ -9,12 +9,12 @@ $(function () {
         $("#modal-msg").hide();
     });
 
-    $(document).on("click", ".del-photo", function() {
+    $(document).on("click", ".del-photo", function () {
         $(this).parents(".photo-item").remove();
     });
 
     $(".file-mask").click(function () {
-        if ($(this).parents(".photo-wrapper").find(".photo-item").length>5) {
+        if ($(this).parents(".photo-wrapper").find(".photo-item").length > 5) {
             return;
         }
         appJsBridge.callHandler('upload', null, function (result) {
@@ -96,7 +96,7 @@ function initNumbox(callback) {
             num = 0;
             return;
         }
-        
+
 
         if (callback) {
             callback($this, point)
@@ -156,22 +156,25 @@ function AppConfirm(title, msg, callback) {
 function toast(msg) {
     $(".toast .toast-msg").text(msg);
     $(".toast").show();
-   var t= setTimeout(function() {
-       $(".toast").hide(1000);
-       clearTimeout(t);
-   }, 500);
+    var t = setTimeout(function () {
+        $(".toast").hide(1000);
+        clearTimeout(t);
+    }, 1000);
 
 }
 
 //判断调用原生接口是否成功
-function checkSuccess(data, callback,tip) {
+function checkSuccess(data, callback, tip) {
     if (data.status == 1) {
         callback(data);
     } else {
         if (tip) {
             toast(tip);
         } else {
-            toast(data.message);
+            if (data.message!="没有查到数据") {
+                toast(data.message);
+            }
+            
         }
     }
 }
@@ -196,7 +199,6 @@ function initScroll(selector, scrollparam, pageSize, callback) {
             }
 
             var pageTotal = Math.ceil(res.totalCount / pageSize);
-
             $("#" + selector).off("scroll").on("scroll", function () {
                 if (flag === 0) {
                     return;
@@ -208,11 +210,12 @@ function initScroll(selector, scrollparam, pageSize, callback) {
                     if (pageTotal == currIndex) {
                         return;
                     }
+
                     flag = 0;
                     currIndex += 1;
                     param.pageIndex += 1;
                     $(".icon-pageloading").addClass("show");
-                
+
                     appJsBridge.callHandler("selectListForPage", param, function (res) {
                         var html = template('s_' + selector, res);
                         $("#" + selector).append(html);
@@ -393,12 +396,12 @@ function addDate(date, days) {
 
 function getTime(date) {
     var time = date.split(" ");
-	if(time[1][1]==":"){
-		return time[1].substring(0, 4);
-	}else {
-		return time[1].substring(0, 5);
-	}
-    
+    if (time[1][1] == ":") {
+        return time[1].substring(0, 4);
+    } else {
+        return time[1].substring(0, 5);
+    }
+
 }
 
 function getdate(date) {
@@ -538,6 +541,9 @@ function formatNumber(number, isFixed) {
 //                        break;
 //                    case "getindex":
 //                        callback(this.getindex);
+//                        break;
+//                    case "getPerformance":
+//                        callback(this.getPerformance);
 //                        break;
 //                    default:
 //                        var data = {
@@ -1829,7 +1835,7 @@ function formatNumber(number, isFixed) {
 //                DamagedReason: "XXX",
 //                Remark: "XXXXXXXX",
 //                IsCheck:0
-                
+
 //            }, {
 //                DeliveryStatus: 1,
 //                DeliveryNo: "32133121",
@@ -1934,6 +1940,27 @@ function formatNumber(number, isFixed) {
 //                DamagedReason: "XXX",
 //                Remark: "XXXXXXXX",
 //                IsCheck: 0
+
+//            }
+//        ]
+//    },
+//    getPerformance: {
+//        status: 1,
+//        message: "",
+//        list: [
+//            {
+//                TargetPerformance:2000,
+//                SalesCommission: 0.1,
+//                T1: 1,
+//                T2: 2,
+//                T3: 3,
+//                T4: 40000,
+//                T5: 1000000,
+//                T6: 10000006,
+//                T7: 10000007,
+//                T8: 10000008,
+//                T9: 10000009,
+//                T10: 100000010,
 
 //            }
 //        ]

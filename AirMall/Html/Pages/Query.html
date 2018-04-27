@@ -11,7 +11,7 @@
     <script src="../Scripts/jquery-1.10.2.min.js"></script>
     <script src="../Component/art-template/arttemplate.js"></script>
     <script src="../Component/Bootstrap/js/bootstrap.min.js"></script>
-    <script src="../Scripts/common.js?v=103"></script>
+    <script src="../Scripts/common.js?v=104"></script>
     <style>
         .content {
             overflow: hidden;
@@ -142,9 +142,9 @@
                         </div>
                     </div>
                     <div class="order-block" data-callback="initStockList" id="stockorder">
-                        <div class="order-item" data-colname="DiningCarNo">
+                        <!--<div class="order-item" data-colname="DiningCarNo">
                             <span>餐车号排序</span><i class="iconfont icon-triangle-up"></i><i class="iconfont icon-triangle-down"></i>
-                        </div>
+                        </div>-->
                         <div class="order-item" data-colname="Inventory.Sku">
                             <span>商品条码排序</span><i class="iconfont icon-triangle-up"></i><i class="iconfont icon-triangle-down"></i>
                         </div>
@@ -199,7 +199,7 @@
         </div>
         <div class="content-footer" style="text-align: center">
             <button class="btn applyfor_restocking"><span class="iconfont icon-archive"></span>申请补货</button>
-            <button class="btn btn-major hbchange"><span class="iconfont icon-exchange"></span>换班盘点</button>
+            <button class="btn btn-major lastcount"><span class="iconfont icon-qingdan"></span>航后清点</button>
         </div>
     </div>
     <div class="appmodal" id="modal-msg">
@@ -227,9 +227,9 @@
             <div class="appmodal-body appmodal-body2 clearfix" style="background: #F5F5F5">
                 <div class="seach-block" style="height: 50px;">
                     <div class="order-block order-block2" data-callback="initHandoverDetail" id="handdetail">
-                        <div class="order-item" data-colname="B.DiningCarNo">
+                        <!--<div class="order-item" data-colname="B.DiningCarNo">
                             <span>餐车号排序</span><i class="iconfont icon-triangle-up"></i><i class="iconfont icon-triangle-down"></i>
-                        </div>
+                        </div>-->
                         <div class="order-item" data-colname="B.Sku">
                             <span>商品条码排序</span><i class="iconfont icon-triangle-up"></i><i class="iconfont icon-triangle-down"></i>
                         </div>
@@ -287,8 +287,6 @@
         {{each list stc index}}
         <div class="box" data-orderid="{{stc.Sku}}">
             <dl>
-              
-                <dd><span>餐车号</span><span>{{stc.DiningCarNo}}</span></dd>
                 <dd><img class="icon-barcode" src="../Images/barcode.png" />{{stc.Sku}}</dd>
                 <dd>{{stc.ProductName}}</dd>
                 <dd><span>库存</span><span>{{stc.Qty+stc.DamageQty}}</span></dd>
@@ -502,9 +500,9 @@
             $('.queren1').click(function () {
                 $('.appmodal').hide();
             });
-            //    换班盘点
-            $('.hbchange').click(function () {
-                window.location.href = 'AssociateCheck.html';
+            //    航后清点
+            $('.lastcount').click(function () {
+               // window.location.href = 'LastFliteCount.html';
             });
             //    申请补货
             $('.applyfor_restocking').click(function () {
@@ -653,7 +651,7 @@
                 sqlorder = " order by " + orderbycol + " desc";
             }
             var param5 = {
-                sql: "select A.PreFlightNo,B.DiningCarNo,B.ProductID," +
+                sql: "select A.PreFlightNo,B.ProductID," +
                     "B.ProductItemID,B.Sku,B.Barcode,B.ProductName,B.Unit,B.HandoverCounts," +
                     "B.HandoverDamagedCounts,B.UndertakeCounts, B.UndertakeDamagedCounts," +
                     "B. Remark from HandoverMaster as A Left Join HandoverItem as B on A.HandoverNo=B.HandoverNo " +

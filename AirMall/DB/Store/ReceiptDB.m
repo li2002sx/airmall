@@ -571,6 +571,8 @@
 
 +(void)createReportFile{
     
+    NSInteger totalFileCount = 0;
+    
     NSString *tmpDir = NSTemporaryDirectory();
     NSString *uploadPath = [tmpDir stringByAppendingPathComponent:@"upload"];
     NSString *uploadZipPath = [NSString stringWithFormat:@"%@/upload.zip",tmpDir];
@@ -605,6 +607,7 @@
         
         where = [NSString stringWithFormat:@"set syn = 1 where syn is null"];
         [DamageList bg_update:@"DamageList" where:where];
+        totalFileCount++;
     }
     
     filePath = [NSString stringWithFormat:@"%@/HandoverMaster.json",uploadPath];
@@ -623,6 +626,7 @@
         
         where = [NSString stringWithFormat:@"set syn = 1 where syn is null"];
         [HandoverMaster bg_update:@"HandoverMaster" where:where];
+        totalFileCount++;
     }
     
     filePath = [NSString stringWithFormat:@"%@/Inventory.json",uploadPath];
@@ -635,6 +639,7 @@
         
         where = [NSString stringWithFormat:@"set syn = 1 where syn is null"];
         [Inventory bg_update:@"Inventory" where:where];
+        totalFileCount++;
     }
     
     filePath = [NSString stringWithFormat:@"%@/LogList.json",uploadPath];
@@ -647,6 +652,7 @@
         
         where = [NSString stringWithFormat:@"set syn = 1 where syn is null"];
         [LogList bg_update:@"LogList" where:where];
+        totalFileCount++;
     }
     
     filePath = [NSString stringWithFormat:@"%@/ReceiptList.json",uploadPath];
@@ -665,6 +671,7 @@
         
         where = [NSString stringWithFormat:@"set syn = 1 where (DeliveryType = 2 or (DeliveryType = 1 and DeliveryStatus = 1)) and (syn is null or syn = 0)"];
         [ReceiptList bg_update:@"ReceiptList" where:where];
+        totalFileCount++;
     }
     
     filePath = [NSString stringWithFormat:@"%@/LastReturnOrder.json",uploadPath];
@@ -683,6 +690,7 @@
         
         where = [NSString stringWithFormat:@"set syn = 1 where syn is null"];
         [LastReturnOrder bg_update:@"LastReturnOrder" where:where];
+        totalFileCount++;
     }
     
     filePath = [NSString stringWithFormat:@"%@/SalesOrder.json",uploadPath];
@@ -701,9 +709,11 @@
         
         where = [NSString stringWithFormat:@"set syn = 1 where syn is null"];
         [SalesOrder bg_update:@"SalesOrder" where:where];
+        totalFileCount++;
     }
-    
-    [SSZipArchive createZipFileAtPath:uploadZipPath withContentsOfDirectory:uploadPath];
+    if(totalFileCount > 0){
+        [SSZipArchive createZipFileAtPath:uploadZipPath withContentsOfDirectory:uploadPath];
+    }
 }
 
 @end

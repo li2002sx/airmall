@@ -11,7 +11,7 @@
     <script src="../Scripts/dispatch.js"></script>
     <script src="../Component/Bootstrap/js/bootstrap.min.js"></script>
     <script src="../Component/art-template/arttemplate.js"></script>
-    <script src="../Scripts/common.js?v=103"></script>
+    <script src="../Scripts/common.js?v=104"></script>
     <style>
         .seach-block {
             padding: 0 40px;
@@ -189,6 +189,73 @@
         .weight {
             font-weight: 700;
         }
+        .icon-guanbi {
+            float: right;
+            font-size: 24px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .img-wrapper-m{
+            width:21%;
+            float:left;
+        }
+        .pro-detail{
+            width:78%;
+            float:right;
+        }
+        .pro-price {
+            height: 40px;
+            line-height: 40px;
+            color: #999;
+            margin-bottom:0;
+        }
+        .pro-price span{
+            color:red;
+        }
+        .type-all {
+            width:100%;
+            background: #f5f5f5;
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+            .type-all dl{
+                margin:0;
+            }
+            .type-all dl dt {
+                margin-right: 15px;
+                height: 52px;
+                line-height: 34px;
+                color: #999;
+                float: left;
+            }
+            .type-all dl dd {
+                width: 60px;
+                height: 40px;
+                line-height: 40px;
+                text-align: center;
+                border: 1px solid #666;
+                border-radius: 9px;
+                margin-right: 15px;
+                float:left;
+                margin-bottom:10px;
+            }
+                .type-all dl dd.current {
+                    background-color: #ff5255;
+                    color: #fff;
+                    border: #ff5255;
+                }
+
+        .h-modal-form-item .key {
+            display: inline-block;
+            height: 40px;
+            line-height: 40px;
+            float: left;
+            margin-right:15px;
+            color:#999;
+        }
+       
     </style>
 </head>
 <body>
@@ -208,7 +275,9 @@
                     <li><a href="#">Separated link</a></li>
                 </ul>
             </div>-->
-
+            <!--<textarea rows="4" class="textarea" style="width:100%"></textarea>
+            <button class="search-sql btn">search</button>
+            <textarea class="result-res" rows="5" style="display:block;width:100%;max-height:300px;overflow:auto;"></textarea>-->
             <div class="serach-group">
                 <input class="search-control" placeholder="请输入关键字" />
                 <div class="search-icon">
@@ -252,14 +321,14 @@
             </div>
         </div>
     </div>
-    <div class="appmodal" id="add-shopping-cart-modal">
+    <div class="appmodal" id="add-shopping-cart-modal" style="display:none;">
         <div class="mask"></div>
         <div class="appmodal-content">
             <div class="appmodal-header ">
-                <span class="weight">选择餐车号</span>
+                <span class="weight">是否加入购物车</span>
             </div>
             <div class="appmodal-body text-center">
-                <div class="msg">
+                <!--<div class="msg">
                     <ul>
                         <li>
                             <label class="key dinner-car-no">餐车号</label>
@@ -268,7 +337,7 @@
                             </div>
                         </li>
                     </ul>
-                </div>
+                </div>-->
             </div>
             <div class="appmodal-footer">
                 <button class="btn btn-cancel" type="button">继续逛逛</button>
@@ -276,6 +345,59 @@
             </div>
         </div>
     </div>
+    <!--<div class="appmodal prd-attribute-modal" style="display:block;">
+        <div class="mask"></div>
+        <div class="appmodal-content">
+            <div class="appmodal-header clearfix">
+                <span class="weight">真丝丝巾</span>
+                <span class="iconfont icon-guanbi"></span>
+            </div>
+            <div class="appmodal-body" style="background-color:#fff;padding:12px 40px 2px; max-height:460px;overflow-y:scroll;">
+                <div class="img-product clearfix">
+                    <div class="img-wrapper-m img-wrapper2">
+                        <img src="../Images/orderlist-1.png" width="100" height="100" class="picture">
+                    </div>
+                    <div class="pro-detail">
+                        <p class="pro-price">商品金额: <span>￥485</span></p>
+                        <div class="type-all">
+                            <dl class="pro-color clearfix">
+                                <dt>颜色</dt>
+                                <dd class="current">红色</dd>
+                                <dd>黄色</dd>
+                                <dd>绿色</dd>
+                                <dd>紫色</dd>
+                                <dd>黑色</dd>
+                            </dl>
+                            <dl class="pro-size clearfix">
+                                <dt>尺码</dt>
+                                <dd>S</dd>
+                                <dd class="current">L</dd>
+                                <dd>XL</dd>
+                                <dd>XXL</dd>
+                                <dd>XXXL</dd>
+                            </dl>
+                            <div class="h-modal-form-item  clearfix">
+                                <span class="key">数量</span>
+                                <div class="calc-wrapper">
+                                    <div class="operate-calc btn-group operate-item" min="1">
+                                        <button type="button" class="btn btn-point point-l" data-point="-1">-</button>
+                                        <input type="number" id="num_damagedCount" readonly="readonly" class="calc-input" value="1">
+                                        <button type="button" class="btn btn-point point-r" data-point="1">+</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <input type="hidden" id="hd_sku" />
+            <input type="hidden" id="hd_carno" />
+            <div class="appmodal-footer">
+                <button class="btn addCart" type="button">加入购物车</button>                
+            </div>
+        </div>
+
+    </div>-->
     <div class="toast">
         <div class="mask"></div>
         <div class="toast-msg"><span></span></div>
@@ -293,9 +415,9 @@
             <div class="prd-detail">
                 <h3 class="title">{{prd.ProductName}}</h3>
                 <ul class="msg-list">
-                    <li class="msg-list-item"><span>商品金额</span><span class="price">￥{{prd.Price}}</span></li>
+                    <li class="msg-list-item"><span>商品金额</span><span class="price" >￥{{prd.Price}}</span></li>
                     <li class="msg-list-item"><span>折扣金额</span><span class="discount">￥{{prd.Discount}}</span></li>
-                    <li class="msg-list-item"><span>库存</span><span>{{prd.Qty}}</span></li>
+                    <li class="msg-list-item"><span>库存</span><span style="{{ prd.Qty == "缺货" ? 'color:#ff5255':'color:#999' }}">{{prd.Qty}}</span></li>
                 </ul>
                 <button class="btn add-prd">加入购物车</button>
             </div>
@@ -313,12 +435,13 @@
     </div>
     <script>
         $(function () {
-            $(".search-sql").click(function() {
+            initNumbox();
+            $(".search-sql").click(function () {
                 var sql = $(".textarea").val();
                 var param = {
                     sql: sql
                 }
-                appJsBridge.callHandler("selectList", param, function(res) {
+                appJsBridge.callHandler("selectList", param, function (res) {
                     $(".result-res").text(JSON.stringify(res))
                     //$(".result-res").text(res.list.length)
                 });
@@ -327,14 +450,16 @@
             var sku;
             var dinnerCarNo;//[{DinnerCarNo:"001"}]
 
-            getLoginInfo(function() {
+            getLoginInfo(function () {
+                
                 getproduct();
+                
             });
 
             $("#search").click(function () {
                 getproduct();
             });
-            $(document).on("click", ".msg-r span", function() {
+            $(document).on("click", ".msg-r span", function () {
                 $(this).addClass("ck").siblings().removeClass("ck");
             });
 
@@ -347,7 +472,7 @@
                 }
 
                 //AppAlert("",param.sql)
-                appJsBridge.callHandler("selectList", param, function(res) {
+                appJsBridge.callHandler("selectList", param, function (res) {
 
                     //AppAlert("",JSON.stringify(res));
                     var html = "";
@@ -356,7 +481,7 @@
 
 
                         dinnerCarNo = res.list;
-                        dinnerCarNo.forEach(function(val, index) {
+                        dinnerCarNo.forEach(function (val, index) {
                             if (index == 0) {
                                 html += "<span class='ck' data-name='" + val.DiningCarNo + "'>" + val.DiningCarNo + "</span>";
                             } else {
@@ -381,11 +506,12 @@
                 var param = {
                     sku: sku,
                     quantity: 1,
-                    diningCarNo: diningCarNo
+                    //diningCarNo: diningCarNo
                 }
 
                 appJsBridge.callHandler('addCart', param, function (res) {
                     checkSuccess(res, function () {
+                    //AppAlert("",JSON.stringify(res))
                         if (res.status) {
                             $(".shopping-confirm-modal").show();
                         }
@@ -409,8 +535,18 @@
 
             $(".content-body").on("click", ".prd-item", function () {
                 var prdId = $(this).data("id");
-				//window.location.href = 'ProductDetail.html?prdId=' + prdId;
+                //window.location.href = 'ProductDetail.html?prdId=' + prdId;
             });
+
+            //商品属性切换颜色、尺寸
+            $(".type-all").on("click", "dl dd", function () {
+                $(this).addClass('current').siblings("dd").removeClass('current');
+            });
+
+            //关闭商品属性
+            $(".appmodal-header").on('click', '.icon-guanbi', function () {
+                $(".prd-attribute-modal").hide();
+            })
 
         });
         //商品列表
@@ -418,21 +554,22 @@
             var txt = $("#search").parent().prev().val();
             var sqlwhere = "";
             if (txt) {
-                sqlwhere = "where C.ProductName like '%" + txt + "%'";
+                sqlwhere = "and C.ProductName like '%" + txt + "%'";
             }
             var param = {
-                sql: "select A.AttributeName,A.AttributeValue," +
-                     "C.ProductName,D.Price Price," +
-             "D.Discount Discount,D.Sku,D.ProductItemID,C.Unit," +
-             "ifnull(SUM(Inventory.Qty),'缺货') AS Qty from Productlist as C inner join productitem as D on C.ProductID=D.ProductID " +
-             "left join productattribute as A on D.ProductItemID=A.ProductItemID " +
-             "left join Inventory on D.ProductItemID=Inventory.ProductItemID " +
-             "group by A.AttributeName,A.AttributeValue,C.ProductName,D.Price,D.Discount,D.Sku,D.ProductItemID,C.Unit " + sqlwhere,
+                sql: "select " +
+                    "C.ProductName,D.Price Price," +
+                    "D.Discount Discount,D.Sku,D.ProductItemID,C.Unit," +
+                    "ifnull(SUM(Inventory.Qty),'缺货') AS Qty from Productlist as C inner join productitem as D on C.ProductID=D.ProductID " +
+                   "left join Inventory on D.ProductItemID=Inventory.ProductItemID " +
+                    " where FlightNo='"
+        + flightInfo.FlightNo + "' and FlightDate='" + flightInfo.FlightDate + "' " + sqlwhere + " group by C.ProductName,D.Price,D.Discount,D.Sku,D.ProductItemID,C.Unit",
                 type: "productlist"
             }
-            appJsBridge.callHandler("selectList", param, function(reslt) {
+            appJsBridge.callHandler("selectList", param, function (reslt) {
                 $("#product-item").html(template("s_product-item", reslt));
             });
+           
             //AppAlert("", param.sql);
             //initScroll("product-item", param, 12);
         }

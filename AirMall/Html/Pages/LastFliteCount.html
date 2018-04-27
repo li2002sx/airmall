@@ -251,11 +251,11 @@
                     <!--<div class="h-modal-form-item">
                         <span class="key">实收总数：</span>
                         <span class="value" id="txt_totalnum"></span>
-                    </div>-->
-                    <div class="h-modal-form-item" style="display: none">
-                        <span class="key">餐车编号：</span>
-                        <span class="value"><span id="txt_dinnercarno"></span></span>
                     </div>
+                    <div class="h-modal-form-item">
+                        <span class="key">餐车编号：</span>
+                        <span class="value"><span id="txt_dinnercarno"></span><span>(该餐车应收数量:<span id="txt_dinnercarnum"></span>)</span></span>
+                    </div>-->
                     <div class="h-modal-form-item mg-12">
                         <span class="key">实收数量：</span>
                         <div class="calc-wrapper">
@@ -422,10 +422,14 @@
             });
 
             $(document).on("click", ".dinnercar-item", function () {
-                $(".dinnercar-item.on").removeClass("on");
-                $(this).addClass("on");
-                var dinnerCarNo = $(this).data("carid");
-                fliterProdByCar(dinnerCarNo);
+                if ($(this).hasClass("on")) {
+                    return;
+                } else {
+                    $(".dinnercar-item.on").removeClass("on");
+                    $(this).addClass("on");
+                    var dinnerCarNo = $(this).data("carid");
+                    fliterProdByCar(dinnerCarNo);
+                }
             });
 
             $(document).on("click", ".iconradio", function () {
@@ -568,17 +572,16 @@
             var flitedProdList = {
                 list: []
             };
-            //if (carNo) {
+            if (carNo) {
                 for (var i = 0; i < prodList.list.length; i++) {
                     if (prodList.list[i].DiningCarNo == carNo) {
                         flitedProdList.list.push(prodList.list[i]);
                     }
                 }
-               // AppAlert("", JSON.stringify(flitedProdList));
                 $("#prodlist").html(template("s_prodlist", flitedProdList));
-            //} else {
-            //    $("#prodlist").html(template("s_prodlist_all", prodList));
-            //}
+            } else {
+                $("#prodlist").html(template("s_prodlist_all", prodList));
+            }
         }
 
         function getProductBySku(sku, carno) {
@@ -608,12 +611,16 @@
             //AppAlert("",JSON.stringify(upDateItem))
             $("#txt_balancenum").text(upDateItem[0].NeedCounts);
             $("#num_damagedCount").val(upDateItem[0].ConfirmCounts);
-            $("#txt_dinnercarno").text(carno);
-            $("#hd_sku").val(sku);
+
+
             appJsBridge.callHandler("selectList", param, function (result) {
                 checkSuccess(result, function () {
                     var prod = result.list[0];
                     $(".appmodal-header span").text(prod.ProductName);
+                    $("#txt_dinnercarno").text(prod.DiningCarNo);
+                    $("#txt_dinnercarnum").text(prod.NeedCounts);
+                    //$("#num_damagedCount").parents(".operate-calc").attr("max", prod.NeedCounts);
+                    $("#hd_sku").val(prod.Sku);
                 });
             });
             for (var i = 0; i < damagedprodList.length; i++) {
@@ -664,7 +671,7 @@
                 damagedReasonDesc: $("#txt_damagedreson").val(),//破损原因描述
                 imageBase64: [] //破损图片base64格式
             }
-            //AppAlert("damagedprod",$("#txt_dinnercarno").text())
+            //AppAlert("damagedprod",JSON.stringify(damagedprod))
 
             if (damagedprod.damagedCount > 0 && damagedprod.damagedReason == "" && $(".different-slect").is(":visible")) {
                 AppAlert("提示", "差异原因不能为空");
@@ -706,8 +713,7 @@
             }
             //AppAlert("prodList",JSON.stringify(prodList))
             //return
-            $('.dinnercar-item.on').click();
-
+            $('.fliter-item.on').click();
             $(".prd-manage-modal").hide();
 
             var $dom = $(".box-" + handleSku);

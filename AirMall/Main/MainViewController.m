@@ -13,8 +13,7 @@
     AppDelegate* _appDelegate;
     
     NSInteger _synCount;
-    
-    NSInteger _networkingStatus;
+
     NSInteger _signal;
     
     NSArray* _signalTextArr;
@@ -77,7 +76,7 @@
     
     _openTableView.dataSource = self;
     _openTableView.delegate = self;
-    _shrinkTableView.scrollEnabled = NO;
+    _openTableView.scrollEnabled = NO;
     
     
     // Show in popup
@@ -94,7 +93,7 @@
     _webView.scrollView.bounces = false;
     
     [self loadHtmlUrl:@"index"];
-    //    [self loadHtmlPage:@"Index"];
+//    [self loadHtmlPage:@"Index"];
     
     [self initLayer];
     [self brigeInit];
@@ -488,6 +487,7 @@
     //    }
     if(tableView == _shrinkTableView){
         if(row == 0){
+//            [self loadHtmlPage:@"Demo"];
             [_popup showWithLayout:_layout];
             //            [_shrinkView setHidden:YES];
         }else if(row < 7){
@@ -496,7 +496,7 @@
             }else{
                 NSArray *arr = [_tableViewArr objectAtIndex:row];
                 [self loadHtmlUrl:[arr objectAtIndex:2]];
-                //                 [self loadHtmlPage:[arr objectAtIndex:2]];
+//                                 [self loadHtmlPage:[arr objectAtIndex:2]];
                 [self updateTableViewIcon: row];
             }
         }else if(row == 7){
@@ -510,7 +510,7 @@
         }else if(row < 7){
             NSArray *arr = [_tableViewArr objectAtIndex:row];
             [self loadHtmlUrl:[arr objectAtIndex:2]];
-            //              [self loadHtmlPage:[arr objectAtIndex:2]];
+//                          [self loadHtmlPage:[arr objectAtIndex:2]];
             [self updateTableViewIcon: row];
         }else if(row == 7){
             [self logout];
@@ -1034,22 +1034,22 @@
     switch (status) {
         case AFNetworkReachabilityStatusUnknown:
         [self noSignal];
-        [self resumeTimer];
+//        [self pauseTimer];
         NSLog(@"无法获取网络状态");
         break;
         case AFNetworkReachabilityStatusReachableViaWWAN:
-        [self pauseTimer];
+//        [self resumeTimer];
         [self setWWANSignal];
         NSLog(@"移动蜂窝网络");
         break;
         case AFNetworkReachabilityStatusReachableViaWiFi:
-        [self pauseTimer];
+//        [self resumeTimer];
         [self getSignalStrength];
         NSLog(@"Wifi上网");
         break;
         case AFNetworkReachabilityStatusNotReachable:
         [self noSignal];
-        [self resumeTimer];
+//        [self pauseTimer];
         NSLog(@"无网络连接");
         break;
         default:
@@ -1083,24 +1083,25 @@
     //        [_synButtom setEnabled:YES];
     //    }
     NSLog(@"signal %d", signalStrength);
-    if(_signal > 0){
-        [self pauseTimer];
-    }
+//    if(_signal > 0){
+//        [self pauseTimer];
+//    }
 }
 
 -(void) startGCDTimer{
-    //    NSTimeInterval period = 2.0; //设置时间间隔
-    //    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
-    //    _timer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, queue);
-    //    dispatch_source_set_timer(_timer, dispatch_walltime(NULL, 0), period * NSEC_PER_SEC, 0); //每秒执行
-    //    __weak typeof(self) weakSelf = self;
-    //    dispatch_source_set_event_handler(_timer, ^{
-    //        //在这里执行事件
-    //        [weakSelf getSignalStrength];
-    //        NSLog(@"每2秒执行test");
-    //    });
-    //
-    //    dispatch_resume(_timer);
+    NSTimeInterval period = 3.0 * 60; //设置时间间隔
+    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+    _timer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, queue);
+    dispatch_source_set_timer(_timer, dispatch_walltime(NULL, 0), period * NSEC_PER_SEC, 0); //每秒执行
+    __weak typeof(self) weakSelf = self;
+    dispatch_source_set_event_handler(_timer, ^{
+        //在这里执行事件
+        [ReceiptDB createReportFile];
+        [weakSelf uploadData];
+        NSLog(@"每3分钟有网上报");
+    });
+
+    dispatch_resume(_timer);
 }
 
 
@@ -1139,6 +1140,7 @@
     if([self.navigationController respondsToSelector:@selector(interactivePopGestureRecognizer)]) {
         self.navigationController.interactivePopGestureRecognizer.enabled = NO;
     }
+    [self startGCDTimer];
     _appDelegate.openCamera = NO;
     [self orientationToPortrait:UIInterfaceOrientationMaskLandscape];
 }
@@ -1149,6 +1151,7 @@
     if([self.navigationController respondsToSelector:@selector(interactivePopGestureRecognizer)]) {
         self.navigationController.interactivePopGestureRecognizer.enabled = YES;
     }
+    [self stopTimer];
 }
 
 - (IBAction)changeFlightPressed:(id)sender {
@@ -1206,6 +1209,7 @@
                     [_userInfo setValue:userData forKey:_UserKey];
                     
                     [self initUserInfo];
+//                    [self loadHtmlPage:@"Index"];
                     [self loadHtmlUrl:@"index"];
                     [CommonUtil showOnlyText:self.view tips:@"切换航班成功"];
                     [_bgView setHidden:YES];

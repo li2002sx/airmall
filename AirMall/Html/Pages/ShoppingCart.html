@@ -12,7 +12,7 @@
     <script src="../Scripts/dispatch.js"></script>
     <script src="../Component/Bootstrap/js/bootstrap.min.js"></script>
     <script src="../Component/art-template/arttemplate.js"></script>
-    <script src="../Scripts/common.js?v=103"></script>
+    <script src="../Scripts/common.js?v=104"></script>
     <style>
         body {
             padding: 20px;
@@ -503,7 +503,7 @@
             <div class="appmodal-header ">
                 <span></span>
             </div>
-            <div class="appmodal-body text-center">
+            <div class="appmodal-body text-center" style="height:400px;overflow-y:auto;">
                 <span></span>
             </div>
             <div class="appmodal-footer">
@@ -617,7 +617,7 @@
 
              var item = {
                  sku: "",
-                 diningCarNo:""
+                 //diningCarNo:""
              }
 
              getLoginInfo(function () {
@@ -631,7 +631,7 @@
 				var diningCarNo = $this.parents(".cart-content-item").data("carno");
                 var param = {
                     sku: sku,
-					diningCarNo:diningCarNo,
+					//diningCarNo:diningCarNo,
                     updateType: point
                 }
 				//AppAlert("",JSON.stringify(param))
@@ -721,7 +721,7 @@
             $(".cart-content").on("click", ".icon-qingkong", function () {
                 $("#modal-msg-item").show();
                 item.sku = $(this).parents(".cart-content-item").data("sku");
-                item.diningCarNo = $(this).parents(".cart-content-item").data("carno");
+                //item.diningCarNo = $(this).parents(".cart-content-item").data("carno");
             });
 
              $(".btn-confirm-item").click(function() {
@@ -741,9 +741,12 @@
 
         function initCartList() {
             var param = {
-                sql: "select A.*,B.Qty from cart A left join Inventory B on A.ProductItemID=B.ProductItemID and A.DiningCarNo=B.DiningCarNo",
+                sql: "select A.*,B.Qty from cart A left join Inventory B " +
+                    "on A.ProductItemID=B.ProductItemID where " +
+                    "B.FlightNo='" + flightInfo.FlightNo + "' and B.FlightDate='" + flightInfo.FlightDate + "'",
                 type: "shoppingCart"
             }
+		//AppAlert("",param.sql)
             appJsBridge.callHandler("selectList", param, function (res) {
                 checkSuccess(res, function (res) {
                     var priceAll = 0;

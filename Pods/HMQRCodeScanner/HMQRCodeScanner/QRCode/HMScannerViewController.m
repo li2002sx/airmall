@@ -218,4 +218,17 @@
 //    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"相册" style:UIBarButtonItemStylePlain target:self action:@selector(clickAlbumButton)];
 }
 
+//- (void)viewDidAppear:(BOOL)animated {
+//    [super viewDidAppear:animated];
+//    [self orientationToPortrait:UIInterfaceOrientationMaskPortrait];
+//}
+//
+////强制旋转屏幕
+//- (void)orientationToPortrait:(UIInterfaceOrientationMask)orientation {
+//    if ([[UIDevice currentDevice] respondsToSelector:@selector(setOrientation:)]) {
+//        [[UIDevice currentDevice] performSelector:@selector(setOrientation:)
+//                                       withObject:@0];
+//    }
+//}
+
 @end

@@ -64,8 +64,6 @@
     _processContentArr = @[@[@"flight",@"航班数据"],@[@"product",@"商品数据"],@[@"staff",@"用户数据"],@[@"schedule",@"排班数据"],@[@"receipt",@"收货数据"],@[@"upload",@"数据上报"]];
     
     _synTableView.scrollEnabled = NO;
-    
-//    [self startGCDTimer];
 }
 
 -(void) viewWillAppear:(BOOL)animated{
@@ -578,11 +576,16 @@
         [_fieldName setEnabled:NO];
         [_fieldPass setEnabled:NO];
         [_loginButton setEnabled:NO];
-        
+
         [_filedFlightNo setText:@"KN"];
         [_fieldDate setText:@""];
         [_fieldName setText:@""];
         [_fieldPass setText:@""];
+        
+//        [_filedFlightNo setText:@"KN5622"];
+//        [_fieldDate setText:@"2018-04-27"];
+//        [_fieldName setText:@"00001"];
+//        [_fieldPass setText:@"123123"];
         
         _tableViewDict = [NSMutableDictionary new];
         [_synTableView reloadData];

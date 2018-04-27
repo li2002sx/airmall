@@ -39,18 +39,19 @@
     self.navigationBar.tintColor = tintColor;
 }
 
-- (UIInterfaceOrientationMask)supportedInterfaceOrientations {
+
+//- (UIInterfaceOrientationMask)supportedInterfaceOrientations {
 //    return UIInterfaceOrientationMaskLandscape;
-    return UIInterfaceOrientationMaskPortrait;
-}
+//    return UIInterfaceOrientationMaskPortrait;
+//}
 
-- (UIStatusBarStyle)preferredStatusBarStyle {
-    return UIStatusBarStyleLightContent;
-}
+//- (UIStatusBarStyle)preferredStatusBarStyle {
+//    return UIStatusBarStyleLightContent;
+//}
 
-- (BOOL)shouldAutorotate {
-    
-    return YES;
-}
+//- (BOOL)shouldAutorotate {
+//    
+//    return YES;
+//}
 
 @end

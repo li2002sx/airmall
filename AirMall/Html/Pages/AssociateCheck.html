@@ -12,7 +12,7 @@
     <script src="../Scripts/dispatch.js"></script>
     <script src="../Component/Bootstrap/js/bootstrap.min.js"></script>
     <script src="../Component/art-template/arttemplate.js"></script>
-    <script src="../Scripts/common.js?v=103"></script>
+    <script src="../Scripts/common.js?v=104"></script>
     <style>
         .flight-before-block {
             float: left;
@@ -619,7 +619,7 @@
 
         function isCheck() {
             var param = {
-                sql: "select count(*) as isCheck from HandoverMaster where PreFlightNo='" + flightInfo.FlightNo + "'"
+                sql: "select count(*) as isCheck from HandoverMaster where PreFlightNo='" + flightInfo.FlightNo + "' and FlightDate='" + flightInfo.FlightDate + "'"
             }
 
             appJsBridge.callHandler("selectList", param, function (data) {

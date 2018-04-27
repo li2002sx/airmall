@@ -12,7 +12,7 @@
     <script src="../Scripts/dispatch.js"></script>
     <script src="../Component/Bootstrap/js/bootstrap.min.js"></script>
     <script src="../Component/art-template/arttemplate.js"></script>
-    <script src="../Scripts/common.js?v=103"></script>
+    <script src="../Scripts/common.js?v=104"></script>
     <style>
         .flight-before-block {
             float: left;
@@ -110,7 +110,8 @@
         }
 
         .list-container {
-            height: calc(100% - 115px);
+            height: calc(100% - 70px);
+            padding-top: 10px;
         }
 
         #search, .fliter-item, .dinnercar-item, .iconradio, .btn-skuupdate {
@@ -150,17 +151,14 @@
         <div class="content-body">
             <!--<div class="seach-block on">
                 <div class="btn-group">
-                    <button type="button" class="btn btn-dark btn-fliter">筛选</button>
+                    <button type="button" class="btn btn-dark btn-fliter">商品类别</button>
                     <button type="button" class="btn btn-dark dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <span class="caret"></span>
                         <span class="sr-only">Toggle Dropdown</span>
                     </button>
                     <ul class="dropdown-menu">
-                        <li><a href="#">Action</a></li>
-                        <li><a href="#">Another action</a></li>
-                        <li><a href="#">Something else here</a></li>
-                        <li role="separator" class="divider"></li>
-                        <li><a href="#">Separated link</a></li>
+                        <li><a href="#">非航</a></li>
+                        <li><a href="#">餐食</a></li>
                     </ul>
                 </div>
                 <div class="serach-group">
@@ -170,13 +168,13 @@
                     </div>
                 </div>
             </div>-->
-            <div class="dinnercar-list-block">
+            <!--<div class="dinnercar-list-block">
                 <ul class="dinnercar-list" id="dinnercarlist"></ul>
                 <div class="fliter-block">
                     <span class="fliter-item on"><i class="iconfont icon-dinnercar"></i>按餐车号显示</span>
                     <span class="fliter-item"><i class="iconfont icon-menu"></i>全部显示</span>
                 </div>
-            </div>
+            </div>-->
 
             <div class="list-container clearfix" id="prodlist">
 
@@ -240,14 +238,7 @@
                     </div>
                     <div class="h-modal-form-item">
                         <span class="key">实物总数：</span>
-                        <span class="value" id="txt_totalnum"></span>
-                    </div>
-                    <div class="h-modal-form-item">
-                        <span class="key">餐车编号：</span>
-                        <span class="value"><span id="txt_dinnercarno"></span><span>(该餐车应收数量:<span id="txt_dinnercarnum"></span>)</span></span>
-                    </div>
-                    <div class="h-modal-form-item mg-12">
-                        <span class="key">差异数量：</span>
+                        <!--<span class="value" id="txt_totalnum"></span>-->
                         <div class="calc-wrapper">
                             <div class="operate-calc btn-group operate-item" min="0">
                                 <button type="button" class="btn btn-point point-l" data-point="-1">-</button>
@@ -256,6 +247,20 @@
                             </div>
                         </div>
                     </div>
+                    <!--<div class="h-modal-form-item">
+                        <span class="key">餐车编号：</span>
+                        <span class="value"><span id="txt_dinnercarno"></span><span>(该餐车应收数量:<span id="txt_dinnercarnum"></span>)</span></span>
+                    </div>-->
+                    <!--<div class="h-modal-form-item mg-12">
+                        <span class="key">差异数量：</span>
+                        <div class="calc-wrapper">
+                            <div class="operate-calc btn-group operate-item" min="0">
+                                <button type="button" class="btn btn-point point-l" data-point="-1">-</button>
+                                <input type="number" id="num_damagedCount" readonly="readonly" class="calc-input" value="0">
+                                <button type="button" class="btn btn-point point-r" data-point="1">+</button>
+                            </div>
+                        </div>
+                    </div>-->
                     <div class="h-modal-form-item mg-12">
                         <span class="key">差异原因：</span>
                         <div class="btn-group operate-item">
@@ -301,18 +306,10 @@
         <div class="mask"></div>
         <div class="toast-msg"><span></span></div>
     </div>
-    <script id="s_dinnercarlist" type="text/html">
-        {{each list value index}}
-        {{if index==0}}
-        <li class="dinnercar-item on" data-carid="{{value.DiningCarNo}}">餐车{{value.DiningCarNo}}</li>
-        {{else}}
-        <li class="dinnercar-item" data-carid="{{value.DiningCarNo}}">餐车{{value.DiningCarNo}}</li>
-        {{/if}}
-        {{/each}}
-    </script>
+   
     <script id="s_prodlist" type="text/html">
         {{each list value index}}
-        <div class="box" data-prodid="{{value.ProductID}}" data-prodsku="{{value.Sku}}" data-carno="{{value.DiningCarNo}}">
+        <div class="box" data-prodid="{{value.ProductID}}" data-prodsku="{{value.Sku}}">
             <dl>
                 {{if value.Status==1}}
                 <dt class="disabled">
@@ -339,7 +336,7 @@
     </script>
     <script id="s_prodlist_all" type="text/html">
         {{each list value index}}
-        <div class="box" data-prodid="{{value.ProductID}}" data-prodsku="{{value.Sku}}" data-carno="{{value.DiningCarNo}}">
+        <div class="box" data-prodid="{{value.ProductID}}" data-prodsku="{{value.Sku}}">
             <dl>
                 {{if value.Status==1}}
                 <dt class="disabled">
@@ -360,7 +357,6 @@
                 <dd><span>结余数</span><span>{{value.HandoverCounts}}</span></dd>
                 <dd><span>实际数</span><span>{{value.UndertakeCounts}}</span></dd>
                 <dd><span>破损数</span><span>{{value.HandoverDamagedCounts}}</span></dd>
-                <dd><span>餐车号</span><span>{{value.DiningCarNo}}</span></dd>
             </dl>
         </div>
         {{/each}}
@@ -374,20 +370,10 @@
             getLoginInfo(function () {
                 $("#txt_prevflightno").text();
                 getHandoverInfo(function () {
-                    getDinnercarList();
+                    // getDinnercarList();
+                    getProductList();
                 });
 
-            });
-
-            $(document).on("click", ".dinnercar-item", function () {
-                if ($(this).hasClass("on")) {
-                    return;
-                } else {
-                    $(".dinnercar-item.on").removeClass("on");
-                    $(this).addClass("on");
-                    var dinnerCarNo = $(this).data("carid");
-                    fliterProdByCar(dinnerCarNo);
-                }
             });
 
             $(document).on("click", ".iconradio", function () {
@@ -395,7 +381,6 @@
                     return;
                 }
                 var prodsku = $(this).parents(".box").data("prodsku");
-                var carno = $(this).parents(".box").data("carno");
                 var radio = $(this).find("i");
                 var checked = radio.hasClass("iconfont");
                 var plist = prodList.list;
@@ -403,17 +388,17 @@
                 if (checked) {
                     radio.removeClass("iconfont").removeClass("icon-duigou").addClass("uncheck");
                     for (var i = 0; i < plist.length; i++) {
-                        if (plist[i].Sku == prodsku && plist[i].DiningCarNo == carno) {
+                        if (plist[i].Sku == prodsku) {
                             plist[i].IsCheck = 0;
-                            removeChecked(prodsku, carno);
+                            removeChecked(prodsku);
                         }
                     }
                 } else {
                     radio.removeClass("uncheck").addClass("iconfont").addClass("icon-duigou");
                     for (var i = 0; i < plist.length; i++) {
-                        if (plist[i].Sku == prodsku && plist[i].DiningCarNo == carno) {
+                        if (plist[i].Sku == prodsku) {
                             plist[i].IsCheck = 1;
-                            addChecked(prodsku, carno);
+                            addChecked(prodsku);
                         }
                     }
                 }
@@ -425,38 +410,18 @@
                     return;
                 }
                 var sku = $(this).parents(".box").data("prodsku");
-                var carno = $(this).parents(".box").data("carno");
-                if ($(".fliter-item:first").hasClass("on")) {
-                    getProductBySku(sku, carno);
-                } else {
-                    getProductBySku(sku, carno);
-                }
+                    getProductBySku(sku);
+               
                 for (var i = 0; i < prodList.list.length; i++) {
-                    if (prodList.list[i].Sku == sku && prodList.list[i].DiningCarNo == carno) {
+                    if (prodList.list[i].Sku == sku) {
                         $("#num_damagedCount").val(prodList.list[i].HandoverDamagedCounts);
-                        $("#txt_dinnercarnum").text(prodList.list[i].HandoverCounts);
+                       // $("#txt_dinnercarnum").text(prodList.list[i].HandoverCounts);
                         break;
                     }
                 }
                 $(".prd-manage-modal").show();
             });
-
-            //餐车号显示与隐藏
-            $('.fliter-item').click(function () {
-                var q = $(this).index();
-                $(this).addClass('on').siblings('.fliter-item').removeClass('on');
-                if (q == 0) {
-                    var dinnerCarNo = $(".dinnercar-item.on").data("carid");
-                    fliterProdByCar(dinnerCarNo);
-                    $('.dinnercar-list').css('display', 'block');
-                    //$('.list-container').css('height', 'calc(100% - 115px)');
-                } else {
-                    $('.dinnercar-list').css('display', 'none');
-                    //$('.list-container').css('height', 'calc(100% - 115px)');
-                    fliterProdByCar();
-                }
-            });
-
+          
             $("#drop_diffreson").next().find("li").click(function () {
                 var resontxt = $(this).data("text");
                 $("#drop_diffreson").prev().text(resontxt);
@@ -507,61 +472,30 @@
             });
         });
 
-        function getDinnercarList() {
-            var param = {
-                sql: "select distinct DiningCarNo from HandoverItem ",
-                type: "dinnercarList"
-            }
-
-            appJsBridge.callHandler("selectList", param, function (result) {
-                checkSuccess(result, function () {
-                    $("#dinnercarlist").html(template("s_dinnercarlist", result));
-                    getProductList(result.list[0].DiningCarNo);
-                });
-            });
-        }
-
-        function getProductList(carNo) {
+        function getProductList() {
             var param = {
                 type: "prodStockList"
             }
             param.sql = "select A.HandoverNo,A.PreFlightNo,A.FlightNo,A.Status,B.ProductName,B.Sku," +
-                "B.ProductID,B.DiningCarNo,ifnull(B.HandoverCounts,0)+ifnull(B.HandoverDamagedCounts,0) as HandoverCounts,B.HandoverDamagedCounts," +
+                "B.ProductID,ifnull(B.HandoverCounts,0)+ifnull(B.HandoverDamagedCounts,0) as HandoverCounts,B.HandoverDamagedCounts," +
                 "ifnull(B.HandoverCounts,0)+ifnull(B.HandoverDamagedCounts,0) as UndertakeCounts,B.UndertakeDamagedCounts, " +
                 "0 as IsCheck, '' as DamagedReson,B.Remark from HandoverMaster as A " +
                 "Left Join HandoverItem as B on A.HandoverNo=B.HandoverNo  where A.HandoverNo='" + orderid + "'";
             appJsBridge.callHandler("selectList", param, function (result) {
                 checkSuccess(result, function () {
                     prodList = result;
-                    fliterProdByCar(carNo);
+                    $("#prodlist").html(template("s_prodlist_all", prodList));
+                    if (prodList.list[0].Status == 1) {
+                        $("#btn_transfer").attr("disabled", true);
+                    }
                 });
             });
-
         }
 
-        function fliterProdByCar(carNo) {
-            var flitedProdList = {
-                list: []
-            };
-            if (carNo) {
-                for (var i = 0; i < prodList.list.length; i++) {
-                    if (prodList.list[i].DiningCarNo == carNo) {
-                        flitedProdList.list.push(prodList.list[i]);
-                    }
-                }
-                $("#prodlist").html(template("s_prodlist", flitedProdList));
-            } else {
-                $("#prodlist").html(template("s_prodlist_all", prodList));
-            }
-            if (prodList.list[0].Status == 1) {
-                $("#btn_transfer").attr("disabled", true);
-            }
-        }
-
-        function getProductBySku(sku, carno) {
+        function getProductBySku(sku) {
             var param = {
                 sql: "select b.* from HandoverMaster as a left Join HandoverItem as b on a.HandoverNo=b.HandoverNo " +
-                    "where b.Sku='" + sku + "'" + " and b.DiningCarNo='" + carno + "' and b.handoverNo='" + orderid + "'",
+                    "where b.Sku='" + sku + "'" + " and b.handoverNo='" + orderid + "'",
                 type: "prodobj"
             }
             //AppAlert("",param.sql);
@@ -569,12 +503,16 @@
                 sql: "select sum(HandoverCounts) as TotalQty from HandoverItem where Sku='" + sku + "' and handoverNo='" + orderid + "' group by HandoverCounts",
                 type: "prodtotal"
             }
+
+            
             //AppAlert("",paramtotal.sql);
             appJsBridge.callHandler("selectList", paramtotal, function (result) {
                 checkSuccess(result, function () {
                     var prod = result.list[0];
                     $("#txt_balancenum").text(prod.TotalQty);
-                    $("#txt_totalnum").text(prod.TotalQty);
+                    $("#num_damagedCount").text(prod.TotalQty);
+                    
+                   // $("#txt_totalnum").text(prod.TotalQty);
 
                 });
             });
@@ -583,7 +521,6 @@
                 checkSuccess(result, function () {
                     var prod = result.list[0];
                     $(".prd-manage-modal .appmodal-header span").text(prod.ProductName);
-                    $("#txt_dinnercarno").text(prod.DiningCarNo);
                     // $("#txt_dinnercarnum").text(prod.HandoverCounts);
                     $("#num_damagedCount").parents(".operate-item").attr("max", prod.HandoverCounts);
                     $("#hd_sku").val(prod.Sku);
@@ -593,7 +530,7 @@
 
         function getHandoverInfo(callback) {
             var param = {
-                sql: "select * from HandoverMaster where PreFlightNo !='" + flightInfo.FlightNo + "'",
+                sql: "select * from HandoverMaster where PreFlightNo ='" + flightInfo.PreFlightNo + "' and HandoverEmpNo!='"+flightInfo.EmpNo+"'",
                 type: "getHandoverInfo"
             }
 
@@ -633,14 +570,12 @@
 
             var damagedprod = {
                 sku: $("#hd_sku").val(),//sku编号
-                diningCarNo: $("#txt_dinnercarno").text(), //餐车号
                 handoverCount: $("#txt_dinnercarnum").text() * 1 - $("#num_damagedCount").val() * 1,//交接数量
                 damagedCount: $("#num_damagedCount").val(), //破损数量
                 damagedReason: $("#drop_diffreson").prev().text(),//破损原因
                 damagedReasonDesc: $("#txt_damagedreson").val(),//破损原因描述
                 imageBase64: [] //破损图片base64格式
             }
-
 
             if (damagedprod.damagedCount > 0 && damagedprod.damagedReason == "") {
                 AppAlert("提示", "差异原因不能为空");
@@ -653,7 +588,7 @@
 
             var isChecked = 0;
             for (var k = 0; k < damagedprodList.length; k++) {
-                if (damagedprodList[k].sku == damagedprod.sku && damagedprodList[k].diningCarNo == damagedprod.diningCarNo) {
+                if (damagedprodList[k].sku == damagedprod.sku) {
                     isChecked = 1;
                     damagedprodList[k].handoverCount = damagedprod.handoverCount,//交接数量
                     damagedprodList[k].damagedCount = damagedprod.damagedCount;
@@ -667,7 +602,7 @@
             }
             //AppAlert("", JSON.stringify(damagedprodList));
             for (var j = 0; j < prodList.list.length; j++) {
-                if (prodList.list[j].Sku == damagedprod.sku && prodList.list[j].DiningCarNo == damagedprod.diningCarNo) {
+                if (prodList.list[j].Sku == damagedprod.sku) {
                     prodList.list[j].UndertakeCounts = damagedprod.handoverCount;
                     prodList.list[j].HandoverDamagedCounts = damagedprod.damagedCount;
                     prodList.list[j].DamagedReson = damagedprod.damagedReason,
@@ -681,12 +616,11 @@
             $(".prd-manage-modal").hide();
         }
 
-        function addChecked(sku, carno) {
+        function addChecked(sku) {
             for (var i = 0; i < prodList.list.length; i++) {
-                if (prodList.list[i].Sku == sku && prodList.list[i].DiningCarNo == carno) {
+                if (prodList.list[i].Sku == sku ) {
                     var damagedprod = {
                         sku: prodList.list[i].Sku,//sku编号
-                        diningCarNo: prodList.list[i].DiningCarNo, //餐车号
                         handoverCount: prodList.list[i].HandoverCounts * 1 - prodList.list[i].HandoverDamagedCounts * 1,//交接数量
                         damagedCount: prodList.list[i].HandoverDamagedCounts, //破损数量
                         damagedReason: prodList.list[i].DamagedReson,//破损原因
@@ -701,9 +635,9 @@
 
         }
 
-        function removeChecked(sku, carno) {
+        function removeChecked(sku) {
             for (var i = 0; i < damagedprodList.length; i++) {
-                if (damagedprodList[i].sku == sku && carno == damagedprodList[i].diningCarNo) {
+                if (damagedprodList[i].sku == sku) {
                     damagedprodList.splice(i, 1);
                     break;
                 }

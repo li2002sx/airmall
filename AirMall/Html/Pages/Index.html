@@ -10,8 +10,7 @@
     <!--<link href="../Content/menu.css" rel="stylesheet" />-->
     <script src="../Scripts/jquery-1.10.2.min.js"></script>
     <script src="../Scripts/dispatch.js"></script>
-    <script src="../Scripts/dispatch.js"></script>
-    <script src="../Scripts/common.js?v=103"></script>
+    <script src="../Scripts/common.js?v=104"></script>
     <style>
         .content-index {
             background: initial;
@@ -20,12 +19,12 @@
         .flight-block {
             border-radius: 20px;
             background: #fff;
-            margin-top: 20px;
+            margin-top: 10px;
             width: 100%;
             text-align: center;
             position: relative;
             padding-top: 60px;
-            margin-bottom: 35px;
+            margin-bottom: 15px;
         }
 
         .flight-NO {
@@ -48,7 +47,7 @@
 
         .flight-airport label {
             color: #666;
-            vertical-align:top;
+            vertical-align: top;
         }
 
         .flight-time .iconfont {
@@ -65,7 +64,7 @@
 
         .flight-param {
             width: 100%;
-            margin: 30px 0 15px;
+            margin: 20px 0 15px;
         }
 
         .param-item {
@@ -94,8 +93,8 @@
             }
 
         .flight-footer {
-            height: 100px;
-            line-height: 100px;
+            height: 70px;
+            line-height: 70px;
         }
 
             .flight-footer .btn {
@@ -116,8 +115,12 @@
         }
 
             .table tr {
-                height: 60px;
+                height: 83px;
             }
+
+                .table tr:last-of-type {
+                    height: 70px;
+                }
 
         .table-striped tr:nth-last-of-type(odd) {
             background: #E6E6E6;
@@ -134,6 +137,14 @@
 
         .table-container .table tr > td {
             vertical-align: middle;
+        }
+
+            .table-container .table tr > td:last-child {
+                color: #666;
+            }
+
+        .red {
+            color: #eb2d36;
         }
 
         .table-container .table tr:first-child th:first-child {
@@ -158,25 +169,52 @@
         }
 
         #other-table > tbody > tr {
-            height: 80px;
+            height: 50px;
         }
+
+            #other-table > tbody > tr:last-of-type {
+                height: 70px;
+            }
 
             #other-table > tbody > tr > td {
                 vertical-align: middle;
             }
 
+                #other-table > tbody > tr > td:last-of-type {
+                    color: #666;
+                }
+
         .ft {
             font-weight: bold;
         }
-        .time{
-            margin:0px 66px;
-            display:inline-block;
-            text-align:center;
-            color:#666;
+
+        .time {
+            margin: 0px 66px;
+            display: inline-block;
+            text-align: center;
+            color: #666;
         }
-        .time > span:first-child{
-            display:inline-block;
-            width:100%;
+
+            .time > span:first-child {
+                display: inline-block;
+                width: 100%;
+            }
+
+        .achievement {
+            display: inline-block;
+            background: #FF5255;
+            padding: 5px 15px;
+            border-radius: 5px;
+            outline: none;
+            border: 1px solid #eee;
+            color: #fff;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .content-index {
+            /*height:500px;*/
+            overflow-y: scroll;
         }
     </style>
 </head>
@@ -210,40 +248,52 @@
             </div>
         </div>
         <div class="table-container clearfix">
-            <table class="table table-striped" style="width:49%;float:left">
+            <table class="table table-striped" style="width:40%;float:left">
                 <tr>
                     <th>舱位</th>
                     <th>总人数</th>
-
                 </tr>
                 <tr>
-                    <td>W</td>
+                    <td class="red">W</td>
                     <td class="person-w">-</td>
                 </tr>
                 <tr>
-                    <td>Y</td>
+                    <td class="red">Y</td>
                     <td class="person-y">-</td>
                 </tr>
                 <tr>
-                    <td>总计</td>
+                    <td style="color:#666;">总计</td>
                     <td class="person-total">-</td>
                 </tr>
             </table>
-            <table class="table table-striped" id="other-table" style="width:49%;float:right;overflow:hidden">
+            <table class="table table-striped" id="other-table" style="width:58%;float:right;overflow:hidden">
                 <tr>
-                    <td class="ft">销售总金额</td>
+                    <td class="ft">销售总额</td>
                     <td class="sales-price">-</td>
                 </tr>
                 <tr>
-                    <td class="ft">销售总件数</td>
+                    <td class="ft">销售件数</td>
                     <td class="sales-number">-</td>
                 </tr>
                 <tr>
-                    <td class="ft">时间</td>
-                    <td class="time-total">-</td>
+                    <td class="ft">组提成</td>
+                    <td class="self-extract">-</td>
                 </tr>
+                <tr>
+                    <td class="ft">完成绩效</td>
+                    <td class="complate-achieve">-</td>
+                </tr>
+                <tr>
+                    <td class="ft">目标绩效</td>
+                    <td class="point-achieve">-</td>
+                </tr>
+                <tr>
+                    <td colspan="2"><span class="achievement">绩效上报</span></td>
+                </tr>
+
             </table>
         </div>
+        <!--<button class="achievement"><span class="iconfont icon-jixiao"></span>绩效上报</button>-->
     </div>
     <div class="appmodal" id="modal-msg">
         <div class="mask"></div>
@@ -260,55 +310,55 @@
             </div>
         </div>
     </div>
-<div class="loading">
-    <div class="loading-mask"></div>
-    <div class="loading-content">
-        <div class="icon-loading">
-            <img src="../Images/loading.png"/>
+    <div class="loading">
+        <div class="loading-mask"></div>
+        <div class="loading-content">
+            <div class="icon-loading">
+                <img src="../Images/loading.png" />
+            </div>
+            <span>数据上传中</span>
         </div>
-        <span>数据上传中</span>
     </div>
-</div>
-<div class="toast">
-    <div class="mask"></div>
-    <div class="toast-msg"><span></span></div>
-</div>
+    <div class="toast">
+        <div class="mask"></div>
+        <div class="toast-msg"><span></span></div>
+    </div>
     <script>
 
         $(function () {
-			var orderid = "";
+            var orderid = "";
             getLoginInfo(function () {
-                var getDisTime = function (eTime, sTime) {                    
+                var getDisTime = function (eTime, sTime) {
                     /*var time = "";
                     var disTime = (new Date(eTime).getTime() / 60000 - new Date(sTime).getTime() / 60000);
                     time = Math.floor(disTime / 60) + "小时" + Math.round(disTime % 60) + "分";*/
                     //$(".flight-flytime").text(time);
 
                 }
-				
-				var calcTime=function(a){
-		var minutes=0;
 
-		if(a[0]=="0"){
-			minutes+=a[1]*60;
-		} else {
-			minutes+=a.substring(0,2)*60;
-		}
+                var calcTime = function (a) {
+                    var minutes = 0;
 
-		if(a[3]=="0"){
-			minutes+=a[4]*1;
-		} else {
-			minutes+=a.substring(3,5)*1;
-		}
-		return minutes;
-	}
-	
-	var getResTime = function(a,b){
-		var c=calcTime(b)-calcTime(a);
-		var hour = parseInt(c/60);
-		var minutes = Math.round((c/60-parseInt(c/60))*60);
-		return hour+"小时"+ minutes +"分钟";
-	}
+                    if (a[0] == "0") {
+                        minutes += a[1] * 60;
+                    } else {
+                        minutes += a.substring(0, 2) * 60;
+                    }
+
+                    if (a[3] == "0") {
+                        minutes += a[4] * 1;
+                    } else {
+                        minutes += a.substring(3, 5) * 1;
+                    }
+                    return minutes;
+                }
+
+                var getResTime = function (a, b) {
+                    var c = calcTime(b) - calcTime(a);
+                    var hour = parseInt(c / 60);
+                    var minutes = Math.round((c / 60 - parseInt(c / 60)) * 60);
+                    return hour + "小时" + minutes + "分钟";
+                }
 
                 var param = {
                     sql: "select DeliveryNo from ReceiptList where 1=1" + sqlFliteFlight,
@@ -324,56 +374,91 @@
 
                 var airport = flightInfo.LineCHN.split("-");
 
-                var startTime="";
-				var endTime="";
-                if (!flightInfo.ActualDeptTime||!flightInfo.ActualArrTime) {
+                var startTime = "";
+                var endTime = "";
+                if (!flightInfo.ActualDeptTime || !flightInfo.ActualArrTime) {
 
                     $("#txt_stime").text(flightInfo.DeptTime);
                     $("#txt_etime").text(flightInfo.ArrTime);
                     startTime = flightInfo.DeptTime;
                     endTime = flightInfo.ArrTime;
-					//AppAlert(parseInt(calcTime(endTime)-calcTime(startTime))/60)
+                    //AppAlert(parseInt(calcTime(endTime)-calcTime(startTime))/60)
                     //getDisTime(endTime,startTime);
 
-                    $(".flight-flytime").text(getResTime(startTime,endTime));
+                    $(".flight-flytime").text(getResTime(startTime, endTime));
                 } else {
                     $("#txt_stime").text(flightInfo.ActualDeptTime);
                     $("#txt_etime").text(flightInfo.ActualArrTime);
                     startTime = flightInfo.ActualDeptTime;
                     endTime = flightInfo.ActualArrTime;
                     //getDisTime(endTime, startTime);
-                    $(".flight-flytime").text(getResTime(startTime,endTime));
+                    $(".flight-flytime").text(getResTime(startTime, endTime));
                 }
 
-                $("#txt_flightno").text(flightInfo.Carrier+flightInfo.FlightNo);
+                $("#txt_flightno").text(flightInfo.Carrier + flightInfo.FlightNo);
                 $("#txt_sport").text(airport[0]);
                 $("#txt_eport").text(airport[1]);
 
 
                 var indexparam = {
                     sql: "select FirstClassAmount,EconomyClassAmount from FlightInfo A " +
-                       " where A.FlightNo = '" + flightInfo.FlightNo + " ' and A.FlightDate = '"+flightInfo.FlightDate + "' " ,
+                        " where A.FlightNo = '" + flightInfo.FlightNo + "' and A.FlightDate = '" + flightInfo.FlightDate + "' ",
                     type: "getindex"
                 }
-                appJsBridge.callhandler("selectList", indexparam, function (result) {
+                appJsBridge.callHandler("selectList", indexparam, function (result) {
                     checkSuccess(result, function () {
                         $(".person-w").html(result.list[0].FirstClassAmount);
                         $(".person-y").html(result.list[0].EconomyClassAmount);
                         $(".person-total").html(result.list[0].FirstClassAmount * 1 + result.list[0].EconomyClassAmount * 1);
-                     });
-                 });
+                    });
+                });
                 var getprice = {
                     sql: "select sum(OrderPrice) as SellTotalPrice " +
-                       "from SalesOrder where 1=1" + sqlFliteFlight,
+                        "from SalesOrder where 1=1" + sqlFliteFlight,
                     type: "getprice"
                 }
-
+                //AppAlert("",getprice.sql)
                 var getQty = {
-                    sql: "select sum(B.Quantity) as QtyTotal from SalesOrder as A inner join SalesOrderItem as B on A.OrderNo=B.OrderNo and A.FlightNo='" + flightInfo.FlightNo + "' and  A.FlightDate ='" + flightInfo.FlightDate + "'"
+                    sql: "select sum(B.Quantity) as QtyTotal from SalesOrder as A " +
+                        "inner join SalesOrderItem as B on A.OrderNo=B.OrderNo and A.FlightNo='"
+                        + flightInfo.FlightNo + "' and  A.FlightDate ='" + flightInfo.FlightDate + "'"
                 }
+
+                var getPerformance = {
+                    sql: "select * from FlightPerformance as A where A.FlightNo=" + flightInfo.FlightNo,
+                    type: "getPerformance"
+                }
+                //var salsAllPrice;
                 appJsBridge.callHandler("selectList", getprice, function (result) {
                     checkSuccess(result, function () {
+                        //AppAlert("",result)
+                        var salsAllPrice = result.list[0].SellTotalPrice;
                         $(".sales-price").html("￥" + formatNumber(result.list[0].SellTotalPrice));
+
+                        appJsBridge.callHandler("selectList", getPerformance, function (res) {
+                            checkSuccess(res, function () {
+                                //var salsAllPrice = salsAllPrice;
+                                var level = 3;
+                                var achieve;
+                                var flag = true;
+                                for (var i = 0; i < level; i++) {
+                                    var key = "T" + (i + 1);
+                                    if (salsAllPrice > res.list[0]["T3"]) {
+                                        achieve = "T3";
+                                        flag = false;
+                                    }
+                                    if (res.list[0][key] >= salsAllPrice && flag) {
+                                        achieve = "T" + i;
+                                        flag = false;
+                                    }
+                                }
+                                $(".complate-achieve").html(achieve);
+                                $(".self-extract").html("￥" + formatNumber((salsAllPrice * 0.1).toFixed(0)));
+                                $(".point-achieve").html(res.list[0].TargetPerformance);
+
+                            });
+
+                        });
                     });
                 });
                 appJsBridge.callHandler("selectList", getQty, function (result) {
@@ -381,14 +466,18 @@
                         $(".sales-number").html(formatNumber(result.list[0].QtyTotal));
                     });
                 });
+
                 $(".time-total").html(flightInfo.FlightDate);
             });
-            $("#btnchange").click(function() {
+            $("#btnchange").click(function () {
                 window.location.href = "AssociateManage.html";
             });
             //送货确认
             $("#btnsure").click(function () {
                 window.location.href = "ReceivingOrderList.html?rorderid=" + orderid;
+            });
+            $(".achievement").click(function () {
+                window.location.href = "PerformanceReporting.html";
             });
         });
     </script>

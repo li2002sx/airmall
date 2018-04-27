@@ -23,6 +23,8 @@
 
 @interface MainViewController : BaseViewController<WKNavigationDelegate,UITableViewDataSource,UITableViewDelegate,UINavigationControllerDelegate,UIImagePickerControllerDelegate>
 
+@property(nonatomic) NSInteger networkingStatus;
+
 @property (weak, nonatomic) IBOutlet UILabel *thisFlightNoLabel;
 
 @property (weak, nonatomic) IBOutlet UILabel *lineCHNLabel;

@@ -1,0 +1,193 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>业绩上报</title>
+    <link href="../Component/Bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="../Content/Style.css?v=1020" rel="stylesheet" />
+    <script src="../Scripts/jquery-1.10.2.min.js"></script>
+    <script src="../Scripts/dispatch.js"></script>
+    <script src="../Component/Bootstrap/js/bootstrap.min.js"></script>
+    <script src="../Component/art-template/arttemplate.js"></script>
+    <script src="../Scripts/common.js?v=104"></script>
+    <style>
+        .content-body {
+            height: calc(100% - 80px);
+            border-radius: 0 0 20px 20px;
+        }
+
+        .content-header {
+            height: 65px;
+        }
+
+        .content-title h3 {
+            font-weight: bold;
+        }
+
+        .table > tbody > tr {
+            height: 71px;
+        }
+
+            .table > tbody > tr > th {
+                text-align: right;
+                width: 50%;
+                vertical-align: middle;
+                padding-right: 30px;
+                border-top: none;
+                border-bottom: 1px solid #e6e6e6;
+            }
+
+                .table > tbody > tr > th span {
+                    display: inline-block;
+                    width: 90px;
+                    text-align: left;
+                }
+
+            .table > tbody > tr > td {
+                color: #666;
+                vertical-align: middle;
+                padding-left: 30px;
+                border-top: none;
+                border-bottom: 1px solid #e6e6e6;
+            }
+    </style>
+</head>
+<body>
+    <div class="content">
+        <div class="content-header">
+            <div class="content-title">
+                <span></span><h3>销售单</h3>
+            </div>
+        </div>
+
+        <div class="content-body">
+            <div class="table-container clearfix">
+                <table class="table ">
+                    <tr>
+                        <th><span>销售总金额</span></th>
+                        <td class="sales-price"></td>
+                    </tr>
+                    <tr>
+                        <th><span>上交总金额</span></th>
+                        <td class="handin-price"></td>
+                    </tr>
+                    <tr>
+                        <th><span>乘务长</span></th>
+                        <td class="EmpType"></td>
+                    </tr>
+                    <tr>
+                        <th><span>乘务员</span></th>
+                        <td class="crew"></td>
+                    </tr>
+                    <tr>
+                        <th><span>组提成</span></th>
+                        <td class="self-extract"></td>
+                    </tr>
+                    <tr>
+                        <th><span>目标绩效</span></th>
+                        <td class="point-achieve"></td>
+                    </tr>
+                    <tr>
+                        <th><span>完成绩效</span></th>
+                        <td class="complate-achieve"></td>
+                    </tr>
+                    <tr>
+                        <th><span>航班号</span></th>
+                        <td class="FlightNo"></td>
+                    </tr>
+
+                </table>
+            </div>
+        </div>
+        <div class="content-footer" style="text-align: center">
+            <button class="btn performance-reporting">绩效上报</button>
+        </div>
+    </div>
+    <div class="appmodal" id="modal-msg">
+        <div class="mask"></div>
+        <div class="appmodal-content">
+            <div class="appmodal-header ">
+                <span></span>
+            </div>
+            <div class="appmodal-body text-center">
+                <span></span>
+            </div>
+            <div class="appmodal-footer">
+                <button class="btn btn-cancel" type="button">取消</button>
+                <button class="btn btn-major btn-confirm" type="button">确认</button>
+            </div>
+        </div>
+    </div>
+    <div class="toast">
+        <div class="mask"></div>
+        <div class="toast-msg"><span></span></div>
+    </div>
+
+
+    <script>
+
+        getLoginInfo(function () {
+            var getprice = {
+                sql: "select sum(OrderPrice) as SellTotalPrice " +
+                   "from SalesOrder where 1=1" + sqlFliteFlight,
+                type: "getprice"
+            }
+
+            var getPerformance = {
+                sql: "select * from FlightPerformance as A where A.FlightNo=" + flightInfo.FlightNo,
+                type: "getPerformance"
+            }
+            //var salsAllPrice;
+            appJsBridge.callHandler("selectList", getprice, function (result) {
+                checkSuccess(result, function () {
+                    var salsAllPrice = result.list[0].SellTotalPrice;
+                    $(".sales-price").html("￥" + formatNumber(result.list[0].SellTotalPrice));
+                    $(".handin-price").html("￥" + formatNumber(result.list[0].SellTotalPrice));
+                    $(".EmpType").text(flightInfo.EmpType)
+                    $(".crew").text("-");
+                    $(".FlightNo").text(flightInfo.Carrier + flightInfo.FlightNo)
+
+                    appJsBridge.callHandler("selectList", getPerformance, function (res) {
+                        checkSuccess(res, function () {
+						//AppAlert("",JSON.stringify(res))
+                            //var salsAllPrice = salsAllPrice;
+                            var level = 3;
+                            var achieve;
+                            var flag = true;
+                            for (var i = 0; i < level; i++) {
+
+                                var key = "T" + (i + 1);
+                                if (salsAllPrice>res.list[0]["T3"]) {
+                                    achieve = "T3";
+                                    flag = false;
+                                }
+                                if (res.list[0][key] >= salsAllPrice && flag) {
+                                    achieve = "T" + i;
+                                    flag = false;
+                                }
+                            }
+                            $(".complate-achieve").html(achieve);
+                            $(".self-extract").html("￥" + formatNumber((salsAllPrice * res.list[0].SalesCommission).toFixed(0)));
+                            $(".point-achieve").html(res.list[0].TargetPerformance);
+
+                        });
+
+                    });
+                });
+            });
+        })
+        $(".performance-reporting").click(function () {
+            appJsBridge.callHandler("reportOrder", {}, function (res) {
+				//AppAlert(1)
+                checkSuccess(res, function () {
+					//AppAlert(2)
+                    AppAlert("提示","业绩上报成功！")
+                })
+            })
+        })
+
+    </script>
+</body>
+</html>

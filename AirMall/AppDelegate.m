@@ -67,10 +67,12 @@
 
 -(UIInterfaceOrientationMask)application:(UIApplication *)application supportedInterfaceOrientationsForWindow:(UIWindow *)window{
 //    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone || _openCamera)
-    if (_openCamera)
-        return UIInterfaceOrientationMaskAll;
-    else
+    if (_openCamera){
+//        return UIInterfaceOrientationMaskAll;
+        return UIInterfaceOrientationMaskPortrait;
+    }else{
         return UIInterfaceOrientationMaskLandscape;
+    }
 }
 
 @end
