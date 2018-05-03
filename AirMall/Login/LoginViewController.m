@@ -70,6 +70,7 @@
     
     [super viewWillAppear:animated];
     [self setButtonStatus:NO];
+    [self checkUpate];
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
@@ -805,6 +806,36 @@
     if([self.navigationController respondsToSelector:@selector(interactivePopGestureRecognizer)]) {
         self.navigationController.interactivePopGestureRecognizer.enabled = YES;
     }
+}
+
+-(void) checkUpate{
+    NSMutableDictionary* dict = [NSMutableDictionary new];
+    [NetworkUtil post:@"api/ipad/autoupdate" params:dict success:^(NSURLSessionDataTask *task, id responseObject) {
+        NSDictionary* response = [NetworkUtil responseConfiguration:responseObject];
+        bool isSucc = [[response objectForKey:@"IsSuccess"] boolValue];
+        if(isSucc){
+            id data = [response objectForKey:@"Data"];
+            NSString* lastVersion = [data valueForKey:@"LatestVersion"];
+            NSString* downUrl = [data valueForKey:@"Url"];
+            
+            NSDictionary *infoDic = [[NSBundle mainBundle] infoDictionary];
+            NSString *currentVersion = [infoDic objectForKey:@"CFBundleShortVersionString"];
+            if(![lastVersion isEqualToString:currentVersion]){
+                
+                SCLAlertView *alert = [[SCLAlertView alloc] init];
+                //Using Block
+                [alert addButton:@"去下载" actionBlock:^(void) {
+                    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:downUrl] options:nil completionHandler:nil];
+                }];
+                
+                alert.showAnimationType= SCLAlertViewShowAnimationSlideInToCenter;
+                [alert showNotice:self title:@"提示" subTitle:@"有新的版本可以下载啦" closeButtonTitle:nil duration:0.0f];
+            }
+        }
+    } fail:^(NSURLSessionDataTask *task, NSError *error) {
+        NSLog(@"error");
+        [self synFail:@"调用接口失败"];
+    }];
 }
 
 @end
