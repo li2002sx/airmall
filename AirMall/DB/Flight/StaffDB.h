@@ -23,7 +23,7 @@
 
 +(id) getPreFlightInfo:(NSString*) flightNo tailNo:(NSString*) tailNo acType:(NSString*)acType deptTime:(NSString*) deptTime;
 
-+(NSArray*) getNotFlightList:(NSString*)empNo flightDate:(NSString*) flightDate;
++(NSArray*) getNotFlightList:(NSString*)empNo flightDate:(NSString*) flightDate tailNo:(NSString*) tailNo acType:(NSString*)acType;
 
 +(LoginInfoResult*) changeFlight:(NSString*) flightNo flightDate:(NSString*) flightDate empNo:(NSString*) empNo deviceNo:(NSString*)deviceNo;
 

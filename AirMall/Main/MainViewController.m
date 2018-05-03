@@ -149,7 +149,7 @@
 }
 
 - (void)initNotFlights{
-    _notFlights = [StaffDB getNotFlightList:[_userDict objectForKey:@"EmpNo"] flightDate:[_userDict objectForKey:@"FlightDate"]];
+    _notFlights = [StaffDB getNotFlightList:[_userDict objectForKey:@"EmpNo"] flightDate:[_userDict objectForKey:@"FlightDate"] tailNo:[_userDict objectForKey:@"TailNo"] acType:[_userDict objectForKey:@"ACType"]];
     if([_notFlights count] > 0){
         int i = 0;
         for(id item in _notFlights){

@@ -63,9 +63,9 @@
     return result;
 }
 
-+(NSArray*) getNotFlightList:(NSString*)empNo flightDate:(NSString*) flightDate{
++(NSArray*) getNotFlightList:(NSString*)empNo flightDate:(NSString*) flightDate tailNo:(NSString*) tailNo acType:(NSString*)acType{
     
-    NSString* sql = [NSString stringWithFormat:@"select b.* from ScheduleInfo a join FlightInfo b on a.FlightDate = b.FlightDate and a.FlightNo = b.FlightNo where a.EmpNo = '%@' and a.FlightDate = '%@' order by DeptTime asc,b.FlightNo asc", empNo, flightDate];
+    NSString* sql = [NSString stringWithFormat:@"select b.* from ScheduleInfo a join FlightInfo b on a.FlightDate = b.FlightDate and a.FlightNo = b.FlightNo where a.EmpNo = '%@' and a.FlightDate = '%@' and TailNo = '%@' and ACType='%@' order by DeptTime asc,b.FlightNo asc", empNo, flightDate,tailNo,acType];
     
     NSArray* arr = bg_executeSql(sql, nil, nil);
     return arr;
